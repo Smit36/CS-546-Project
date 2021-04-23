@@ -44,6 +44,43 @@ const getTripApproval = async (tripId) => {
   return null;
 };
 
+const createApproval = async (data) => {
+  assertRequiredObject(data);
+
+  const { tripId, userId, createdAt = new Date().getTime() } = data;
+
+  assertObjectIdString(tripId, "Approval trip ID");
+  assertObjectIdString(userId, "Approval creator's user ID");
+  assertRequiredNumber(createdAt, "Arroval/trip created time");
+
+  const initStatus = APPROVAL_STATUS.CREATED;
+  const approvalData = {
+    _id: new ObjectId(),
+    status: initStatus,
+    updates: [
+      {
+        _id: new ObjectId(),
+        userId: new ObjectId(userId),
+        status: initStatus,
+        message: "",
+        createdAt: createdAt,
+      },
+    ],
+    createdAt: createdAt,
+    updatedAt: createAt,
+  };
+
+  const { result, insertedCount, insertedId } = await collection.insertOne(
+    approvalData
+  );
+
+  if (!result.ok || insertedCount !== 1) {
+    throw new QueryError(`Could not create approval for trip ID(${tripId})`);
+  }
+
+  return await getByObjectId(insertedId);
+};
+
 const optionalValuedString = (s, description) =>
   s !== undefined && assertIsValuedString(s, description);
 
