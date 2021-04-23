@@ -12,8 +12,10 @@ const {
 const {
   assertObjectIdString,
   assertIsValuedString,
+  assertRequiredObject,
+  assertRequiredNumber,
 } = require("../utils/assertion");
-const { getTripById } = require("./trips");
+// const { getTrip } = require("./trips");
 
 const APPROVAL_STATUS = {
   CREATED: "CREATED",
@@ -22,7 +24,7 @@ const APPROVAL_STATUS = {
   PENDING: "PENDING",
 };
 
-const isApprovalStatus = (s) => s in Object.values(APPROVAL_STATUS);
+const isApprovalStatus = (s) => Object.values(APPROVAL_STATUS).includes(s);
 
 const getByObjectId = async (objectId) => {
   const collection = await getApprovalCollection();
@@ -39,8 +41,8 @@ const getTripApproval = async (tripId) => {
   assertObjectIdString(tripId);
 
   // TODO: trip data function
-  // const trip = await getTripById(tripId);
-  // return await getApprovalById(trip.approvalId);
+  // const trip = await getTrip(tripId);
+  // return await getApproval(trip.approvalId);
   return null;
 };
 
@@ -56,6 +58,7 @@ const createApproval = async (data) => {
   const initStatus = APPROVAL_STATUS.CREATED;
   const approvalData = {
     _id: new ObjectId(),
+    tripId: new ObjectId(tripId),
     status: initStatus,
     updates: [
       {
@@ -67,9 +70,10 @@ const createApproval = async (data) => {
       },
     ],
     createdAt: createdAt,
-    updatedAt: createAt,
+    updatedAt: createdAt,
   };
 
+  const collection = await getApprovalCollection();
   const { result, insertedCount, insertedId } = await collection.insertOne(
     approvalData
   );
@@ -92,13 +96,13 @@ const updateApproval = async (id, updates) => {
   assertObjectIdString(lastUpdateId, "Last approval update ID");
   assertObjectIdString(userId, "Approval updated-by-user ID");
   assertIsValuedString(status, "Approval status");
-  optionalValuedString(status, "Approval message");
+  optionalValuedString(message, "Approval message");
 
   if (!isApprovalStatus(status)) {
     throw new ValidationError("Approval status is invalid");
   }
 
-  const approval = await getApprovalById(id);
+  const approval = await getApproval(id);
   if (
     !approval ||
     !Array.isArray(approval.updates) ||
@@ -108,7 +112,7 @@ const updateApproval = async (id, updates) => {
   }
 
   const lastUpdate = approval.updates[approval.updates.length - 1];
-  if (lastUpdaateId !== stringifyObjectId(lastUpdate._id)) {
+  if (lastUpdateId !== lastUpdate._id) {
     throw new QueryError(`Approval thread request is out-of-date.`);
   }
 
@@ -145,19 +149,21 @@ const updateApproval = async (id, updates) => {
     throw new QueryError(`Could not update approval thread with ID \`${id}\``);
   }
 
-  return updatedApproval;
+  return parseMongoData(updatedApproval);
 };
 
 const updateTripApproval = (tripId, updates) => {
   assertObjectIdString(tripId);
 
   // TODO: trip data function
-  // const trip = await getTripById(tripId);
+  // const trip = await getTrip(tripId);
   // return await updateApproval(trip.approvalId);
   return null;
 };
 
 module.exports = {
+  APPROVAL_STATUS,
+  createApproval,
   getApproval,
   getTripApproval,
   updateApproval,
