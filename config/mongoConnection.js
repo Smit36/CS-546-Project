@@ -1,6 +1,5 @@
 const { MongoClient } = require("mongodb");
-const { mongoConfig } = require("./settings");
-const { mongoConfig } = require("./settings");
+const { mongoConfig } = require("./settings");  
 
 const { serverUrl: databaseUrl, database: databaseName } = mongoConfig;
 const connectOptions = {

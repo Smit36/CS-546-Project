@@ -1,7 +1,7 @@
-const { getCollection } = require("./mongoConnection");
+const { getCollection } = require('./mongoConnection');
 
-// const EXAMPLE_COLLECTION_NAME = "books";
+const EXPENSE_COLLECTION_NAME = 'expenses';
 
 module.exports = {
-  // example: () => getCollection(EXAMPLE_COLLECTION_NAME)
+  expenses: () => getCollection(EXPENSE_COLLECTION_NAME),
 };
