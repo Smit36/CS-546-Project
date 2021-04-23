@@ -19,13 +19,29 @@ const stringifyObjectId = (objectId) => {
   }
 };
 
-const parseMongoData = (data) =>
-  !!data
-    ? {
-        ...data,
-        _id: stringifyObjectId(data._id),
-      }
-    : null;
+const parseMongoData = (data) => {
+  if (data == null) {
+    return null;
+  }
+
+  if (typeof data !== "object") {
+    return data;
+  }
+
+  if (Array.isArray(data)) {
+    return data.map((item) => parseMongoData(item));
+  }
+
+  const result = { ...data };
+  for (const [key, value] of Object.entries(data)) {
+    result[key] =
+      value instanceof ObjectId
+        ? stringifyObjectId(value)
+        : parseMongoData(value);
+  }
+
+  return result;
+};
 
 module.exports = {
   idQuery,
