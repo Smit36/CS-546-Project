@@ -1,7 +1,7 @@
 const { getCollection } = require("./mongoConnection");
 
-// const EXAMPLE_COLLECTION_NAME = "books";
+const RANK_COLLECTION_NAME = "ranks";
 
 module.exports = {
-  // example: () => getCollection(EXAMPLE_COLLECTION_NAME)
+  ranks: () => getCollection(RANK_COLLECTION_NAME)
 };
