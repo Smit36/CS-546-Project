@@ -22,20 +22,28 @@ const getByObjectId = async (objectId) => {
     return parseMongoData(rank);
   };
   
-  const getRank = async (id) => {
+const getRank = async (id) => {
     assertObjectIdString(id);
     return await getByObjectId(new ObjectId(id));
-  };
+};
 
-  const createRank = async (data) => {
+const getAllRanks = async () => {
+    const collection = await getRankCollection();
+
+    const rankList = await collection.find({}).toArray();
+
+    return parseMongoData(rankList);
+},
+
+const createRank = async (data) => {
     assertRequiredObject(data);
   
     const { corporateId, name, level, createdAt = new Date().getTime() } = data;
   
     assertObjectIdString(corporateId, "Corporate ID");
     assertIsValuedString(name, "Rank name");
-    assertRequiredNumber(level, "Rank in corporate hierarchy");
-    assertRequiredNumber(createdAt, "Arroval/trip created time");
+    assertRequiredNumber(level, "Rank level");
+    assertRequiredNumber(createdAt, "Rank created time");
   
     const rankData = {
       _id: new ObjectId(),
@@ -56,10 +64,57 @@ const getByObjectId = async (objectId) => {
     }
   
     return await getByObjectId(insertedId);
-  };
-  
+};
 
-  module.exports = {
+const updateRank = async (id, updates) => {
+    assertObjectIdString(id);
+    assertRequiredObject(updates, "Ranks updates data");
+  
+    const { corporateId, name, level } = updates;
+    assertObjectIdString(corporateId, "Updated Corporate ID");
+    assertIsValuedString(name, "Updated rank name");
+    assertIsValuedString(level, "Updated rank level");
+  
+    const rank = await getRank(id);
+
+    if (!rank) {
+      throw new QueryError(`Rank with ID\`${id}\` not found.`);
+    }
+
+    // TODO: validate session user ID and operation
+  
+    const options = { returnOriginal: false };
+    const collection = await getRankCollection();
+    const currentTimestamp = new Date().getTime();
+
+    const newUpdate = {
+      corporateId: new ObjectId(corporateId),
+      status: status,
+      name: name,
+      level: level,
+      updatedAt: currentTimestamp,
+    };
+
+    const ops = {
+      $set: newUpdate      
+    };
+  
+    const { value: updatedRank, ok } = await collection.findOneAndUpdate(
+      idQuery(id),
+      ops,
+      options
+    );
+  
+    if (!ok) {
+      throw new QueryError(`Could not update rank with ID \`${id}\``);
+    }
+  
+    return parseMongoData(updatedRank);
+};  
+
+module.exports = {
     createRank,
     getRank,
-  };
+    getAllRanks,
+    updateRank
+};
