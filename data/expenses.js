@@ -1,7 +1,5 @@
 const { ObjectId, ObjectID } = require('mongodb');
-const mongoCollections = require('../config/mongoCollections');
-const expenses = mongoCollections.expenses;
-const expenseCollection = await expenses();
+const { expenses: getExpensesCollection } = require('../config/mongoCollections');
 
 const { QueryError, ValidationError } = require('../utils/errors');
 const { idQuery, parseMongoData, stringifyObjectId } = require('../utils/mongodb');
@@ -12,14 +10,15 @@ const {
 } = require('../utils/assertion');
 
 const getByObjectId = async (objectId) => {
-  const expense = await expenseCollection.findOne(idQuery(objectId));
+  const collection = await getExpensesCollection();
+  const expense = await collection.findOne(idQuery(objectId));
   return parseMongoData(expense);
 };
 
 const getExpense = async (expenseId) => {
   assertObjectIdString(expenseId, 'Expense id');
 
-  let expense = await getByObjectId(new ObjectId(expenseId));
+  let expense = await getByObjectId(expenseId);
   if (expense == null) {
     throw new QueryError(`Could not get expense for (${expenseId})`);
   }
@@ -29,11 +28,12 @@ const getExpense = async (expenseId) => {
 const getAllExpenses = async (tripId) => {
   assertObjectIdString(tripId, 'Trip id');
 
-  const trip = await getTrip(tripId);
+  //const trip = await getTrip(tripId);
 
-  const allExpenses = await expenseCollection.find({ tripId: trip._id }).toArray();
+  const collection = await getExpensesCollection();
+  const allExpenses = await collection.find({ tripId: new ObjectId(tripId) }).toArray();
   if (allExpenses.length == 0) {
-    throw new QueryError(`Trip not found for trip ID(${tripId})`);
+    throw new QueryError(`Expenses not found`);
   }
 
   return allExpenses;
@@ -41,7 +41,7 @@ const getAllExpenses = async (tripId) => {
 
 const addExpense = async (data) => {
   assertRequiredObject(data);
-
+  console.log(data);
   const { userId, tripId, paymentId, name, description = null } = data;
   const createdAt = new Date().getTime();
 
@@ -49,6 +49,8 @@ const addExpense = async (data) => {
   assertObjectIdString(tripId, 'Expense trip ID');
   assertObjectIdString(paymentId, 'Expense payment ID');
   assertIsValuedString(name, 'Expense name');
+
+  const collection = await getExpensesCollection();
 
   const expenseData = {
     _id: new ObjectId(),
@@ -62,9 +64,7 @@ const addExpense = async (data) => {
     createdBy: new ObjectId(userId),
     updatedBy: new ObjectId(userId),
   };
-
-  const { result, insertedCount, insertedId } = await expenseCollection.insertOne(expenseData);
-
+  const { result, insertedCount, insertedId } = await collection.insertOne(expenseData);
   if (!result.ok || insertedCount !== 1) {
     throw new QueryError(`Could not add expense for trip ID(${tripId})`);
   }
@@ -81,10 +81,10 @@ const updateExpense = async (expenseId, data) => {
   assertObjectIdString(paymentId, 'Expense payment ID');
   assertIsValuedString(name, 'Expense name');
 
-  const lastExpense = await getByObjectId(new Object(expenseId));
+  const lastExpense = await getByObjectId(expenseId);
 
   if (lastExpense == null) {
-    throw new QueryError(`Expense not found for expense ID(${expenseId})`);
+    throw `Expense not found for expense ID(${expenseId})`;
   }
 
   const newUpdate = {
@@ -93,11 +93,12 @@ const updateExpense = async (expenseId, data) => {
     tripId: new ObjectId(tripId),
     name,
     description,
-    updatedAt: new Date.getTime(),
+    updatedAt: new Date().getTime(),
     updatedBy: new ObjectId(userId),
   };
 
-  const { modifiedCount, matchedCount } = await expenseCollection.updateOne(
+  const collection = await getExpensesCollection();
+  const { modifiedCount, matchedCount } = await collection.updateOne(
     { _id: new ObjectId(expenseId) },
     { $set: newUpdate },
   );
@@ -105,7 +106,7 @@ const updateExpense = async (expenseId, data) => {
   if (!modifiedCount && !matchedCount) {
     throw new QueryError(`Could not update expense ID(${expenseId})`);
   }
-  const updatedExpense = await getByObjectId(new ObjectId(expenseId));
+  const updatedExpense = await getByObjectId(expenseId);
   return updatedExpense;
 };
 
@@ -114,10 +115,11 @@ const deleteExpense = async (expenseId) => {
 
   let deleteExpense = await getByObjectId(new ObjectId(expenseId));
   if (deleteExpense == null) {
-    throw new QueryError(`Expense not found for expense ID(${expenseId})`);
+    throw `Expense not found for expense ID(${expenseId})`;
   }
 
-  let { deletedCount } = await expenseCollection.deleteOne({ _id: new ObjectId(expenseId) });
+  const collection = await getExpensesCollection();
+  let { deletedCount } = await collection.deleteOne({ _id: new ObjectId(expenseId) });
 
   if (deletedCount === 0) {
     throw new QueryError(`Could not delete expense for (${expenseId})`);
@@ -130,7 +132,8 @@ const deleteExpense = async (expenseId) => {
 const deleteAllExpenses = async (tripId) => {
   const allExpenses = await getAllExpenses(tripId);
 
-  const { deletedCount } = await expenseCollection.deleteMany({ tripId: new ObjectId(tripId) });
+  const collection = await getExpensesCollection();
+  const { deletedCount } = await collection.deleteMany({ tripId: new ObjectId(tripId) });
   if (deletedCount === 0) {
     throw new QueryError(`Could not delete all expenses for (${tripId})`);
   }

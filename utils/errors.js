@@ -25,7 +25,8 @@ class HttpError extends Error {
 
 class QueryError extends Error {}
 
-class ValidationError extends Error {}
+class ValidationError extends Error {
+}
 
 module.exports = {
   AxiosError,
