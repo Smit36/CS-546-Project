@@ -1,6 +1,6 @@
 const { ObjectId, ObjectID } = require('mongodb');
-const mongoCollections = require('../config/mongoCollections');
-const expensePaymentsCollection = await expensePayments();
+const { expensePayment: getExpensePaymentsCollection } = require('../config/mongoCollections');
+const { getExpense } = require('./expenses');
 
 const { QueryError, ValidationError } = require('../utils/errors');
 const { idQuery, parseMongoData, stringifyObjectId } = require('../utils/mongodb');
@@ -13,19 +13,21 @@ const {
 } = require('../utils/assertion');
 
 const getByObjectId = async (objectId) => {
-  const expensePayment = await expensePaymentsCollection.findOne(idQuery(objectId));
+  const collection = await getExpensePaymentsCollection();
+  const expensePayment = await collection.findOne(idQuery(objectId));
   return parseMongoData(expensePayment);
 };
 
 const addExpensePayment = async (data) => {
   assertRequiredObject(data);
 
-  const { expenseId, amount, currency, notes, method, time } = data;
+  const { expenseId, amount, currency, notes, method, date } = data;
   const createdAt = new Date().getTime();
 
   assertObjectIdString(expenseId, 'Expense id');
-  assertDateString(time, 'Expense payment time');
-  assertRequiredNumber(currency, 'Currency of expense amount');
+  assertDateString(date, 'Expense payment date');
+  assertRequiredNumber(amount, 'Expense amount');
+  assertIsValuedString(currency, 'Expense curreny');
   assertIsValuedString(method, 'Payment method');
 
   const expensePaymentData = {
@@ -35,14 +37,25 @@ const addExpensePayment = async (data) => {
     currency,
     notes,
     method,
-    time,
+    date,
     createdAt,
     updatedAt: createdAt,
   };
 
-  const { result, insertedCount, insertedId } = await expensePaymentsCollection.insertOne(
-    expensePaymentData,
-  );
+  const expense = await getExpense(expenseId);
+  if (!expense) {
+    throw new QueryError(`Expense not exist for expense ID(${expenseId})`);
+  }
+
+  const collection = await getExpensePaymentsCollection();
+
+  const payment = await collection.find({ expenseId: new ObjectId(expenseId) }).toArray();
+  console.log(payment);
+  if (payment.length != 0) {
+    throw new QueryError(`Payment already exist for expense ID(${expenseId})`);
+  }
+
+  const { result, insertedCount, insertedId } = await collection.insertOne(expensePaymentData);
 
   if (!result.ok || insertedCount !== 1) {
     throw new QueryError(`Could not add expense payment for expense ID(${expenseId})`);
@@ -54,12 +67,13 @@ const addExpensePayment = async (data) => {
 const deleteExpensePayment = async (paymentId) => {
   assertObjectIdString(paymentId, 'Payment Id');
 
-  let deleteExpensePayment = await getByObjectId(new ObjectId(paymentId));
+  let deleteExpensePayment = await getByObjectId(paymentId);
   if (deleteExpensePayment == null) {
     throw new QueryError(`Payment not found for payment ID(${paymentId})`);
   }
 
-  let { deletedCount } = await expensePaymentsCollection.deleteOne({
+  const collection = await getExpensePaymentsCollection();
+  let { deletedCount } = await collection.deleteOne({
     _id: new ObjectId(paymentId),
   });
 
@@ -73,13 +87,20 @@ const deleteExpensePayment = async (paymentId) => {
 
 const updateExpensePayment = async (paymentId, data) => {
   assertRequiredObject(data);
-  const { expenseId, amount, currency, notes, method, time } = data;
+  const { expenseId, amount, currency, notes, method, date } = data;
 
   assertObjectIdString(expenseId, 'Expense id');
-  assertDateString(time, 'Expense payment time');
-  assertRequiredNumber(currency, 'Currency of expense amount');
+  assertDateString(date, 'Expense payment time');
+  assertRequiredNumber(amount, 'Expense amount');
+  assertIsValuedString(currency, 'Expense curreny');
   assertIsValuedString(method, 'Payment method');
 
+  const expense = await getExpense(expenseId);
+  if (!expense) {
+    throw new QueryError(`Expense not exist for expense ID(${expenseId})`);
+  }
+
+  const lastExpensePayment = await getExpensePayment(paymentId);
   if (lastExpensePayment == null) {
     throw new QueryError(`Payment not found for payment ID(${paymentId})`);
   }
@@ -90,26 +111,27 @@ const updateExpensePayment = async (paymentId, data) => {
     currency,
     notes,
     method,
-    time,
-    updatedAt: new Date.getTime(),
+    date,
+    updatedAt: new Date().getTime(),
   };
 
-  const { modifiedCount, matchedCount } = await expensePaymentsCollection.updateOne(
-    { _id: new ObjectId(payementId) },
+  const collection = await getExpensePaymentsCollection();
+  const { modifiedCount, matchedCount } = await collection.updateOne(
+    { _id: new ObjectId(paymentId) },
     { $set: newUpdate },
   );
 
   if (!modifiedCount && !matchedCount) {
     throw new QueryError(`Could not update payment ID(${paymentId})`);
   }
-  const updatedExpensePayment = await getByObjectId(new ObjectId(paymentId));
+  const updatedExpensePayment = await getByObjectId(paymentId);
   return updatedExpensePayment;
 };
 
 const getExpensePayment = async (paymentId) => {
   assertObjectIdString(paymentId, 'Expense payment id');
 
-  let expensePayment = await getByObjectId(new ObjectId(paymentId));
+  let expensePayment = await getByObjectId(paymentId);
   if (expensePayment == null) {
     throw new QueryError(`Could not get expense payment for (${paymentId})`);
   }
