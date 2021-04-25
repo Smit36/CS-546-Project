@@ -37,10 +37,9 @@ const getCorporate = async (id) => {
 const createCorporate = async (data) => {
     assertRequiredObject(data);
   
-    const { name, password, email, contact, address, createdBy, updateBy, createdAt = new Date().getTime() } = data;
+    const { name, email, contact, address, createdBy, updateBy, createdAt = new Date().getTime() } = data;
      
     assertIsValuedString(name, "Corporate name");
-    assertIsValuedString(password, "Password");
     assertIsValuedString(email, "Email");
     assertRequiredNumber(contact, "Contact Number");
     assertIsValuedString(address, "Address");
@@ -51,7 +50,6 @@ const createCorporate = async (data) => {
     const corporateData = {
       _id: new ObjectId(),
       name : name,
-      password: password,
       email: email,
       contact: contact,
       address: address,
@@ -74,13 +72,11 @@ const createCorporate = async (data) => {
 };
 
 const updateCorporate = async (id, updates) => {
-    assertObjectIdString(id);
     assertRequiredObject(updates, "Corporate updates data");
 
-    const { name, password, email, contact, address, createdBy, updateBy, createdAt = new Date().getTime() } = data;
+    const { name, email, contact, address, createdBy, updateBy, createdAt = new Date().getTime() } = data;
     
     assertIsValuedString(name, "Corporate name");
-    assertIsValuedString(password, "Password");
     assertIsValuedString(email, "Email");
     assertRequiredNumber(contact, "Contact Number");
     assertIsValuedString(address, "Address");
@@ -103,7 +99,6 @@ const updateCorporate = async (id, updates) => {
     const newUpdate = {
       _id: new ObjectId(),
       name : name,
-      password: password,
       email: email,
       contact: contact,
       address: address,
