@@ -1,0 +1,169 @@
+const { ObjectId } = require("mongodb");
+const {
+  trips: getTripCollection,
+} = require("../config/mongoCollections");
+
+const { QueryError, ValidationError } = require("../utils/errors");
+const {
+  idQuery,
+  parseMongoData,
+} = require("../utils/mongodb");
+const {
+  assertObjectIdString,
+  assertIsValuedString,
+  assertRequiredObject,
+  assertRequiredNumber,
+  assertNonEmptyArray,
+} = require("../utils/assertion");
+// const { createApproval } = require("./approvals");
+// const { getUser } = require("./users");
+
+const getByObjectId = async (objectId) => {
+  const collection = await getTripCollection();
+  const trip = await collection.findOne(idQuery(objectId));
+  return parseMongoData(trip);
+};
+
+const getTrip = async (id) => {
+  assertObjectIdString(id);
+  return await getByObjectId(new ObjectId(id));
+};
+
+const createTrip = async (data) => {
+  assertRequiredObject(data);
+
+  const {
+    userId,
+    corporateId,
+    managerId,
+    employeeIdList = [],
+    name,
+    description,
+    startTime,
+    endTime,
+    createdAt = new Date().getTime()
+  } = data;
+
+  assertObjectIdString(userId, "Trip creater ID");
+  assertObjectIdString(corporateId, "Trip corporate ID");
+  assertObjectIdString(managerId, "Trip manager's user ID");
+  assertNonEmptyArray(employeeIdList, "Trip employee ID list")
+  assertIsValuedString(name, "Trip name");
+  assertIsValuedString(description, "Trip description");
+  assertRequiredNumber(startTime, "Trip start time");
+  assertRequiredNumber(endTime, "Trip end time");
+  assertRequiredNumber(createdAt, "Trip data creation time");
+
+  employeeIdList.forEach(userId => assertObjectIdString(userId, "Employee ID"));
+
+  // TODO: validate user corporate
+  // const manager = await getUser(managerId);
+  // if (!manager.corporateId !== corporateId) {
+  //   throw new ValidationError(`Invalid manager: User ${managerId}`);
+  // }
+
+  // const invalidEmployeeIdList = await employeeIdList.reduce(async (idList, userId) => {
+  //   assertObjectIdString(userId, "Employee ID");
+  //   const employee = await getUser(userId);
+  //   if (employee.corporateId !== corporateId || employee.rank >= manager.rank) {
+  //     idList.push(userId);
+  //   }
+  //   return idList;
+  // }, []);
+  // if (invalidEmployeeIdList.length > 0) {
+  //   throw new ValidationError(`Invalid employee(s): ${outsiderIdList.join(', ')}`);
+  // }
+
+  const tripId = new ObjectId();
+
+  // TODO: create Approval
+  // cnost approval = await createApproval({
+  //   tripId,
+  //   userId,
+  //   createAt,
+  // });
+
+  const tripData = {
+    _id: tripId,
+    corporateId: new ObjectId(corporateId),
+    // TODO: add approvalId
+    // approvalId: new ObjectId(approval._id),
+    managerId: new ObjectId(managerId),
+    employeeIdList: employeeIdList.map(ids => new ObjectId(ids)),
+    expenseIdList: [],
+    createdAt: createdAt,
+    updatedAt: createdAt,
+    // TODO: get session user ID
+    createdBy: userId,
+    updatedBy: userId,
+  };
+
+  const collection = await getTripCollection();
+  const { result, insertedCount, insertedId } = await collection.insertOne(
+    tripData
+  );
+
+  if (!result.ok || insertedCount !== 1) {
+    throw new QueryError(`Could not add trip data`);
+  }
+
+  return await getByObjectId(insertedId);
+};
+
+const deleteTrip = async (id) => {
+  assertObjectIdString(id);
+
+  const collection = await getTripCollection();
+  const { value: deleletedTrip, ok } = await collection.findOneAndDelete(
+    idQuery(id)
+  );
+
+  if (!ok || !deleletedTrip) {
+    throw new QueryError(`Could not delete trip with ID of ${id}`);
+  }
+
+  return parseMongoData(deleletedTrip);
+};
+
+const addTripExpenses = async (tripId, userId, expenseIdList) => {
+  assertObjectIdString(tripId, "Trip ID");
+  assertObjectIdString(userId, "Trip updater user ID");
+  assertNonEmptyArray(expenseIdList);
+  
+  expenseIdList.forEach(expenseId => assertObjectIdString(expenseId, "Expense ID"))
+
+  const currentTimestamp = new Date().getTime();
+  const ops = {
+    $set: {
+      updatedAt: currentTimestamp,
+      updatedBy: new ObjectId(userId),
+    },
+    $addToSet: {
+      expenseIdList: {
+        $each: expenseIdList
+      },
+    },
+  };
+  const options = { returnOriginal: false };
+
+  const collection = await getTripCollection();
+  const { value: updatedTrip, ok } = await collection.findOneAndUpdate(
+    idQuery(tripId),
+    ops,
+    options
+  );
+
+  if (!ok || !updatedTrip) {
+    throw new QueryError(`Could not add expenses to trip with ID \`${tripId}\``);
+  }
+
+  return parseMongoData(updatedTrip);
+};
+
+
+module.exports = {
+  createTrip,
+  getTrip,
+  deleteTrip,
+  addTripExpenses,
+};
