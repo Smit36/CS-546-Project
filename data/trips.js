@@ -13,6 +13,7 @@ const {
   assertIsValuedString,
   assertRequiredObject,
   assertRequiredNumber,
+  assertNonEmptyArray,
 } = require("../utils/assertion");
 // const { createApproval } = require("./approvals");
 // const { getUser } = require("./users");
@@ -28,18 +29,22 @@ const getTrip = async (id) => {
   return await getByObjectId(new ObjectId(id));
 };
 
-const isUserFromCorporate = async (userId, corporateId) => {
-  // TODO
-  // const user = await getUser(userId);
-  // return user.corporateId === corporateId;
-  return true;
-};
-
 const createTrip = async (data) => {
   assertRequiredObject(data);
 
-  const { corporateId, managerId, employeeIdList = [], name, description, startTime, endTime, createdAt = new Date().getTime() } = data;
+  const {
+    userId,
+    corporateId,
+    managerId,
+    employeeIdList = [],
+    name,
+    description,
+    startTime,
+    endTime,
+    createdAt = new Date().getTime()
+  } = data;
 
+  assertObjectIdString(userId, "Trip creater ID");
   assertObjectIdString(corporateId, "Trip corporate ID");
   assertObjectIdString(managerId, "Trip manager's user ID");
   assertNonEmptyArray(employeeIdList, "Trip employee ID list")
@@ -49,22 +54,28 @@ const createTrip = async (data) => {
   assertRequiredNumber(endTime, "Trip end time");
   assertRequiredNumber(createdAt, "Trip data creation time");
 
+  employeeIdList.forEach(userId => assertObjectIdString(userId, "Employee ID"));
+
   // TODO: validate user corporate
-  const isManagerFromCorporate = await isUserFromCorporate(managerId, corporateId);
-  if (!isManagerFromCorporate) {
-    throw new ValidationError(`Invalid manager: User ${managerId} not in corporate`);
-  }
-  const outsiderIdList = await employeeIdList.reduce((idList, userId) => {
-    if (await isUserFromCorporate(userId, corporateId)) {
-      idList.push(userId);
-    }
-    return idList;
-  }, []);
-  if (outsiderIdList.length > 0) {
-    throw new ValidationError(`Invalid employee(s): ${outsiderIdList.join(', ')} not in corporate`);
-  }
+  // const manager = await getUser(managerId);
+  // if (!manager.corporateId !== corporateId) {
+  //   throw new ValidationError(`Invalid manager: User ${managerId}`);
+  // }
+
+  // const invalidEmployeeIdList = await employeeIdList.reduce(async (idList, userId) => {
+  //   assertObjectIdString(userId, "Employee ID");
+  //   const employee = await getUser(userId);
+  //   if (employee.corporateId !== corporateId || employee.rank >= manager.rank) {
+  //     idList.push(userId);
+  //   }
+  //   return idList;
+  // }, []);
+  // if (invalidEmployeeIdList.length > 0) {
+  //   throw new ValidationError(`Invalid employee(s): ${outsiderIdList.join(', ')}`);
+  // }
 
   const tripId = new ObjectId();
+
   // TODO: create Approval
   // cnost approval = await createApproval({
   //   tripId,
@@ -83,8 +94,8 @@ const createTrip = async (data) => {
     createdAt: createdAt,
     updatedAt: createdAt,
     // TODO: get session user ID
-    createdBy: null,
-    updatedBy: null,
+    createdBy: userId,
+    updatedBy: userId,
   };
 
   const collection = await getTripCollection();
@@ -99,7 +110,7 @@ const createTrip = async (data) => {
   return await getByObjectId(insertedId);
 };
 
-const deleteTrip = (id) => {
+const deleteTrip = async (id) => {
   assertObjectIdString(id);
 
   const collection = await getTripCollection();
@@ -107,38 +118,46 @@ const deleteTrip = (id) => {
     idQuery(id)
   );
 
-  if (!ok) {
+  if (!ok || !deleletedTrip) {
     throw new QueryError(`Could not delete trip with ID of ${id}`);
   }
 
-  return deleletedTrip;
+  return parseMongoData(deleletedTrip);
 };
 
-// TODO
-const addTripExpenses = (tripId, expenseData) => {
-  // const expense = await createExpense({ tripId, expenseData });
-  // const expenseId = expense._id;
+const addTripExpenses = async (tripId, userId, expenseIdList) => {
+  assertObjectIdString(tripId, "Trip ID");
+  assertObjectIdString(userId, "Trip updater user ID");
+  assertNonEmptyArray(expenseIdList);
+  
+  expenseIdList.forEach(expenseId => assertObjectIdString(expenseId, "Expense ID"))
 
-  // const ops = {
-  //   $addToSet: {
-  //     expenseIdList: expenseId,
-  //   },
-  // };
-  // const options = { returnOriginal: false };
+  const currentTimestamp = new Date().getTime();
+  const ops = {
+    $set: {
+      updatedAt: currentTimestamp,
+      updatedBy: new ObjectId(userId),
+    },
+    $addToSet: {
+      expenseIdList: {
+        $each: expenseIdList
+      },
+    },
+  };
+  const options = { returnOriginal: false };
 
-  // const collection = await getTripCollection();
-  // const { value: updatedTrip, ok } = await collection.findOneAndUpdate(
-  //   idQuery(tripId),
-  //   ops,
-  //   options
-  // );
+  const collection = await getTripCollection();
+  const { value: updatedTrip, ok } = await collection.findOneAndUpdate(
+    idQuery(tripId),
+    ops,
+    options
+  );
 
-  // if (!ok) {
-  //   throw new QueryError(`Could not update expenses of trip with ID \`${tripId}\``);
-  // }
+  if (!ok || !updatedTrip) {
+    throw new QueryError(`Could not add expenses to trip with ID \`${tripId}\``);
+  }
 
-  // return parseMongoData(updatedTrip);
-  return null;
+  return parseMongoData(updatedTrip);
 };
 
 
