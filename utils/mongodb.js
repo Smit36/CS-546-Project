@@ -11,11 +11,11 @@ const idQuery = (id) => ({
 
 const isObjectIdString = (id) => ObjectId.isValid(id);
 
-const stringifyObjectId = (objectId) => {
+const stringifyObjectId = (objectId, desc = 'Identifier') => {
   if (objectId instanceof ObjectId) {
     return objectId.toHexString();
   } else {
-    throw "Identifier is not an ObjectId";
+    throw `${desc} is not an ObjectId`;
   }
 };
 
@@ -32,15 +32,14 @@ const parseMongoData = (data) => {
     return data.map((item) => parseMongoData(item));
   }
 
-  const result = { ...data };
-  for (const [key, value] of Object.entries(data)) {
-    result[key] =
-      value instanceof ObjectId
-        ? stringifyObjectId(value)
-        : parseMongoData(value);
+  if (data instanceof ObjectId) {
+    return stringifyObjectId(data);
   }
 
-  return result;
+  return Object.entries(data).reduce((result, [key, value]) => {
+    result[key] = parseMongoData(value);
+    return result;
+  }, {});
 };
 
 module.exports = {
