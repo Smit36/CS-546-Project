@@ -1,1 +1,5 @@
-module.exports = {};
+const corporate = require('./corporate');
+
+module.exports = {
+  corporate
+};
