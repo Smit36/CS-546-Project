@@ -37,24 +37,24 @@ const getCorporate = async (id) => {
 const createCorporate = async (data) => {
     assertRequiredObject(data);
   
-    const { name, email, contact, address, createdBy, updateBy, createdAt = new Date().getTime() } = data;
+    const { name, emailDomain, contactNo, address, createdBy, updatedBy, createdAt = new Date().getTime() } = data;
      
     assertIsValuedString(name, "Corporate name");
-    assertIsValuedString(email, "Email");
-    assertRequiredNumber(contact, "Contact Number");
+    assertIsValuedString(emailDomain, "Email");
+    assertRequiredNumber(contactNo, "Contact Number");
     assertIsValuedString(address, "Address");
-    assertIsValuedString(createdBy, "Created By");
-    assertIsValuedString(updateBy, "Update By");
+    assertObjectIdString(createdBy, "Created By");
+    assertObjectIdString(updatedBy, "Update By");
     assertRequiredNumber(createdAt, "Corporate created time");
   
     const corporateData = {
       _id: new ObjectId(),
       name : name,
-      email: email,
-      contact: contact,
+      emailDomain: emailDomain,
+      contactNo: contactNo,
       address: address,
       createdBy: createdBy,
-      updateBy: updateBy,
+      updatedBy: updatedBy,
       createdAt: createdAt,
       updatedAt: createdAt,
     };
@@ -72,16 +72,17 @@ const createCorporate = async (data) => {
 };
 
 const updateCorporate = async (id, updates) => {
+    assertObjectIdString(id);
     assertRequiredObject(updates, "Corporate updates data");
 
-    const { name, email, contact, address, createdBy, updateBy, createdAt = new Date().getTime() } = data;
+    const { name, emailDomain, contactNo, address, createdBy, updatedBy, createdAt = new Date().getTime() } = data;
     
     assertIsValuedString(name, "Corporate name");
-    assertIsValuedString(email, "Email");
-    assertRequiredNumber(contact, "Contact Number");
+    assertIsValuedString(emailDomain, "Email");
+    assertRequiredNumber(contactNo, "Contact Number");
     assertIsValuedString(address, "Address");
-    assertIsValuedString(createdBy, "Created By");
-    assertIsValuedString(updateBy, "Update By");
+    assertObjectIdString(createdBy, "Created By");
+    assertObjectIdString(updatedBy, "Update By");
     assertRequiredNumber(createdAt, "Corporate created time");
   
     const corporate = await getCorporate(id);
@@ -97,13 +98,12 @@ const updateCorporate = async (id, updates) => {
     const currentTimestamp = new Date().getTime();
     
     const newUpdate = {
-      _id: new ObjectId(),
       name : name,
-      email: email,
-      contact: contact,
+      emailDomain: emailDomain,
+      contactNo: contactNo,
       address: address,
       createdBy: createdBy,
-      updateBy: updateBy,
+      updatedBy: updatedBy,
       createdAt: createdAt,
       updatedAt: currentTimestamp,
     };
@@ -127,8 +127,6 @@ const updateCorporate = async (id, updates) => {
 
 const deleteCorporate = async (id) => {
     const collection = await getCorporatesCollection();  
-    
-    const corporate = await getCorporate(id);
 
     const deletionInfo = await collection.deleteOne({ _id: idQuery(id) });
 
