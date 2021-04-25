@@ -1,6 +1,6 @@
 const { ObjectId, ObjectID } = require("mongodb");
 const {
-  corporate: getCorporatesCollection,
+  corporates: getCorporatesCollection,
 } = require("../config/mongoCollections");
 
 const { QueryError, ValidationError } = require("../utils/errors");

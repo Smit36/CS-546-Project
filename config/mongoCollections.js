@@ -1,7 +1,9 @@
 const { getCollection } = require("./mongoConnection");
 
-const CORPORATES_COLLECTION_NAME = "corporates";
+const APPROVAL_COLLECTION_NAME = "approvals";
+const CORPORATE_COLLECTION_NAME = "corporates";
 
 module.exports = {
-  corporate: () => getCollection(CORPORATES_COLLECTION_NAME)
+  approvals: () => getCollection(APPROVAL_COLLECTION_NAME),
+  corporates: () => getCollection(CORPORATE_COLLECTION_NAME),
 };

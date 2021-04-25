@@ -1,5 +1,7 @@
-const corporate = require('./corporate');
+const approvals = require("./approvals");
+const corporates = require("./corporates");
 
 module.exports = {
-  corporate
+  approvals,
+  corporates,
 };
