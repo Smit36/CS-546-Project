@@ -1,8 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const data = require('../data');
-const paymentData = data.expensePayments;
+const paymentData = require('../data/expensePayments');
 
 //Add Expense Payment
 router.post('/', async (req, res) => {
