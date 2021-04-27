@@ -22,7 +22,6 @@ const getExpense = async (expenseId) => {
   if (expense == null) {
     throw new QueryError(`Could not get expense for (${expenseId})`);
   }
-  console.log(typeof expense._id);
   return expense;
 };
 
@@ -37,16 +36,11 @@ const getAllExpensesByTrip = async (tripId) => {
     throw new QueryError(`Expenses not found`);
   }
 
-  for (let i = 0; i < allExpenses.length; i++) {
-    allExpenses[i]._id = allExpenses[i]._id.toString();
-  }
-
-  return allExpenses;
+  return parseMongoData(allExpenses);
 };
 
 const addExpense = async (data) => {
   assertRequiredObject(data);
-  console.log(data);
   const { userId, tripId, paymentId, name, description = null } = data;
   const createdAt = new Date().getTime();
 
@@ -143,8 +137,7 @@ const deleteAllExpensesByTrip = async (tripId) => {
     throw new QueryError(`Could not delete all expenses for (${tripId})`);
   }
 
-  allExpenses.message = 'Successfully deleted';
-  return allExpenses;
+  return parseMongoData(allExpenses);
 };
 
 module.exports = {
