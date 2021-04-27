@@ -25,7 +25,7 @@ const getExpense = async (expenseId) => {
   return expense;
 };
 
-const getAllExpenses = async (tripId) => {
+const getAllExpensesByTrip = async (tripId) => {
   assertObjectIdString(tripId, 'Trip id');
 
   //const trip = await getTrip(tripId);
@@ -36,12 +36,11 @@ const getAllExpenses = async (tripId) => {
     throw new QueryError(`Expenses not found`);
   }
 
-  return allExpenses;
+  return parseMongoData(allExpenses);
 };
 
 const addExpense = async (data) => {
   assertRequiredObject(data);
-  console.log(data);
   const { userId, tripId, paymentId, name, description = null } = data;
   const createdAt = new Date().getTime();
 
@@ -129,8 +128,8 @@ const deleteExpense = async (expenseId) => {
   return deleteExpense;
 };
 
-const deleteAllExpenses = async (tripId) => {
-  const allExpenses = await getAllExpenses(tripId);
+const deleteAllExpensesByTrip = async (tripId) => {
+  const allExpenses = await getAllExpensesByTrip(tripId);
 
   const collection = await getExpensesCollection();
   const { deletedCount } = await collection.deleteMany({ tripId: new ObjectId(tripId) });
@@ -138,15 +137,14 @@ const deleteAllExpenses = async (tripId) => {
     throw new QueryError(`Could not delete all expenses for (${tripId})`);
   }
 
-  allExpenses.message = 'Successfully deleted';
-  return allExpenses;
+  return parseMongoData(allExpenses);
 };
 
 module.exports = {
   getExpense,
-  getAllExpenses,
+  getAllExpensesByTrip,
   addExpense,
   updateExpense,
-  deleteAllExpenses,
+  deleteAllExpensesByTrip,
   deleteExpense,
 };

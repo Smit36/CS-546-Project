@@ -50,7 +50,6 @@ const addExpensePayment = async (data) => {
   const collection = await getExpensePaymentsCollection();
 
   const payment = await collection.find({ expenseId: new ObjectId(expenseId) }).toArray();
-  console.log(payment);
   if (payment.length != 0) {
     throw new QueryError(`Payment already exist for expense ID(${expenseId})`);
   }
@@ -82,7 +81,7 @@ const deleteExpensePayment = async (paymentId) => {
   }
 
   deleteExpensePayment.message = 'Successfully deleted';
-  return deleteExpensePayment;
+  return parseMongoData(deleteExpensePayment);
 };
 
 const updateExpensePayment = async (paymentId, data) => {
