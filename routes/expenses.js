@@ -18,8 +18,8 @@ router.post('/', async (req, res) => {
 router.get('/trip/:tripId', async (req, res) => {
   try {
     const { tripId } = req.params;
-    console.log(tripId);
-    const allExpenses = await expenseData.getAllExpenses(tripId);
+
+    const allExpenses = await expenseData.getAllExpensesByTrip(tripId);
     res.status(200).json(allExpenses);
   } catch (e) {
     res.status(400).json({ error: e });
@@ -41,12 +41,10 @@ router.get('/:expenseId', async (req, res) => {
 router.put('/:expenseId', async (req, res) => {
   try {
     const { expenseId } = req.params;
-    let  expense = req.body;
-
+    let expense = req.body;
     expense = await expenseData.updateExpense(expenseId, expense);
     res.status(200).json(expense);
   } catch (e) {
-    console.log(e);
     res.status(400).json({ error: e });
   }
 });
@@ -55,10 +53,9 @@ router.put('/:expenseId', async (req, res) => {
 router.delete('/trip/:tripId', async (req, res) => {
   try {
     const { tripId } = req.params;
-    const allExpenses = await expenseData.deleteAllExpenses(tripId);
+    const allExpenses = await expenseData.deleteAllExpensesByTrip(tripId);
     res.status(200).json(allExpenses);
   } catch (e) {
-    console.log(e);
     res.status(400).json({ error: e });
   }
 });
@@ -70,7 +67,6 @@ router.delete('/:expenseId', async (req, res) => {
     const expense = await expenseData.deleteExpense(expenseId);
     res.status(200).json(expense);
   } catch (e) {
-    console.log(e);
     res.status(400).json({ error: e });
   }
 });

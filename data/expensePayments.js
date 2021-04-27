@@ -50,7 +50,6 @@ const addExpensePayment = async (data) => {
   const collection = await getExpensePaymentsCollection();
 
   const payment = await collection.find({ expenseId: new ObjectId(expenseId) }).toArray();
-  console.log(payment);
   if (payment.length != 0) {
     throw new QueryError(`Payment already exist for expense ID(${expenseId})`);
   }

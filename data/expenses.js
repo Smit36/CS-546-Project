@@ -22,10 +22,11 @@ const getExpense = async (expenseId) => {
   if (expense == null) {
     throw new QueryError(`Could not get expense for (${expenseId})`);
   }
+  console.log(typeof expense._id);
   return expense;
 };
 
-const getAllExpenses = async (tripId) => {
+const getAllExpensesByTrip = async (tripId) => {
   assertObjectIdString(tripId, 'Trip id');
 
   //const trip = await getTrip(tripId);
@@ -34,6 +35,10 @@ const getAllExpenses = async (tripId) => {
   const allExpenses = await collection.find({ tripId: new ObjectId(tripId) }).toArray();
   if (allExpenses.length == 0) {
     throw new QueryError(`Expenses not found`);
+  }
+
+  for (let i = 0; i < allExpenses.length; i++) {
+    allExpenses[i]._id = allExpenses[i]._id.toString();
   }
 
   return allExpenses;
@@ -129,8 +134,8 @@ const deleteExpense = async (expenseId) => {
   return deleteExpense;
 };
 
-const deleteAllExpenses = async (tripId) => {
-  const allExpenses = await getAllExpenses(tripId);
+const deleteAllExpensesByTrip = async (tripId) => {
+  const allExpenses = await getAllExpensesByTrip(tripId);
 
   const collection = await getExpensesCollection();
   const { deletedCount } = await collection.deleteMany({ tripId: new ObjectId(tripId) });
@@ -144,9 +149,9 @@ const deleteAllExpenses = async (tripId) => {
 
 module.exports = {
   getExpense,
-  getAllExpenses,
+  getAllExpensesByTrip,
   addExpense,
   updateExpense,
-  deleteAllExpenses,
+  deleteAllExpensesByTrip,
   deleteExpense,
 };
