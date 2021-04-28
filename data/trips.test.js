@@ -191,7 +191,7 @@ describe("Trips data function", () => {
       expect(createResult1).toMatchObject({
         corporateId: stringifyObjectId(testCorporateId1),
         managerId: userId,
-        employeeIdList: [stringifyObjectId(testUserId2)],
+        employeeIdList: [userId, stringifyObjectId(testUserId2)],
         expenseIdList: [],
         createdBy: userId,
         updatedBy: userId,

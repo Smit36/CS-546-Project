@@ -24,7 +24,7 @@ const APPROVAL_STATUS = {
   PENDING: "PENDING",
 };
 
-const isApprovalStatus = (s) => Object.values(APPROVAL_STATUS).includes(s);
+const isApprovalStatus = (s = '') => !s || Object.values(APPROVAL_STATUS).includes(s);
 
 const getByObjectId = async (objectId) => {
   const collection = await getApprovalCollection();
@@ -86,21 +86,27 @@ const createApproval = async (data) => {
 };
 
 const optionalValuedString = (s, description) =>
-  s !== undefined && assertIsValuedString(s, description);
+  s == null || s === '' ||  assertIsValuedString(s, description);
 
-const updateApproval = async (id, updates) => {
+
+const assertApprovalUpdates = (id, updates) => {
   assertObjectIdString(id);
   assertRequiredObject(updates, "Approval updates data");
 
   const { lastUpdateId, userId, status, message } = updates;
   assertObjectIdString(lastUpdateId, "Last approval update ID");
   assertObjectIdString(userId, "Approval updated-by-user ID");
-  assertIsValuedString(status, "Approval status");
+  optionalValuedString(status, "Approval status");
   optionalValuedString(message, "Approval message");
 
   if (!isApprovalStatus(status)) {
     throw new ValidationError("Approval status is invalid");
   }
+};
+
+const updateApproval = async (id, updates) => {
+  assertApprovalUpdates(id, updates);
+  const { lastUpdateId, userId, status, message } = updates;
 
   const approval = await getApproval(id);
   if (
@@ -115,8 +121,6 @@ const updateApproval = async (id, updates) => {
   if (lastUpdateId !== lastUpdate._id) {
     throw new QueryError(`Approval thread request is out-of-date.`);
   }
-
-  // TODO: validate session user ID and operation
 
   const options = { returnOriginal: false };
   const collection = await getApprovalCollection();
@@ -166,6 +170,7 @@ module.exports = {
   createApproval,
   getApproval,
   getTripApproval,
+  assertApprovalUpdates,
   updateApproval,
   updateTripApproval,
 };

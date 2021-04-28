@@ -89,7 +89,7 @@ const createTrip = async (data) => {
     // TODO: add approvalId
     // approvalId: new ObjectId(approval._id),
     managerId: new ObjectId(managerId),
-    employeeIdList: employeeIdList.map(ids => new ObjectId(ids)),
+    employeeIdList: [managerId, ...employeeIdList].map(ids => new ObjectId(ids)),
     expenseIdList: [],
     createdAt: createdAt,
     updatedAt: createdAt,
@@ -125,7 +125,23 @@ const deleteTrip = async (id) => {
   return parseMongoData(deleletedTrip);
 };
 
-const addTripExpenses = async (tripId, userId, expenseIdList) => {
+const getAddTripExpensesOps = (expenseIdList) => ({
+  $addToSet: {
+    expenseIdList: {
+      $each: expenseIdList,
+    },
+  },
+});
+
+const getRemoveTripExpensesOps = (expenseIdList) => ({
+  $pull: {
+    expenseIdList: {
+      $in: expenseIdList,
+    },
+  },
+});
+
+const updateTripExpenses = async (tripId, userId, expenseIdList, getUpdateOps) => {
   assertObjectIdString(tripId, "Trip ID");
   assertObjectIdString(userId, "Trip updater user ID");
   assertNonEmptyArray(expenseIdList);
@@ -138,11 +154,7 @@ const addTripExpenses = async (tripId, userId, expenseIdList) => {
       updatedAt: currentTimestamp,
       updatedBy: new ObjectId(userId),
     },
-    $addToSet: {
-      expenseIdList: {
-        $each: expenseIdList
-      },
-    },
+    ...getUpdateOps(expenseIdList),
   };
   const options = { returnOriginal: false };
 
@@ -154,11 +166,14 @@ const addTripExpenses = async (tripId, userId, expenseIdList) => {
   );
 
   if (!ok || !updatedTrip) {
-    throw new QueryError(`Could not add expenses to trip with ID \`${tripId}\``);
+    throw new QueryError(`Could not update expenses for trip \`${tripId}\``);
   }
 
   return parseMongoData(updatedTrip);
 };
+
+const addTripExpenses = (...params) => updateTripExpenses(...params, getAddTripExpensesOps);
+const removeTripExpenses = (...params) => updateTripExpenses(...params, getRemoveTripExpensesOps);
 
 
 module.exports = {
@@ -166,4 +181,5 @@ module.exports = {
   getTrip,
   deleteTrip,
   addTripExpenses,
+  removeTripExpenses,
 };

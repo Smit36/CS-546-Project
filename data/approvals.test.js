@@ -208,19 +208,7 @@ describe("Approvals data function", () => {
       await expectAsyncValidationError(
         updateApproval(approvalId, {
           ...updateData,
-          status: "",
-        })
-      );
-      await expectAsyncValidationError(
-        updateApproval(approvalId, {
-          ...updateData,
           status: "NOTASTATUS",
-        })
-      );
-      await expectAsyncValidationError(
-        updateApproval(approvalId, {
-          ...updateData,
-          status: undefined,
         })
       );
       await expectAsyncValidationError(
