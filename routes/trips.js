@@ -1,8 +1,15 @@
 const { Router } = require("express");
-const { getApproval } = require("../data/approvals");
 const {
+  getApproval,
+  // deleteApproval,
+} = require("../data/approvals");
+const {
+  createTrip,
+  // assertTripData,
   getTrip,
+  // getUserTrips,
   addTripExpenses,
+  deleteTrip,
   // removeTripExpenses,
 } = require("../data/trips");
 const {
@@ -74,6 +81,57 @@ const getAuthorizedExpense = async (user, expenseId) => {
 
 const router = Router();
 
+// TODO: get user trips
+router.get("/", async (req, res, next) => {
+  try {
+    const { user } = req.session;
+    //const trips = await getUserTrips(user, id);
+    const trips = [];
+
+    res.status(200).json(trips);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/", async (req, res, next) => {
+  try {
+    const { user } = req.session;
+    const tripData = req.body;
+    tripData.userId = user._id;
+    // TODO: trip data error handling
+    // assertTripData(tripData);
+
+    // TODO: integrate user data functions
+    // const { managerId, employeeIdList } = tripData;
+    // const manager = await getUser(managerId);
+    // if (!manager.corporateId !== corporateId) {
+    //   throw new HttpError(`Invalid corporate manager ${managerId}`, 400);
+    // }
+
+    // await Promise.all(
+    //   employeeIdList.map(async (employeeId, userId) => {
+    //     const employee = await getUser(employeeId);
+
+    //     if (employee.corporateId !== corporateId) {
+    //       throw new HttpError(`Invalid corporate employee ${userId}`, 400);
+    //     }
+
+    //     if (employee.rank >= manager.rank) {
+    //       throw new HttpError(`Invalid employee hierarchy for ${userId}`, 400);
+    //     }
+    //   })
+    // );
+
+    const trip = await createTrip(tripData);
+    tripExist("", trip);
+
+    res.status(200).json(trip);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -92,6 +150,25 @@ router.get("/:id", async (req, res, next) => {
       approval: approvalInfo,
       // TODO: total
     });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    assertTripID(id);
+
+    const { user } = req.session;
+    const trip = await getAuthorizedTrip(user, id);
+
+    // TODO: delete approval data function
+    // const deletedApproval = await deleteApproval(trip.approvalId);
+    const deletedTrip = await deleteTrip(id);
+    tripExist(id, deletedTrip);
+
+    res.status(200).json(deletedTrip);
   } catch (error) {
     next(error);
   }
