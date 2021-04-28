@@ -8,13 +8,14 @@ const {
   createApproval,
   getApproval,
   updateApproval,
+  deleteApproval,
 } = require("./approvals");
 
 const expectAsyncError = async (promise, error) =>
   await expect(promise).rejects.toThrow(error);
 const expectAsyncValidationError = async (promise) =>
   await expectAsyncError(promise, ValidationError);
-const expectAsyncQeuryError = async (promise) =>
+const expectAsyncQueryError = async (promise) =>
   await expectAsyncError(promise, QueryError);
 
 let db;
@@ -149,6 +150,30 @@ describe("Approvals data function", () => {
     });
   });
 
+  describe("deleteApproval", () => {
+    test("invalid ID", async () => {
+      await expectAsyncValidationError(deleteApproval());
+      await expectAsyncValidationError(deleteApproval(" "));
+      await expectAsyncValidationError(deleteApproval(123));
+      await expectAsyncValidationError(deleteApproval("asdfasdf"));
+      await expectAsyncValidationError(deleteApproval(new ObjectId()));
+    });
+
+    test("non-existant ID", async () => {
+      await expectAsyncQueryError(
+        deleteApproval(stringifyObjectId(new ObjectId()))
+      );
+    });
+
+    test("get test approval 1 and 2", async () => {
+      const deletedResult = await deleteApproval(testApproval2._id);
+      expect(deletedResult).toEqual(testApproval2);
+      const getResult = await getApproval(testApproval2._id);
+      expect(getResult).toEqual(null);
+      testApproval2 = null;
+    });
+  });
+
   describe("updateApproval", () => {
     const getUpdateData = () => {
       const updates = testApproval1.updates || [];
@@ -219,7 +244,7 @@ describe("Approvals data function", () => {
     });
 
     test("non-existant ID", async () => {
-      await expectAsyncQeuryError(
+      await expectAsyncQueryError(
         updateApproval(stringifyObjectId(new ObjectId()), getUpdateData())
       );
     });
@@ -246,7 +271,7 @@ describe("Approvals data function", () => {
     test("out-dated update", async () => {
       let updateData = getUpdateData();
       updateData.lastUpdateId = testApproval1.updates[0]._id;
-      await expectAsyncQeuryError(
+      await expectAsyncQueryError(
         updateApproval(testApproval1._id, updateData)
       );
     });

@@ -4,10 +4,7 @@ const {
 } = require("../config/mongoCollections");
 
 const { QueryError, ValidationError } = require("../utils/errors");
-const {
-  idQuery,
-  parseMongoData,
-} = require("../utils/mongodb");
+const { idQuery, parseMongoData } = require("../utils/mongodb");
 const {
   assertObjectIdString,
   assertIsValuedString,
@@ -145,10 +142,26 @@ const updateApproval = async (id, updates) => {
   return parseMongoData(updatedApproval);
 };
 
+const deleteApproval = async (id) => {
+  assertObjectIdString(id);
+
+  const collection = await getApprovalCollection();
+  const { value: deletedApproval, ok } = await collection.findOneAndDelete(
+    idQuery(id)
+  );
+
+  if (!ok || !deletedApproval) {
+    throw new QueryError(`Could not delete approval with ID of ${id}`);
+  }
+
+  return parseMongoData(deletedApproval);
+};
+
 module.exports = {
   APPROVAL_STATUS,
   createApproval,
   getApproval,
   assertApprovalUpdates,
   updateApproval,
+  deleteApproval,
 };

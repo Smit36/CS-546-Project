@@ -36,14 +36,14 @@ const getUserTrips = async (userId) => {
   return parseMongoData(trips);
 };
 
-const createTrip = async (data) => {
+const assertTripData = (data) => {
   assertRequiredObject(data);
 
   const {
     userId,
     corporateId,
     managerId,
-    employeeIdList = [],
+    employeeIdList,
     name,
     description,
     startTime,
@@ -64,6 +64,18 @@ const createTrip = async (data) => {
   employeeIdList.forEach((userId) =>
     assertObjectIdString(userId, "Employee ID")
   );
+};
+
+const createTrip = async (data) => {
+  assertTripData(data);
+
+  const {
+    userId,
+    corporateId,
+    managerId,
+    employeeIdList,
+    createdAt = new Date().getTime(),
+  } = data;
 
   const tripId = new ObjectId();
 
@@ -104,15 +116,15 @@ const deleteTrip = async (id) => {
   assertObjectIdString(id);
 
   const collection = await getTripCollection();
-  const { value: deleletedTrip, ok } = await collection.findOneAndDelete(
+  const { value: deletedTrip, ok } = await collection.findOneAndDelete(
     idQuery(id)
   );
 
-  if (!ok || !deleletedTrip) {
+  if (!ok || !deletedTrip) {
     throw new QueryError(`Could not delete trip with ID of ${id}`);
   }
 
-  return parseMongoData(deleletedTrip);
+  return parseMongoData(deletedTrip);
 };
 
 const getAddTripExpensesOps = (expenseIdList) => ({
@@ -176,6 +188,7 @@ const removeTripExpenses = (...params) =>
 
 module.exports = {
   createTrip,
+  assertTripData,
   getTrip,
   getUserTrips,
   deleteTrip,

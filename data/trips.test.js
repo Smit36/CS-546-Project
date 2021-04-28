@@ -343,32 +343,28 @@ describe("Trips data function", () => {
       const [expenseId1, expenseId2] = expenseIdList;
       const userId = stringifyObjectId(testUserId1);
 
-      const updateResult1 = await removeTripExpenses(tripId, userId, [
-        expenseId1,
-      ]);
+      const result1 = await removeTripExpenses(tripId, userId, [expenseId1]);
 
-      expect(updateResult1).toMatchObject({
+      expect(result1).toMatchObject({
         ...testTrip1,
         expenseIdList: [expenseId2],
         updatedBy: userId,
-        updatedAt: updateResult1.updatedAt,
+        updatedAt: result1.updatedAt,
       });
-      expect(updateResult1.updatedAt).toBeGreaterThan(testTrip1.updatedAt);
+      expect(result1.updatedAt).toBeGreaterThan(testTrip1.updatedAt);
 
       // remove non-existant id => no error, no updates
-      const updateResult2 = await removeTripExpenses(tripId, userId, [
-        expenseId1,
-      ]);
-      expect(updateResult2.expenseIdList).toEqual([expenseId2]);
+      const result2 = await removeTripExpenses(tripId, userId, [expenseId1]);
+      expect(result2.expenseIdList).toEqual([expenseId2]);
 
       // remove mixed id => remove existing id only
-      const updateResult3 = await removeTripExpenses(tripId, userId, [
+      const result3 = await removeTripExpenses(tripId, userId, [
         expenseId1,
         expenseId2,
       ]);
-      expect(updateResult3.expenseIdList).toEqual([]);
+      expect(result3.expenseIdList).toEqual([]);
 
-      testTrip1 = updateResult3;
+      testTrip1 = result3;
     });
   });
 
