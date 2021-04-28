@@ -7,7 +7,6 @@ const { QueryError, ValidationError } = require("../utils/errors");
 const {
   idQuery,
   parseMongoData,
-  stringifyObjectId,
 } = require("../utils/mongodb");
 const {
   assertObjectIdString,
@@ -15,7 +14,6 @@ const {
   assertRequiredObject,
   assertRequiredNumber,
 } = require("../utils/assertion");
-// const { getTrip } = require("./trips");
 
 const APPROVAL_STATUS = {
   CREATED: "CREATED",
@@ -24,7 +22,8 @@ const APPROVAL_STATUS = {
   PENDING: "PENDING",
 };
 
-const isApprovalStatus = (s = '') => !s || Object.values(APPROVAL_STATUS).includes(s);
+const isApprovalStatus = (s = "") =>
+  !s || Object.values(APPROVAL_STATUS).includes(s);
 
 const getByObjectId = async (objectId) => {
   const collection = await getApprovalCollection();
@@ -35,15 +34,6 @@ const getByObjectId = async (objectId) => {
 const getApproval = async (id) => {
   assertObjectIdString(id);
   return await getByObjectId(new ObjectId(id));
-};
-
-const getTripApproval = async (tripId) => {
-  assertObjectIdString(tripId);
-
-  // TODO: trip data function
-  // const trip = await getTrip(tripId);
-  // return await getApproval(trip.approvalId);
-  return null;
 };
 
 const createApproval = async (data) => {
@@ -86,8 +76,7 @@ const createApproval = async (data) => {
 };
 
 const optionalValuedString = (s, description) =>
-  s == null || s === '' ||  assertIsValuedString(s, description);
-
+  s == null || s === "" || assertIsValuedString(s, description);
 
 const assertApprovalUpdates = (id, updates) => {
   assertObjectIdString(id);
@@ -156,21 +145,10 @@ const updateApproval = async (id, updates) => {
   return parseMongoData(updatedApproval);
 };
 
-const updateTripApproval = (tripId, updates) => {
-  assertObjectIdString(tripId);
-
-  // TODO: trip data function
-  // const trip = await getTrip(tripId);
-  // return await updateApproval(trip.approvalId);
-  return null;
-};
-
 module.exports = {
   APPROVAL_STATUS,
   createApproval,
   getApproval,
-  getTripApproval,
   assertApprovalUpdates,
   updateApproval,
-  updateTripApproval,
 };

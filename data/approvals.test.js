@@ -17,13 +17,6 @@ const expectAsyncValidationError = async (promise) =>
 const expectAsyncQeuryError = async (promise) =>
   await expectAsyncError(promise, QueryError);
 
-// const testApprovalUpdateData1 = {
-//   userId: testUserId2,
-//   status: APPROVAL_STATUS.PENDING,
-//   message: 'please approve thanks',
-//   createdAt: testTimestamp3,
-// };
-
 let db;
 
 beforeAll(async () => {
@@ -251,12 +244,11 @@ describe("Approvals data function", () => {
     });
 
     test("out-dated update", async () => {
-      let updateData = getUpdateData()
+      let updateData = getUpdateData();
       updateData.lastUpdateId = testApproval1.updates[0]._id;
-      await expectAsyncQeuryError(updateApproval(testApproval1._id, updateData));
+      await expectAsyncQeuryError(
+        updateApproval(testApproval1._id, updateData)
+      );
     });
   });
-
-  // TODO: test get Trip approval
-  // TODO: test update Trip approval
 });
