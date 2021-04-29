@@ -33,7 +33,7 @@ const getAllRanks = async () => {
     const rankList = await collection.find({}).toArray();
 
     return parseMongoData(rankList);
-},
+};
 
 const createRank = async (data) => {
     assertRequiredObject(data);
@@ -73,7 +73,7 @@ const updateRank = async (id, updates) => {
     const { corporateId, name, level } = updates;
     assertObjectIdString(corporateId, "Updated Corporate ID");
     assertIsValuedString(name, "Updated rank name");
-    assertIsValuedString(level, "Updated rank level");
+    assertRequiredNumber(level, "Updated rank level");
   
     const rank = await getRank(id);
 

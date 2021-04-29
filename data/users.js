@@ -27,8 +27,8 @@ const getAllUsers = async () => {
 
     const userList = await collection.find({}).toArray();
 
-    return parseMongoData(userList);
-},
+    return userList;
+};
   
 const getUser = async (id) => {
     assertObjectIdString(id);
@@ -80,7 +80,7 @@ const createUser = async (data) => {
     return await getByObjectId(insertedId);
 };
 
-const updateRank = async (id, updates) => {
+const updateUser = async (id, updatedBy, updates) => {
     assertObjectIdString(id);
     assertRequiredObject(updates, "Ranks updates data");
 
@@ -96,6 +96,7 @@ const updateRank = async (id, updates) => {
     assertIsValuedString(role, "Role");
     assertRequiredNumber(rank, "Rank");
     assertIsValuedString(createdBy, "Created By");
+    assertIsValuedString(updatedBy, "Updated By");
     assertRequiredNumber(createdAt, "User created time");
   
     const user = await getUser(id);
@@ -120,8 +121,7 @@ const updateRank = async (id, updates) => {
         designation: designation,
         rank: rank,
         role: role,
-        createdBy: createdBy,
-        createdAt: createdAt,
+        updatedBy: updatedBy,
         updatedAt: currentTimestamp,
     };
 
@@ -144,8 +144,6 @@ const updateRank = async (id, updates) => {
 
 const deleteUser = async (id) => {
     const collection = await getUserCollection();  
-    
-    const user = await getUser(id);
 
     const deletionInfo = await collection.deleteOne({ _id: idQuery(id) });
 
@@ -165,6 +163,6 @@ module.exports = {
     createUser,
     getUser,
     getAllUsers,
-    updatedUser,
+    updateUser,
     deleteUser
 };
