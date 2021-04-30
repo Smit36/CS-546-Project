@@ -2,12 +2,14 @@ const { ObjectId } = require("mongodb");
 const { connect, disconnect } = require("../config/mongoConnection");
 const { ValidationError, QueryError } = require("../utils/errors");
 const { stringifyObjectId } = require("../utils/mongodb");
+const { getApproval, APPROVAL_STATUS } = require("./approvals");
 
 const {
   createTrip,
   getTrip,
   deleteTrip,
   addTripExpenses,
+  removeTripExpenses,
 } = require("./trips");
 
 const expectAsyncError = async (promise, error) =>
@@ -59,12 +61,14 @@ describe("Trips data function", () => {
     endTime: testTimestamp3,
   };
 
-
   const testTripData2 = {
     userId: stringifyObjectId(testUserId3),
     corporateId: stringifyObjectId(testCorporateId2),
     managerId: stringifyObjectId(testUserId3),
-    employeeIdList: [stringifyObjectId(testUserId4), stringifyObjectId(testUserId5)],
+    employeeIdList: [
+      stringifyObjectId(testUserId4),
+      stringifyObjectId(testUserId5),
+    ],
     name: "Business trip to Terra",
     description: "Intersteller business trip to Earth for secret meeting",
     startTime: testTimestamp1,
@@ -156,7 +160,7 @@ describe("Trips data function", () => {
       await expectAsyncValidationError(
         createTrip({
           ...testTripData1,
-          startTime: new Date,
+          startTime: new Date(),
         })
       );
       await expectAsyncValidationError(
@@ -191,10 +195,16 @@ describe("Trips data function", () => {
       expect(createResult1).toMatchObject({
         corporateId: stringifyObjectId(testCorporateId1),
         managerId: userId,
-        employeeIdList: [stringifyObjectId(testUserId2)],
+        employeeIdList: [userId, stringifyObjectId(testUserId2)],
         expenseIdList: [],
         createdBy: userId,
         updatedBy: userId,
+      });
+      const createdApproval = await getApproval(createResult1.approvalId);
+      expect(createdApproval).toMatchObject({
+        tripId: createResult1._id,
+        status: APPROVAL_STATUS.CREATED,
+        createdAt: createResult1.createdAt,
       });
 
       testTrip1 = createResult1;
@@ -233,20 +243,20 @@ describe("Trips data function", () => {
       await expectAsyncValidationError(getTrip(new ObjectId()));
     });
 
-    test('delete non-existant', async () => {
+    test("delete non-existant", async () => {
       await expectAsyncQueryError(
         deleteTrip(stringifyObjectId(new ObjectId()))
       );
     });
 
-    test('delete test trip 2', async () => {
+    test("delete test trip 2", async () => {
       const deletedTrip = await deleteTrip(testTrip2._id);
       expect(deletedTrip).toEqual(testTrip2);
       testTrip2 = null;
     });
   });
 
-  describe("addTripExpenses", () => {
+  describe("updateTripExpenses", () => {
     const testExpenseId1 = new ObjectId();
     const testExpenseId2 = new ObjectId();
 
@@ -254,45 +264,56 @@ describe("Trips data function", () => {
       await expectAsyncValidationError(addTripExpenses(testTrip1._id));
       await expectAsyncValidationError(addTripExpenses(" "));
       await expectAsyncValidationError(addTripExpenses(123));
-      await expectAsyncValidationError(addTripExpenses("asdfasdf"));
-      await expectAsyncValidationError(addTripExpenses(new ObjectId()));
+      await expectAsyncValidationError(removeTripExpenses("asdfasdf"));
+      await expectAsyncValidationError(removeTripExpenses(new ObjectId()));
     });
 
     test("invalid updater user ID list", async () => {
       const tripId = testTrip1._id;
-      await expectAsyncValidationError(addTripExpenses(tripId));
-      await expectAsyncValidationError(addTripExpenses(tripId, " "));
-      await expectAsyncValidationError(addTripExpenses(tripId, 123));
+      await expectAsyncValidationError(removeTripExpenses(tripId));
+      await expectAsyncValidationError(removeTripExpenses(tripId, " "));
+      await expectAsyncValidationError(removeTripExpenses(tripId, 123));
       await expectAsyncValidationError(addTripExpenses(tripId, "asdfasdf"));
       await expectAsyncValidationError(addTripExpenses(tripId, new ObjectId()));
     });
-  
+
     test("invalid expenses ID list", async () => {
       const tripId = testTrip1._id;
       const userId = stringifyObjectId(testUserId1);
       await expectAsyncValidationError(addTripExpenses(tripId, userId));
-      await expectAsyncValidationError(addTripExpenses(tripId, userId, " "));
+      await expectAsyncValidationError(removeTripExpenses(tripId, userId, " "));
       await expectAsyncValidationError(addTripExpenses(tripId, userId, 123));
-      await expectAsyncValidationError(addTripExpenses(tripId, userId, "asdfasdf"));
-      await expectAsyncValidationError(addTripExpenses(tripId, userId, new ObjectId()));
-      await expectAsyncValidationError(addTripExpenses(tripId, userId, stringifyObjectId(testExpenseId1)));
-      await expectAsyncValidationError(addTripExpenses(tripId, userId, [new ObjectId()]));
-    });
-
-    test("non-existant trip ID", async () => {
-      await expectAsyncQueryError(
-        addTripExpenses(stringifyObjectId(new ObjectId()), stringifyObjectId(testUserId1), [
-          stringifyObjectId(testExpenseId1),
-        ])
+      await expectAsyncValidationError(
+        removeTripExpenses(tripId, userId, "asdfasdf")
+      );
+      await expectAsyncValidationError(
+        addTripExpenses(tripId, userId, new ObjectId())
+      );
+      await expectAsyncValidationError(
+        removeTripExpenses(tripId, userId, stringifyObjectId(testExpenseId1))
+      );
+      await expectAsyncValidationError(
+        addTripExpenses(tripId, userId, [new ObjectId()])
       );
     });
 
+    test("non-existant trip ID", async () => {
+      const updateParams = [
+        stringifyObjectId(new ObjectId()),
+        stringifyObjectId(testUserId1),
+        [stringifyObjectId(testExpenseId1)],
+      ];
+      await expectAsyncQueryError(addTripExpenses(...updateParams));
+      await expectAsyncQueryError(removeTripExpenses(...updateParams));
+    });
+
     test("add expenses to trip", async () => {
+      // add expenseId 1 and 2;
       const tripId = testTrip1._id;
       const userId = stringifyObjectId(testUserId1);
       const expenseId1 = stringifyObjectId(testExpenseId1);
       const expenseId2 = stringifyObjectId(testExpenseId2);
-      
+
       const updateResult1 = await addTripExpenses(tripId, userId, [expenseId1]);
 
       expect(updateResult1).toMatchObject({
@@ -303,24 +324,49 @@ describe("Trips data function", () => {
       });
       expect(updateResult1.updatedAt).toBeGreaterThan(testTrip1.updatedAt);
 
-      const updateResult2 = await addTripExpenses(tripId, userId, [expenseId1, expenseId2]);
-      expect(updateResult2).toMatchObject({
-        ...testTrip1,
-        expenseIdList: [expenseId1, expenseId2],
-        updatedBy: userId,
-        updatedAt: updateResult2.updatedAt,
-      });
-      expect(updateResult2.updatedAt).toBeGreaterThan(updateResult1.updatedAt);
+      const updateResult2 = await addTripExpenses(tripId, userId, [
+        expenseId1,
+        expenseId2,
+      ]);
+      expect(updateResult2.expenseIdList).toEqual([expenseId1, expenseId2]);
 
       const updateResult3 = await addTripExpenses(tripId, userId, [expenseId2]);
-      expect(updateResult3).toMatchObject({
-        ...testTrip1,
-        expenseIdList: [expenseId1, expenseId2],
-        updatedBy: userId,
-        updatedAt: updateResult3.updatedAt,
-      });
+      expect(updateResult3.expenseIdList).toEqual([expenseId1, expenseId2]);
 
+      // result holds expenseId 1 and 2;
       testTrip1 = updateResult3;
     });
+
+    test("remove expenses from trip", async () => {
+      // remove expenseId 1 and 2;
+      const { _id: tripId, expenseIdList } = testTrip1;
+      const [expenseId1, expenseId2] = expenseIdList;
+      const userId = stringifyObjectId(testUserId1);
+
+      const result1 = await removeTripExpenses(tripId, userId, [expenseId1]);
+
+      expect(result1).toMatchObject({
+        ...testTrip1,
+        expenseIdList: [expenseId2],
+        updatedBy: userId,
+        updatedAt: result1.updatedAt,
+      });
+      expect(result1.updatedAt).toBeGreaterThan(testTrip1.updatedAt);
+
+      // remove non-existant id => no error, no updates
+      const result2 = await removeTripExpenses(tripId, userId, [expenseId1]);
+      expect(result2.expenseIdList).toEqual([expenseId2]);
+
+      // remove mixed id => remove existing id only
+      const result3 = await removeTripExpenses(tripId, userId, [
+        expenseId1,
+        expenseId2,
+      ]);
+      expect(result3.expenseIdList).toEqual([]);
+
+      testTrip1 = result3;
+    });
   });
+
+  // TODO: get user trips tests
 });
