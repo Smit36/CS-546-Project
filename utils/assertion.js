@@ -125,6 +125,20 @@ const assertDateString = (s, description) => {
   }
 };
 
+const assertEmailString = (email, description= "Email") => {
+  assertIsValuedString(email, description);
+  if (!email.match(/^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/)) {
+    throw new ValidationError(`${description} is not a valid Email: ${email}`);
+  }
+};
+
+const assertContactString = (contact, description= "Contact") => {
+  assertIsValuedString(contact, description);
+  if (!contact.match(/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/)){
+  throw new ValidationError(`${description} is not a valid Contact: ${contact}`);
+  }
+}
+
 module.exports = {
   checkFieldTypes,
   assertType,
@@ -135,4 +149,6 @@ module.exports = {
   assertIsValuedString,
   assertDateString,
   assertObjectIdString,
+  assertEmailString,
+  assertContactString
 };

@@ -4,6 +4,7 @@
   "description": "Spring 2021 CS-546 Group 17 Final Project",
   "main": "index.js",
   "scripts": {
+    "seed": "node ./tasks/seed.js",
     "start": "node index.js",
     "test": "jest"
   },

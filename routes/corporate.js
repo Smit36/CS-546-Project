@@ -1,4 +1,4 @@
-const { ObjectID } = require("bson");
+const { ObjectId } = require("bson");
 const { Router } = require("express");
 const router = Router();
 
@@ -14,6 +14,8 @@ const {
   assertObjectIdString,
   assertRequiredObject,
   assertIsValuedString,
+  assertEmailString,
+  assertContactString
 } = require("../utils/assertion");
 
 const { HttpError } = require("../utils/errors");
@@ -38,7 +40,9 @@ const corporateExist = (id, corporate) =>
 const assertCorporateData = (corporateData) => {
   assertIsValuedString(corporateData.name, "Corporate name");
   assertIsValuedString(corporateData.emailDomain, "Email");
+  // assertEmailString(corporateData.emailDomain, "Corporate Email");
   assertIsValuedString(corporateData.contactNo, "Contact Number");
+  assertContactString(corporateData.contactNo, "Contact Number");
   assertIsValuedString(corporateData.address, "Address");
   assertRequiredObject(corporateData.createdBy, "Created By");
   assertRequiredObject(corporateData.updatedBy, "Update By");
@@ -49,7 +53,7 @@ router.post("/", async (req, res, next) => {
   try {
     // const { user } = req.session;
     // For Testing only(set user id statically)
-    const user = { _id: new ObjectID("608c14d031a2df4a7cc07372") };
+    const user = { _id: new ObjectId("608c14d031a2df4a7cc07372") };
     assertRequiredObject(user._id);
     const corporateData = req.body;
     corporateData.createdBy = user._id;
@@ -94,9 +98,13 @@ router.put("/:corporateId", async (req, res, next) => {
     assertObjectIdString(corporateId);
     // const { user } = req.session;
     // For Testing only(set user id statically)
-    const user = { _id: new ObjectID("608c1f4817e05f82c4b7ce1b") };
+    const user = { _id: new ObjectId("608c1f4817e05f82c4b7ce1b") };
     assertRequiredObject(user._id);
+
     let corporateData = req.body;
+    // assertEmailString(corporateData.emailDomain, "Corporate Email");
+    assertContactString(corporateData.contactNo, "Contact Number");
+    
     corporateData.updatedBy = user._id;
 
     const corporate = await getCorporate(corporateId);

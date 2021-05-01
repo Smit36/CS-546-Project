@@ -1,4 +1,4 @@
-const { ObjectId, ObjectID } = require("mongodb");
+const { ObjectId } = require("mongodb");
 const {
   corporate: getCorporatesCollection,
 } = require("../config/mongoCollections");
@@ -10,6 +10,8 @@ const {
   assertIsValuedString,
   assertRequiredObject,
   assertRequiredNumber,
+  assertEmailString,
+  assertContactString
 } = require("../utils/assertion");
 
 const isDataExist = (id, data, desc = "data") => {
@@ -52,7 +54,9 @@ const createCorporate = async (data) => {
   } = data;
   assertIsValuedString(name, "Corporate name");
   assertIsValuedString(emailDomain, "Email");
+  // assertEmailString(emailDomain, "Corporate Email")
   assertIsValuedString(contactNo, "Contact Number");
+  assertContactString(contactNo, "Contact Number");
   assertIsValuedString(address, "Address");
   assertRequiredObject(createdBy, "Created By");
   assertRequiredObject(updatedBy, "Update By");
@@ -98,7 +102,9 @@ const updateCorporate = async (id, updates) => {
 
   assertIsValuedString(name, "Corporate name");
   assertIsValuedString(emailDomain, "Email");
+  // assertEmailString(emailDomain, "Corporate Email");
   assertIsValuedString(contactNo, "Contact Number");
+  assertContactString(contactNo, "Contact Number");
   assertIsValuedString(address, "Address");
   assertRequiredObject(updatedBy, "Update By");
   assertRequiredNumber(updatedAt, "Corporate Updated time");
