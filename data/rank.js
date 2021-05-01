@@ -89,7 +89,6 @@ const updateRank = async (id, updates) => {
 
     const newUpdate = {
       corporateId: new ObjectId(corporateId),
-      status: status,
       name: name,
       level: level,
       updatedAt: currentTimestamp,

@@ -145,7 +145,7 @@ const updateUser = async (id, updatedBy, updates) => {
 const deleteUser = async (id) => {
     const collection = await getUserCollection();  
 
-    const deletionInfo = await collection.deleteOne({ _id: idQuery(id) });
+    const deletionInfo = await collection.deleteOne({ _id: new ObjectID(id) });
 
     if (deletionInfo.deletedCount === 0) {
         throw new QueryError(`Could not delete movie with id of ${id}`);
