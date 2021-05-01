@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const rankData = require('./data/rank');
+const rankData = require('../data/rank');
 
 //add rank
 router.post('/', async (req, res) => {
@@ -24,7 +24,7 @@ try {
 }
 });
 
-  //Update expense
+  //Update rank
 router.put('/:rankId', async (req, res) => {
     try {
       const { rankId } = req.params;

@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const usersData = require('./data/users');
+const usersData = require('../data/users');
 
 //add user
 router.post('/', async (req, res) => {
@@ -24,12 +24,23 @@ try {
 }
 });
 
-//Update expense
+//get user by Id
+router.get('/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await usersData.getUser(userId);
+    res.status(200).json(user);
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
+});
+
+//Update user
 router.put('/:userId', async (req, res) => {
     try {
       const { userId } = req.params;
       let userReq = req.body;
-      const user = await usersData.updateRank(userId, userReq);
+      const user = await usersData.updateUser(userId, userId, userReq);
       res.status(200).json(user);
     } catch (e) {
       res.status(400).json({ error: e });
@@ -40,7 +51,7 @@ router.put('/:userId', async (req, res) => {
 router.delete('/:userId', async (req, res) => {
     try {
       const { userId } = req.params;
-      const user = await usersData.removeUser(userId);
+      const user = await usersData.deleteUser(userId);
       res.status(200).json(user);
     } catch (e) {
       res.status(400).json({ error: e });
