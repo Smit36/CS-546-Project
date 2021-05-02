@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ title }}</title>
+    <title>{{ title }} | Corporate Traveling Expense Management</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 
@@ -11,15 +11,102 @@
 
   <header>
     <h1>
-      {{ title }}
+      Corporate Traveling Expense Management
     </h1>
+    <h2>
+      {{title}}
+    </h2>
+
+    <nav>
+      <ul>
+        <li>
+          <a href="/expenses">
+            Expenses
+          </a>
+        </li>
+        <li>
+          <a href="/trips">
+            Trips
+          </a>
+        </li>
+        {{#if isCorporateAdmin}}
+          <li>
+            <a href="/employees">
+              Employees
+            </a>
+          </li>
+        {{/if}}
+        {{#if isCorporateAdmin}}
+          <li>
+            <a href="/corporates">
+              Corporates
+            </a>
+          </li>
+        {{/if}}
+      </ul>
+    </nav>
+
+    <aside>
+      {{#if noUser}}
+        <a href="/login">
+          Login
+        </a>
+      {{else}}
+        {{#if corporate}}
+          <div>
+            Corporate:
+            {{corporate.name}}
+          </div>
+        {{/if}}
+        {{#if user}}
+          <div>
+            User:
+            {{user.name}}
+          </div>
+          <div>
+            <a href="/logout">
+              Logout
+            </a>
+          </div>
+        {{/if}}
+      {{/if}}
+    </aside>
+
   </header>
 
   <main>
     {{{body}}}
   </main>
 
-  <footer></footer>
+  <footer>
+    <dl>
+      <dt>
+        Spring 2021 CS-546
+      </dt>
+      <dd>
+        Web Programming I - Final Project
+      </dd>
+      <dt>
+        Professor
+      </dt>
+      <dd>
+        Patrick Hill
+      </dd>
+      <dt>
+        Group Members
+      </dt>
+      <dd>
+        Parthik Davra | Vivian Dbritto | Smit Gor | Ming-Wei Hu | Junhong Wu
+      </dd>
+      <dt>
+        GitHub
+      </dt>
+      <a href="https://github.com/Smit36/CS-546-Project">
+        https://github.com/Smit36/CS-546-Project
+      </a>
+      <dd></dd>
+    </dl>
+  </footer>
 
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
