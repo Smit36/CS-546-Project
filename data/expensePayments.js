@@ -81,7 +81,7 @@ const deleteExpensePayment = async (paymentId) => {
   }
 
   deleteExpensePayment.message = 'Successfully deleted';
-  return deleteExpensePayment;
+  return parseMongoData(deleteExpensePayment);
 };
 
 const updateExpensePayment = async (paymentId, data) => {

@@ -1,12 +1,11 @@
 const { ObjectId } = require("mongodb");
-const {
-  trips: getTripCollection,
-} = require("../config/mongoCollections");
+const { trips: getTripCollection } = require("../config/mongoCollections");
 
-const { QueryError, ValidationError } = require("../utils/errors");
+const { QueryError } = require("../utils/errors");
 const {
   idQuery,
   parseMongoData,
+  stringifyObjectId,
 } = require("../utils/mongodb");
 const {
   assertObjectIdString,
@@ -15,8 +14,7 @@ const {
   assertRequiredNumber,
   assertNonEmptyArray,
 } = require("../utils/assertion");
-// const { createApproval } = require("./approvals");
-// const { getUser } = require("./users");
+const { createApproval } = require("./approvals");
 
 const getByObjectId = async (objectId) => {
   const collection = await getTripCollection();
@@ -29,71 +27,75 @@ const getTrip = async (id) => {
   return await getByObjectId(new ObjectId(id));
 };
 
-const createTrip = async (data) => {
+const getUserTrips = async (userId) => {
+  assertObjectIdString(userId);
+  const collection = await getTripCollection();
+  const trips = await collection
+    .find({ userId: new ObjectId(userId) })
+    .toArray();
+  return parseMongoData(trips);
+};
+
+const assertTripData = (data) => {
   assertRequiredObject(data);
 
   const {
     userId,
     corporateId,
     managerId,
-    employeeIdList = [],
+    employeeIdList,
     name,
     description,
     startTime,
     endTime,
-    createdAt = new Date().getTime()
+    createdAt = new Date().getTime(),
   } = data;
 
   assertObjectIdString(userId, "Trip creater ID");
   assertObjectIdString(corporateId, "Trip corporate ID");
   assertObjectIdString(managerId, "Trip manager's user ID");
-  assertNonEmptyArray(employeeIdList, "Trip employee ID list")
+  assertNonEmptyArray(employeeIdList, "Trip employee ID list");
   assertIsValuedString(name, "Trip name");
   assertIsValuedString(description, "Trip description");
   assertRequiredNumber(startTime, "Trip start time");
   assertRequiredNumber(endTime, "Trip end time");
   assertRequiredNumber(createdAt, "Trip data creation time");
 
-  employeeIdList.forEach(userId => assertObjectIdString(userId, "Employee ID"));
+  employeeIdList.forEach((userId) =>
+    assertObjectIdString(userId, "Employee ID")
+  );
+};
 
-  // TODO: validate user corporate
-  // const manager = await getUser(managerId);
-  // if (!manager.corporateId !== corporateId) {
-  //   throw new ValidationError(`Invalid manager: User ${managerId}`);
-  // }
+const createTrip = async (data) => {
+  assertTripData(data);
 
-  // const invalidEmployeeIdList = await employeeIdList.reduce(async (idList, userId) => {
-  //   assertObjectIdString(userId, "Employee ID");
-  //   const employee = await getUser(userId);
-  //   if (employee.corporateId !== corporateId || employee.rank >= manager.rank) {
-  //     idList.push(userId);
-  //   }
-  //   return idList;
-  // }, []);
-  // if (invalidEmployeeIdList.length > 0) {
-  //   throw new ValidationError(`Invalid employee(s): ${outsiderIdList.join(', ')}`);
-  // }
+  const {
+    userId,
+    corporateId,
+    managerId,
+    employeeIdList,
+    createdAt = new Date().getTime(),
+  } = data;
 
   const tripId = new ObjectId();
 
-  // TODO: create Approval
-  // cnost approval = await createApproval({
-  //   tripId,
-  //   userId,
-  //   createAt,
-  // });
+  const approval = await createApproval({
+    tripId: stringifyObjectId(tripId),
+    userId,
+    createdAt,
+  });
 
   const tripData = {
     _id: tripId,
     corporateId: new ObjectId(corporateId),
-    // TODO: add approvalId
-    // approvalId: new ObjectId(approval._id),
+    approvalId: new ObjectId(approval._id),
     managerId: new ObjectId(managerId),
-    employeeIdList: employeeIdList.map(ids => new ObjectId(ids)),
+    employeeIdList: [managerId, ...employeeIdList].map(
+      (ids) => new ObjectId(ids)
+    ),
     expenseIdList: [],
     createdAt: createdAt,
     updatedAt: createdAt,
-    // TODO: get session user ID
     createdBy: userId,
     updatedBy: userId,
   };
@@ -114,23 +116,46 @@ const deleteTrip = async (id) => {
   assertObjectIdString(id);
 
   const collection = await getTripCollection();
-  const { value: deleletedTrip, ok } = await collection.findOneAndDelete(
+  const { value: deletedTrip, ok } = await collection.findOneAndDelete(
     idQuery(id)
   );
 
-  if (!ok || !deleletedTrip) {
+  if (!ok || !deletedTrip) {
     throw new QueryError(`Could not delete trip with ID of ${id}`);
   }
 
-  return parseMongoData(deleletedTrip);
+  return parseMongoData(deletedTrip);
 };
 
-const addTripExpenses = async (tripId, userId, expenseIdList) => {
+const getAddTripExpensesOps = (expenseIdList) => ({
+  $addToSet: {
+    expenseIdList: {
+      $each: expenseIdList,
+    },
+  },
+});
+
+const getRemoveTripExpensesOps = (expenseIdList) => ({
+  $pull: {
+    expenseIdList: {
+      $in: expenseIdList,
+    },
+  },
+});
+
+const updateTripExpenses = async (
+  tripId,
+  userId,
+  expenseIdList,
+  getUpdateOps
+) => {
   assertObjectIdString(tripId, "Trip ID");
   assertObjectIdString(userId, "Trip updater user ID");
   assertNonEmptyArray(expenseIdList);
-  
-  expenseIdList.forEach(expenseId => assertObjectIdString(expenseId, "Expense ID"))
+
+  expenseIdList.forEach((expenseId) =>
+    assertObjectIdString(expenseId, "Expense ID")
+  );
 
   const currentTimestamp = new Date().getTime();
   const ops = {
@@ -138,11 +163,7 @@ const addTripExpenses = async (tripId, userId, expenseIdList) => {
       updatedAt: currentTimestamp,
       updatedBy: new ObjectId(userId),
     },
-    $addToSet: {
-      expenseIdList: {
-        $each: expenseIdList
-      },
-    },
+    ...getUpdateOps(expenseIdList),
   };
   const options = { returnOriginal: false };
 
@@ -154,16 +175,23 @@ const addTripExpenses = async (tripId, userId, expenseIdList) => {
   );
 
   if (!ok || !updatedTrip) {
-    throw new QueryError(`Could not add expenses to trip with ID \`${tripId}\``);
+    throw new QueryError(`Could not update expenses for trip \`${tripId}\``);
   }
 
   return parseMongoData(updatedTrip);
 };
 
+const addTripExpenses = (...params) =>
+  updateTripExpenses(...params, getAddTripExpensesOps);
+const removeTripExpenses = (...params) =>
+  updateTripExpenses(...params, getRemoveTripExpensesOps);
 
 module.exports = {
   createTrip,
+  assertTripData,
   getTrip,
+  getUserTrips,
   deleteTrip,
   addTripExpenses,
+  removeTripExpenses,
 };
