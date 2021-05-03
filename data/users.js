@@ -22,6 +22,14 @@ const getByObjectId = async (objectId) => {
     return parseMongoData(user);
 };
 
+const getUserByEmail = async (email) => {
+    assertIsValuedString(email, 'Email ID');
+
+    const collection = await getUserCollection();
+    const user = await collection.findOne({ email });
+    return parseMongoData(user);
+}
+
 const getAllUsers = async () => {
     const collection = await getUserCollection();
 
@@ -163,6 +171,7 @@ module.exports = {
     createUser,
     getUser,
     getAllUsers,
+    getUserByEmail,
     updateUser,
     deleteUser
 };
