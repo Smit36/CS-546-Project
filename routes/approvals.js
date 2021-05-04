@@ -2,9 +2,9 @@ const { Router } = require("express");
 const {
   getApproval,
   updateApproval,
-  getTripApproval,
-  // assertApprovalUpdates,
+  assertApprovalUpdates,
 } = require("../data/approvals");
+const { getTrip } = require("../data/trips");
 const { assertObjectIdString } = require("../utils/assertion");
 const { HttpError } = require("../utils/errors");
 
@@ -22,10 +22,13 @@ const getAuthorizedData = async (user, approvalId) => {
   approvalExist(id, approval);
 
   const { tripId } = approval;
-  const trip = await getTripApproval(tripId);
+  const trip = await getTrip(tripId);
   tripExist(tripId, trip);
 
-  if (user.corporteId !== trip.corporateId || !trip.employeeIdList.contains(user)) {
+  if (
+    user.corporteId !== trip.corporateId ||
+    !trip.employeeIdList.contains(user)
+  ) {
     throw new HttpError("Unauthorized approval thread", 401);
   }
 
@@ -57,19 +60,18 @@ router.put("/:id", async (req, res, next) => {
     const { user } = req.session;
     const updateData = req.body;
     updateData.userId = user._id;
-    // TODO: approval updates error handling
-    // assertApprovalUpdates(id, updateData);
+    assertApprovalUpdates(id, updateData);
 
     const { trip, approval } = await getAuthorizedData(user, id);
 
     const isManager = user._id === trip.managerId;
     if (!isManager && !!updateData.status) {
-      throw new HttpError('Unauthorized update: not the trip manager', 401);
+      throw new HttpError("Unauthorized update: not the trip manager", 401);
     }
 
     const lastUpdateId = approval.updates[approval.updates.length - 1]._id;
     if (lastUpdateId != updateData.lastUpdateId) {
-      throw new HttpError('Update is based on out-dated history', 400);
+      throw new HttpError("Update is based on out-dated history", 400);
     }
 
     const updatedApproval = await updateApproval(id, updateData);

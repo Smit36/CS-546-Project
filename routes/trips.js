@@ -1,22 +1,20 @@
 const { Router } = require("express");
-const {
-  getApproval,
-  // deleteApproval,
-} = require("../data/approvals");
+const { getApproval, deleteApproval } = require("../data/approvals");
 const {
   createTrip,
-  // assertTripData,
+  assertTripData,
   getTrip,
-  // getUserTrips,
+  getUserTrips,
   addTripExpenses,
   deleteTrip,
-  // removeTripExpenses,
+  removeTripExpenses,
 } = require("../data/trips");
 const {
   getAllExpensesByTrip,
   getExpense,
   addExpense,
 } = require("../data/expenses");
+const { getUser } = require("../data/users");
 const {
   assertObjectIdString,
   assertNonEmptyArray,
@@ -63,7 +61,6 @@ const getAuthorizedTripData = async (user, id) => {
     approval,
     trip,
     expenses,
-    // TODO: expense payments
   };
 };
 
@@ -81,12 +78,10 @@ const getAuthorizedExpense = async (user, expenseId) => {
 
 const router = Router();
 
-// TODO: get user trips
 router.get("/", async (req, res, next) => {
   try {
     const { user } = req.session;
-    //const trips = await getUserTrips(user, id);
-    const trips = [];
+    const trips = await getUserTrips(user, id);
 
     res.status(200).json(trips);
   } catch (error) {
@@ -99,29 +94,27 @@ router.post("/", async (req, res, next) => {
     const { user } = req.session;
     const tripData = req.body;
     tripData.userId = user._id;
-    // TODO: trip data error handling
-    // assertTripData(tripData);
+    assertTripData(tripData);
 
-    // TODO: integrate user data functions
-    // const { managerId, employeeIdList } = tripData;
-    // const manager = await getUser(managerId);
-    // if (!manager.corporateId !== corporateId) {
-    //   throw new HttpError(`Invalid corporate manager ${managerId}`, 400);
-    // }
+    const { managerId, employeeIdList } = tripData;
+    const manager = await getUser(managerId);
+    if (!manager.corporateId !== corporateId) {
+      throw new HttpError(`Invalid corporate manager ${managerId}`, 400);
+    }
 
-    // await Promise.all(
-    //   employeeIdList.map(async (employeeId, userId) => {
-    //     const employee = await getUser(employeeId);
+    await Promise.all(
+      employeeIdList.map(async (employeeId, userId) => {
+        const employee = await getUser(employeeId);
 
-    //     if (employee.corporateId !== corporateId) {
-    //       throw new HttpError(`Invalid corporate employee ${userId}`, 400);
-    //     }
+        if (employee.corporateId !== corporateId) {
+          throw new HttpError(`Invalid corporate employee ${userId}`, 400);
+        }
 
-    //     if (employee.rank >= manager.rank) {
-    //       throw new HttpError(`Invalid employee hierarchy for ${userId}`, 400);
-    //     }
-    //   })
-    // );
+        if (employee.rank >= manager.rank) {
+          throw new HttpError(`Invalid employee hierarchy for ${userId}`, 400);
+        }
+      })
+    );
 
     const trip = await createTrip(tripData);
     tripExist("", trip);
@@ -163,8 +156,7 @@ router.delete("/:id", async (req, res, next) => {
     const { user } = req.session;
     const trip = await getAuthorizedTrip(user, id);
 
-    // TODO: delete approval data function
-    // const deletedApproval = await deleteApproval(trip.approvalId);
+    const deletedApproval = await deleteApproval(trip.approvalId);
     const deletedTrip = await deleteTrip(id);
     tripExist(id, deletedTrip);
 
@@ -233,13 +225,26 @@ router.put("/:id/expenses", async (req, res, next) => {
   }
 });
 
+const assertExpenseData = (data) => {
+  assertRequiredObject(data);
+
+  const { userId, tripId, name, date, amount, currency, method } = data;
+  assertObjectIdString(userId, "User ID");
+  assertObjectIdString(tripId, "Trip ID");
+  assertIsValuedString(name, "Expense name");
+  assertDateString(date, "Payment date");
+  assertRequiredNumber(amount, "Expense amount");
+  assertIsValuedString(currency, "Expense curreny");
+  assertIsValuedString(method, "Payment method");
+};
+
 router.post("/:id/expense", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const expenseData = req.body;
-
     assertTripID(id);
-    // TODO: expense data error handling
+
+    const expenseData = req.body;
+    assertExpenseData(expenseData);
 
     const { user } = req.session;
     const trip = await getAuthorizedTrip(user, id);
@@ -280,12 +285,10 @@ const removeAuthorizedTripExpenses = async (user, tripId, expenseIdList) => {
     expenseIdList.map((expenseId) => getAuthorizedExpense(user, expenseId))
   );
 
-  // TODO: removal data function
-  // const updatedTrip = await removeTripExpenses(id, user._id, expenseIdList);
-  // tripExist(id, updatedTrip);
+  const updatedTrip = await removeTripExpenses(id, user._id, expenseIdList);
+  tripExist(id, updatedTrip);
 
-  // return updatedTrip;
-  return null;
+  return updatedTrip;
 };
 
 router.delete("/:id/expense/:expenseId", async (req, res, next) => {
