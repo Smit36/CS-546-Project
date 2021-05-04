@@ -21,7 +21,7 @@ const getByObjectId = async (objectId) => {
 const addExpensePayment = async (data) => {
   assertRequiredObject(data);
 
-  const { expenseId, amount, currency, notes, method, date } = data;
+  const { expenseId, paymentId, amount, currency, notes, method, date } = data;
   const createdAt = new Date().getTime();
 
   assertObjectIdString(expenseId, 'Expense id');
@@ -31,7 +31,7 @@ const addExpensePayment = async (data) => {
   assertIsValuedString(method, 'Payment method');
 
   const expensePaymentData = {
-    _id: new ObjectId(),
+    _id: new ObjectId(paymentId),
     expenseId: new ObjectId(expenseId),
     amount,
     currency,
@@ -41,11 +41,6 @@ const addExpensePayment = async (data) => {
     createdAt,
     updatedAt: createdAt,
   };
-
-  const expense = await getExpense(expenseId);
-  if (!expense) {
-    throw new QueryError(`Expense not exist for expense ID(${expenseId})`);
-  }
 
   const collection = await getExpensePaymentsCollection();
 
@@ -80,7 +75,6 @@ const deleteExpensePayment = async (paymentId) => {
     throw new QueryError(`Could not delete payment for (${paymentId})`);
   }
 
-  deleteExpensePayment.message = 'Successfully deleted';
   return parseMongoData(deleteExpensePayment);
 };
 
@@ -94,10 +88,7 @@ const updateExpensePayment = async (paymentId, data) => {
   assertIsValuedString(currency, 'Expense curreny');
   assertIsValuedString(method, 'Payment method');
 
-  const expense = await getExpense(expenseId);
-  if (!expense) {
-    throw new QueryError(`Expense not exist for expense ID(${expenseId})`);
-  }
+ 
 
   const lastExpensePayment = await getExpensePayment(paymentId);
   if (lastExpensePayment == null) {
