@@ -127,16 +127,23 @@ const assertDateString = (s, description) => {
 
 const assertEmailString = (email, description= "Email") => {
   assertIsValuedString(email, description);
-  if (!email.match(/^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/)) {
+  if (!email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/)) {
     throw new ValidationError(`${description} is not a valid Email: ${email}`);
   }
 };
 
 const assertContactString = (contact, description= "Contact") => {
   assertIsValuedString(contact, description);
-  if (!contact.match(/^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/)){
+  if (!contact.match(/^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$/)){
   throw new ValidationError(`${description} is not a valid Contact: ${contact}`);
   }
+}
+
+const assertPassword = (password, description = 'Password') => {
+  assertIsValuedString(password, description);
+  if (!password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)){
+    throw new ValidationError(`${description} is not a valid Password: ${password}`);
+    }
 }
 
 module.exports = {
@@ -150,5 +157,6 @@ module.exports = {
   assertDateString,
   assertObjectIdString,
   assertEmailString,
-  assertContactString
+  assertContactString,
+  assertPassword
 };

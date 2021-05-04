@@ -40,7 +40,7 @@ const corporateExist = (id, corporate) =>
 const assertCorporateData = (corporateData) => {
   assertIsValuedString(corporateData.name, "Corporate name");
   assertIsValuedString(corporateData.emailDomain, "Email");
-  // assertEmailString(corporateData.emailDomain, "Corporate Email");
+  assertEmailString(corporateData.emailDomain, "Corporate Email");
   assertIsValuedString(corporateData.contactNo, "Contact Number");
   assertContactString(corporateData.contactNo, "Contact Number");
   assertIsValuedString(corporateData.address, "Address");
@@ -102,7 +102,7 @@ router.put("/:corporateId", async (req, res, next) => {
     assertRequiredObject(user._id);
 
     let corporateData = req.body;
-    // assertEmailString(corporateData.emailDomain, "Corporate Email");
+    assertEmailString(corporateData.emailDomain, "Corporate Email");
     assertContactString(corporateData.contactNo, "Contact Number");
     
     corporateData.updatedBy = user._id;

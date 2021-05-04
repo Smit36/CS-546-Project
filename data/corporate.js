@@ -52,9 +52,10 @@ const createCorporate = async (data) => {
     updatedBy,
     createdAt = new Date().getTime(),
   } = data;
+
   assertIsValuedString(name, "Corporate name");
   assertIsValuedString(emailDomain, "Email");
-  // assertEmailString(emailDomain, "Corporate Email")
+  assertEmailString(emailDomain, "Corporate Email");
   assertIsValuedString(contactNo, "Contact Number");
   assertContactString(contactNo, "Contact Number");
   assertIsValuedString(address, "Address");
@@ -102,7 +103,7 @@ const updateCorporate = async (id, updates) => {
 
   assertIsValuedString(name, "Corporate name");
   assertIsValuedString(emailDomain, "Email");
-  // assertEmailString(emailDomain, "Corporate Email");
+  assertEmailString(emailDomain, "Corporate Email");
   assertIsValuedString(contactNo, "Contact Number");
   assertContactString(contactNo, "Contact Number");
   assertIsValuedString(address, "Address");
