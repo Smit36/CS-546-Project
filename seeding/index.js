@@ -14,21 +14,14 @@ const unseed = async (db) => {
 const seed = async () => {
   let db = await connect();
   const seedData = {};
-
+  
   try {
     await unseed(db);
-
+    
+    const {corporate1, corporate2, corporate3, corporate4, corporate5} = await seedCorporate();
+    
     // TODO: seed admins
 
-    
-    // TODO: fix corporate seeding
-    // const {
-    //   corporate1,
-    //   corporate2,
-    //   corporate3,
-    //   corporate4,
-    //   corporate5,
-    // } = seedCorporate();
 
     // TODO: fix rank seeding
     // const { rank1, rank2, rank3, rank4, rank5, rank6 } = await seedRanks();
