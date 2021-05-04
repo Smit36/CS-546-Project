@@ -72,7 +72,8 @@ router.post("/", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const allCorporate = await getAllCorporates();
-    res.status(200).json(allCorporate);
+    console.log(allCorporate)
+    res.render('corporate/landing', {corporates: allCorporate});
   } catch (error) {
     next(error);
   }

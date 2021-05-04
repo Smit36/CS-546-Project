@@ -1,9 +1,9 @@
-const { ObjectId, ObjectID } = require("mongodb");
+const { ObjectId } = require("mongodb");
 const {
   corporates: getCorporatesCollection,
 } = require("../config/mongoCollections");
 
-const { QueryError, ValidationError } = require("../utils/errors");
+const { QueryError } = require("../utils/errors");
 const {
   idQuery,
   parseMongoData
@@ -13,11 +13,20 @@ const {
   assertIsValuedString,
   assertRequiredObject,
   assertRequiredNumber,
+  assertContactString,
+  assertEmailString
 } = require("../utils/assertion");
+
+const isDataExist = (id, data, desc = "data") => {
+  if (!data)
+    throw new QueryError(`Cannot find corporate data with ID: ${id}`, 404);
+};
 
 const getByObjectId = async (objectId) => {
     const collection = await getCorporatesCollection();
     const corporate = await collection.findOne(idQuery(objectId));
+    isDataExist(objectId, corporate, "corporate");
+
     return parseMongoData(corporate);
 };
 
@@ -27,7 +36,7 @@ const getAllCorporates = async () => {
     const corporateList = await collection.find({}).toArray();
 
     return parseMongoData(corporateList);
-},
+};
   
 const getCorporate = async (id) => {
     assertObjectIdString(id);
@@ -41,10 +50,12 @@ const createCorporate = async (data) => {
      
     assertIsValuedString(name, "Corporate name");
     assertIsValuedString(emailDomain, "Email");
-    assertRequiredNumber(contactNo, "Contact Number");
+    assertEmailString(emailDomain, "Email")
+    assertIsValuedString(contactNo, "Contact Number");
+    assertContactString(contactNo, "Contact Number")
     assertIsValuedString(address, "Address");
-    assertObjectIdString(createdBy, "Created By");
-    assertObjectIdString(updatedBy, "Update By");
+    assertRequiredObject(createdBy, "Created By");
+    assertRequiredObject(updatedBy, "Update By");
     assertRequiredNumber(createdAt, "Corporate created time");
   
     const corporateData = {
@@ -75,15 +86,16 @@ const updateCorporate = async (id, updates) => {
     assertObjectIdString(id);
     assertRequiredObject(updates, "Corporate updates data");
 
-    const { name, emailDomain, contactNo, address, createdBy, updatedBy, createdAt = new Date().getTime() } = data;
+    const { name, emailDomain, contactNo, address, updatedBy, updatedAt = new Date().getTime() } = data;
     
     assertIsValuedString(name, "Corporate name");
     assertIsValuedString(emailDomain, "Email");
-    assertRequiredNumber(contactNo, "Contact Number");
+    assertEmailString(emailDomain, "Email");
+    assertIsValuedString(contactNo, "Contact Number");
+    assertContactString(contactNo, "Contact Number");
     assertIsValuedString(address, "Address");
-    assertObjectIdString(createdBy, "Created By");
     assertObjectIdString(updatedBy, "Update By");
-    assertRequiredNumber(createdAt, "Corporate created time");
+    assertRequiredNumber(updatedAt, "Corporate updated time");
   
     const corporate = await getCorporate(id);
 
@@ -95,7 +107,6 @@ const updateCorporate = async (id, updates) => {
   
     const options = { returnOriginal: false };
     const collection = await getCorporatesCollection();
-    const currentTimestamp = new Date().getTime();
     
     const newUpdate = {
       name : name,
@@ -119,16 +130,21 @@ const updateCorporate = async (id, updates) => {
     );
   
     if (!ok) {
-      throw new QueryError(`Could not update rank with ID \`${id}\``);
+      throw new QueryError(`Could not update corporate with ID \`${id}\``);
     }
   
     return parseMongoData(updatedCorporate);
 };
 
 const deleteCorporate = async (id) => {
+  assertObjectIdString(id);
     const collection = await getCorporatesCollection();  
 
-    const deletionInfo = await collection.deleteOne({ _id: idQuery(id) });
+    const corporate = await getCorporate(id);
+    if (!corporate) {
+    throw new QueryError(`Corporate with ID\`${id}\` not found.`);
+  }
+    const deletionInfo = await collection.deleteOne({ _id: new ObjectId(id) });
 
     if (deletionInfo.deletedCount === 0) {
         throw new QueryError(`Could not delete corporate with id of ${id}`);

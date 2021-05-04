@@ -4,6 +4,7 @@ const expensesRouter = require("./expenses");
 const expensePaymentRouter = require("./expensePayments");
 const usersRouter = require("./users");
 const rankRouter = require("./ranks");
+const corporateRouter = require("./corporate");
 
 const configRoutes = (app) =>
   app
@@ -12,6 +13,7 @@ const configRoutes = (app) =>
     .use("/payment", expensePaymentRouter)
     .use("/user", usersRouter)
     .use("/rank", rankRouter)
+    .use("/corporate", corporateRouter)
     .use(defaultErrorHandling);
 
 module.exports = {
