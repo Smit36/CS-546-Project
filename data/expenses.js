@@ -9,9 +9,16 @@ const {
   assertRequiredObject,
 } = require('../utils/assertion');
 
+const {
+  addExpensePayment,
+  getExpensePayment,
+  updateExpensePayment,
+  deleteExpensePayment,
+} = require('./expensePayments');
+
 const getByObjectId = async (objectId) => {
   const collection = await getExpensesCollection();
-  const expense = await collection.findOne(idQuery(objectId));
+  let expense = await collection.findOne(idQuery(objectId));
   return parseMongoData(expense);
 };
 
@@ -22,6 +29,7 @@ const getExpense = async (expenseId) => {
   if (expense == null) {
     throw new QueryError(`Could not get expense for (${expenseId})`);
   }
+  expense.payment = await getExpensePayment(expense.paymentId);
   return expense;
 };
 
@@ -35,26 +43,31 @@ const getAllExpensesByTrip = async (tripId) => {
   if (allExpenses.length == 0) {
     throw new QueryError(`Expenses not found`);
   }
+  for (let i = 0; i < allExpenses.length; i++) {
+    allExpenses[i].payment = await getExpensePayment(allExpenses[i].paymentId.toHexString());
+  }
 
   return parseMongoData(allExpenses);
 };
 
 const addExpense = async (data) => {
   assertRequiredObject(data);
-  const { userId, tripId, paymentId, name, description = null } = data;
+  const { userId, tripId, name, description = null } = data;
   const createdAt = new Date().getTime();
 
   assertObjectIdString(userId, 'Expense added by user ID');
   assertObjectIdString(tripId, 'Expense trip ID');
-  assertObjectIdString(paymentId, 'Expense payment ID');
   assertIsValuedString(name, 'Expense name');
+
+  data.expenseId = new ObjectId().toHexString();
+  data.paymentId = new ObjectId().toHexString();
 
   const collection = await getExpensesCollection();
 
   const expenseData = {
-    _id: new ObjectId(),
+    _id: new ObjectId(data.expenseId),
+    paymentId: new ObjectId(data.paymentId),
     userId: new ObjectId(userId),
-    paymentId: new ObjectId(paymentId),
     tripId: new ObjectId(tripId),
     name,
     description,
@@ -68,19 +81,21 @@ const addExpense = async (data) => {
     throw new QueryError(`Could not add expense for trip ID(${tripId})`);
   }
 
-  return await getByObjectId(insertedId);
+  let expense = await getByObjectId(insertedId);
+  expense.payment = await addExpensePayment(data);
+
+  return expense;
 };
 
 const updateExpense = async (expenseId, data) => {
   assertRequiredObject(data);
-  const { userId, tripId, paymentId, name, description = null } = data;
+  const { userId, tripId, name, description = null } = data;
   assertObjectIdString(expenseId, 'Expense id');
   assertObjectIdString(userId, 'Expense added by user ID');
   assertObjectIdString(tripId, 'Expense trip ID');
-  assertObjectIdString(paymentId, 'Expense payment ID');
   assertIsValuedString(name, 'Expense name');
 
-  const lastExpense = await getByObjectId(expenseId);
+  const lastExpense = await getExpense(expenseId);
 
   if (lastExpense == null) {
     throw `Expense not found for expense ID(${expenseId})`;
@@ -88,7 +103,7 @@ const updateExpense = async (expenseId, data) => {
 
   const newUpdate = {
     userId: new ObjectId(userId),
-    paymentId: new ObjectId(paymentId),
+    paymentId: new ObjectId(lastExpense.paymentId),
     tripId: new ObjectId(tripId),
     name,
     description,
@@ -105,17 +120,21 @@ const updateExpense = async (expenseId, data) => {
   if (!modifiedCount && !matchedCount) {
     throw new QueryError(`Could not update expense ID(${expenseId})`);
   }
-  const updatedExpense = await getByObjectId(expenseId);
+  const updatedExpense = await getExpense(expenseId);
+  data.expenseId = expenseId;
+  updatedExpense.payment = await updateExpensePayment(updatedExpense.paymentId, data);
   return updatedExpense;
 };
 
 const deleteExpense = async (expenseId) => {
   assertObjectIdString(expenseId, 'Expense id');
 
-  let deleteExpense = await getByObjectId(new ObjectId(expenseId));
+  let deleteExpense = await getExpense(expenseId);
   if (deleteExpense == null) {
     throw `Expense not found for expense ID(${expenseId})`;
   }
+
+  deleteExpense.payment = await deleteExpensePayment(deleteExpense.paymentId);
 
   const collection = await getExpensesCollection();
   let { deletedCount } = await collection.deleteOne({ _id: new ObjectId(expenseId) });
@@ -131,12 +150,16 @@ const deleteExpense = async (expenseId) => {
 const deleteAllExpensesByTrip = async (tripId) => {
   const allExpenses = await getAllExpensesByTrip(tripId);
 
+  for (let i = 0; i < allExpenses.length; i++) {
+    const del = await deleteExpensePayment(allExpenses[i].paymentId);
+  }
+
   const collection = await getExpensesCollection();
   const { deletedCount } = await collection.deleteMany({ tripId: new ObjectId(tripId) });
   if (deletedCount === 0) {
     throw new QueryError(`Could not delete all expenses for (${tripId})`);
   }
-
+  allExpenses.message = 'Successfully deleted all expenses.';
   return parseMongoData(allExpenses);
 };
 
