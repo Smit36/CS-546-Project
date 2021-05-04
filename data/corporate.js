@@ -27,7 +27,7 @@ const getAllCorporates = async () => {
     const corporateList = await collection.find({}).toArray();
 
     return parseMongoData(corporateList);
-},
+};
   
 const getCorporate = async (id) => {
     assertObjectIdString(id);
