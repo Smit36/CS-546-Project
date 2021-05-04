@@ -1,8 +1,10 @@
 const { connect, disconnect } = require("../config/mongoConnection");
+
 const seedUsers = require("./users");
 const seedRanks = require("./ranks");
 const seedTripsAndApprovals = require("./tripApprovals");
 const { seedCorporate } = require("./corporate");
+
 
 const unseed = async (db) => {
   if (!!db) {
@@ -17,9 +19,8 @@ const seed = async () => {
   
   try {
     await unseed(db);
-    
-    const {corporate1, corporate2, corporate3, corporate4, corporate5} = await seedCorporate();
-    
+
+    const {corporate1, corporate2, corporate3, corporate4, corporate5} = await seedCorporate();    
     // TODO: seed admins
 
 
@@ -34,6 +35,7 @@ const seed = async () => {
     });
 
     console.log("Seeding completed.");
+
     return {
       // ...seedData,
     };
