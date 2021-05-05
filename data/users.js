@@ -14,7 +14,15 @@ const {
   assertIsValuedString,
   assertRequiredObject,
   assertRequiredNumber,
+  assertUserRole,
+  assertEmailString,
+  assertContactString,
+  assertPasswordString,
+  assertHashedPasswordString
 } = require("../utils/assertion");
+const {
+  USER_ROLE
+} = require('../utils/constants');
 
 const getByObjectId = async (objectId) => {
     const collection = await getUserCollection();
@@ -30,10 +38,20 @@ const getUserByEmail = async (email) => {
     return parseMongoData(user);
 }
 
-const getAllUsers = async () => {
+const getAllUsers = async (user) => {
     const collection = await getUserCollection();
 
-    const userList = await collection.find({}).toArray();
+    const role = user.role;
+
+    if (role === USER_ROLE.ADMIN) {
+      const userList = await collection.find({}).toArray();
+    }
+    else if (role === USER_ROLE.CORPORATE) {
+      const userList = await collection.find({ corporateId : user.corporateId }).toArray();
+    }
+    else {
+      const userList = await collection.find({ _id : user._id }).toArray();
+    }
 
     return userList;
 };
@@ -48,30 +66,46 @@ const createUser = async (data) => {
   
     const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = data;
   
-    assertObjectIdString(corporateId, "Corporate ID");
-    assertObjectIdString(rankId, "Rank ID");    
+    assertUserRole(role, "User Role");
+
+    if (role == USER_ROLE.ADMIN && corporateId && rankId && designation && rank) {
+      throw new ValidationError(`Super Admin has invalid data`);
+    }
+    else if (role == USER_ROLE.CORPORATE && rankId && designation && rank) {
+      throw new ValidationError(`Corporate Admin has invalid data`);
+    }
+      
+    if (role !== USER_ROLE.ADMIN) {
+      assertObjectIdString(corporateId, "Corporate ID");
+    }
+    if (role === USER_ROLE.EMPLOYEE) {
+      assertObjectIdString(rankId, "Rank ID"); 
+    }   
     assertIsValuedString(name, "User name");
-    assertIsValuedString(password, "Password");
-    assertIsValuedString(email, "Email");
-    assertRequiredNumber(contact, "Contact Number");
-    assertIsValuedString(designation, "Designation");
-    assertIsValuedString(role, "Role");
-    assertRequiredNumber(rank, "Rank");
+    assertHashedPasswordString(password, "Password");
+    assertEmailString(email, "Email");
+    assertContactString(contact, "Contact Number");
+    if (role === USER_ROLE.EMPLOYEE) {
+      assertIsValuedString(designation, "Designation");
+    }
+    if (role === USER_ROLE.EMPLOYEE) {
+      assertRequiredNumber(rank, "Rank");
+    }
     assertIsValuedString(createdBy, "Created By");
     assertRequiredNumber(createdAt, "User created time");
   
     const userData = {
       _id: new ObjectId(),
-      corporateId: new ObjectId(corporateId),
-      rankId: new ObjectId(rankId),
+      corporateId: role == USER_ROLE.ADMIN ? null : new ObjectId(corporateId),
+      rankId: role == USER_ROLE.ADMIN || role == USER_ROLE.CORPORATE ? null : new ObjectId(rankId),
       name : name,
       password: password,
       email: email,
       contact: contact,
-      designation: designation,
-      rank: rank,
+      designation: ( role == USER_ROLE || role == USER_ROLE.CORPORATE ) ? null : designation,
+      rank: ( role == USER_ROLE.ADMIN || role == USER_ROLE.CORPORATE ) ? null : rank,
       role: role,
-      createdBy: createdBy,
+      createdBy: role == USER_ROLE.ADMIN ? 'System' : createdBy,
       createdAt: createdAt,
       updatedAt: createdAt,
     };
@@ -90,21 +124,36 @@ const createUser = async (data) => {
 
 const updateUser = async (id, updatedBy, updates) => {
     assertObjectIdString(id);
-    assertRequiredObject(updates, "Ranks updates data");
+    assertRequiredObject(updates, "User updates data");
 
     const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = updates;
   
-    assertObjectIdString(corporateId, "Corporate ID");
-    assertObjectIdString(rankId, "Rank ID");    
+    assertUserRole(role, "User Role");
+
+    if (role == USER_ROLE.ADMIN && corporateId && rankId && designation && rank) {
+      throw new ValidationError(`Super Admin has invalid data`);
+    }
+    else if (role == USER_ROLE.CORPORATE && rankId && designation && rank) {
+      throw new ValidationError(`Corporate Admin has invalid data`);
+    }
+
+    if (role !== USER_ROLE.ADMIN) {
+      assertObjectIdString(corporateId, "Corporate ID");
+    }
+    if (role === USER_ROLE.EMPLOYEE) {
+      assertObjectIdString(rankId, "Rank ID"); 
+    }   
     assertIsValuedString(name, "User name");
-    assertIsValuedString(password, "Password");
-    assertIsValuedString(email, "Email");
-    assertRequiredNumber(contact, "Contact Number");
-    assertIsValuedString(designation, "Designation");
-    assertIsValuedString(role, "Role");
-    assertRequiredNumber(rank, "Rank");
+    assertHashedPasswordString(password, "Password");
+    assertEmailString(email, "Email");
+    assertContactString(contact, "Contact Number");
+    if (role === USER_ROLE.EMPLOYEE) {
+      assertIsValuedString(designation, "Designation");
+    }
+    if (role === USER_ROLE.EMPLOYEE) {
+      assertRequiredNumber(rank, "Rank");
+    }
     assertIsValuedString(createdBy, "Created By");
-    assertIsValuedString(updatedBy, "Updated By");
     assertRequiredNumber(createdAt, "User created time");
   
     const user = await getUser(id);
@@ -120,17 +169,17 @@ const updateUser = async (id, updatedBy, updates) => {
     const currentTimestamp = new Date().getTime();
     
     const newUpdate = {
-        corporateId: new ObjectId(corporateId),
-        rankId: new ObjectId(rankId),
-        name : name,
-        password: password,
-        email: email,
-        contact: contact,
-        designation: designation,
-        rank: rank,
-        role: role,
-        updatedBy: updatedBy,
-        updatedAt: currentTimestamp,
+      corporateId: role == USER_ROLE.ADMIN ? null : new ObjectId(corporateId),
+      rankId: role == USER_ROLE.ADMIN || role == USER_ROLE.CORPORATE ? null : new ObjectId(rankId),
+      name : name,
+      password: password,
+      email: email,
+      contact: contact,
+      designation: ( role == USER_ROLE || role == USER_ROLE.CORPORATE ) ? null : designation,
+      rank: ( role == USER_ROLE.ADMIN || role == USER_ROLE.CORPORATE ) ? null : rank,
+      role: role,
+      updatedBy: updatedBy,
+      updatedAt: currentTimestamp,
     };
 
     const ops = {
@@ -144,7 +193,7 @@ const updateUser = async (id, updatedBy, updates) => {
     );
   
     if (!ok) {
-      throw new QueryError(`Could not update rank with ID \`${id}\``);
+      throw new QueryError(`Could not update user with ID \`${id}\``);
     }
   
     return parseMongoData(updatedUser);
@@ -156,7 +205,7 @@ const deleteUser = async (id) => {
     const deletionInfo = await collection.deleteOne({ _id: new ObjectID(id) });
 
     if (deletionInfo.deletedCount === 0) {
-        throw new QueryError(`Could not delete movie with id of ${id}`);
+        throw new QueryError(`Could not delete user with id of ${id}`);
     }
 
     if (deletionInfo.deletedCount > 0) {
