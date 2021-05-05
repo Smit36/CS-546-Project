@@ -1,5 +1,6 @@
 const { connect, disconnect } = require("../config/mongoConnection");
 // const getCollectionSeedData = require('./collection');
+const { seedAdminUsers } = require('./users');
 
 const unseed = async (db) => {
   if (!!db) {
@@ -16,6 +17,7 @@ const seed = async () => {
     await unseed(db);
   
     // const seedDataBundle = await getCollectionSeedData();
+    const { admin1, admin2 } = await seedAdminUsers();
   
     console.log('Seeding completed.');
     return {

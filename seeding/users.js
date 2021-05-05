@@ -1,7 +1,41 @@
 const { ObjectId } = require("mongodb");
 const { stringifyObjectId } = require("../utils/mongodb");
 const { createUser } = require("../data/users");
+const bcrypt = require('bcrypt');
 
+
+const seedAdminUsers = async ({
+  timestamp1 = new Date().getTime(),
+  timestamp2 = new Date().getTime(),
+  password = "$2b$08$4Y.tGYgbCwvYd.Ru4GJCHelLr4wHF4qLht9K2WOrsh3rxD34oYe.q"
+}= {}) => {
+  const adminData1 = {
+    name : "Admin1",
+    password: password,
+    email: "admin1@gmail.com",
+    contact: "213-456-7890",
+    role: "ADMIN",
+    createdBy: "System",
+    createdAt: timestamp1,
+    updatedAt: timestamp1,
+  };
+
+  const adminData2 = {
+    name : "Admin2",
+    password: password,
+    email: "admin2@gmail.com",
+    contact: "201-456-7000",
+    role: "ADMIN",
+    createdBy: "System",
+    createdAt: timestamp2,
+    updatedAt: timestamp2,
+  };
+
+  const admin1 = await createUser(adminData1);
+  const admin2 = await createUser(adminData2);
+
+  return { admin1, admin2 };
+};
 
 const seedUsers = async ({
     userId1 = new ObjectId(),
@@ -17,6 +51,8 @@ const seedUsers = async ({
     rankId1 = new ObjectId(),
     rankId2 = new ObjectId(),
     rankId3 = new ObjectId(),
+    password = "$2b$08$4Y.tGYgbCwvYd.Ru4GJCHelLr4wHF4qLht9K2WOrsh3rxD34oYe.q"
+
 } = {}) => {
 
     const userData1 = {
@@ -24,7 +60,7 @@ const seedUsers = async ({
         corporateId: corporateId1,
         rankId: rankId1,
         name : "Admin",
-        password: "p@ssw0rd123",
+        password: password,
         email: "admin@gmail.com",
         contact: "1234567890",
         designation: "Admin",
@@ -40,7 +76,7 @@ const seedUsers = async ({
         corporateId: corporateId1,
         rankId: rankId1,
         name : "Test User 1",
-        password: "p@ssw0rd123",
+        password: password,
         email: "user1@gmail.com",
         contact: "1234877890",
         designation: "Manager",
@@ -56,7 +92,7 @@ const seedUsers = async ({
       corporateId: corporateId1,
       rankId: rankId2,
       name : "Test User 3",
-      password: "p@ssw0rd123",
+      password: password,
       email: "user3@gmail.com",
       contact: "2054877890",
       designation: "Software developer",
@@ -72,7 +108,7 @@ const seedUsers = async ({
     corporateId: corporateId2,
     rankId: rankId1,
     name : "Test User 4",
-    password: "p@ssw0rd123",
+    password: password,
     email: "user4@gmail.com",
     contact: "2014877890",
     designation: "Manager",
@@ -88,7 +124,7 @@ const seedUsers = async ({
     corporateId: corporateId2,
     rankId: rankId2,
     name : "Test User 5",
-    password: "p@ssw0rd123",
+    password: password,
     email: "user5@gmail.com",
     contact: "2015577890",
     designation: "Associate",
@@ -115,4 +151,4 @@ const seedUsers = async ({
   };
 };
 
-  module.exports = seedUsers;
+  module.exports = { seedAdminUsers, seedUsers };
