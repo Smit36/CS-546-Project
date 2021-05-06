@@ -18,4 +18,5 @@ const getTemplateData = (req, options = {}) => {
 
 module.exports = {
   getTemplateData,
+  USER_ROLE
 };
