@@ -1,25 +1,197 @@
 html,
 body {
-	box-sizing: border-box;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 header {
-	position: absolute;
-	top: 0;
-	width: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 main {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+input[type='text'],
+input[type='number'],
+input[type='date'],
+select {
+  width: 90%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type='date'] {
+  width: 25%;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+.submit,
+#new-expense button,
+#show-expense button {
+  background-color: #358aeb;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px 0 0 45%;
+}
+
+.submit {
+  background-color: #4caf50;
+}
+.submit:hover {
+  background-color: #45a049;
+}
+
+#show-form {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  margin-left: 10%;
+  width: 75%;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+.col-15 {
+  float: left;
+  width: 15%;
+  margin-top: 6px;
+}
+
+.col-35 {
+  float: left;
+  width: 35%;
+  margin-top: 6px;
+}
+
+#expense-list button {
+  background-color: #f2f2f2;
+  color: rgb(66, 66, 66);
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  border-bottom: 1px solid rgb(66, 66, 66);
+}
+
+#expense-list button:hover {
+  cursor: pointer;
+  background-color: #ebebeb;
+  color: rgb(66, 66, 66);
+}
+
+#header {
+  background-color: #777;
+  color: white;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+}
+
+.delete-button,
+.update-button {
+  float: left;
+  width: 50%;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.delete-button {
+  background-color: #f44336;
+}
+
+.update-button {
+  background-color: #04aa6d;
+  color: white;
+}
+
+#modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #474e5d;
+  opacity: 0.95;
+  padding-top: 50px;
+}
+
+.detail {
+  background-color: #fefefe;
+  opacity: 1;
+  margin: 5% auto 5% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+.close:hover {
+  cursor: pointer;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25,
+  .col-75,
+  .col-15,
+  .col-35,
+  input[type='submit'] {
+    width: 100%;
+    margin-top: 0;
+  }
 }

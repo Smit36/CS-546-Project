@@ -1,12 +1,15 @@
 const { Router } = require('express');
+const { getTemplateData } = require('../utils/routes');
+
 const router = Router();
 
 const expenseData = require('../data/expenses');
 
 const {
-  assertObjectIdString,
-  assertRequiredObject,
+  assertObjectIdString, 
   assertIsValuedString,
+  assertDateString,
+  assertRequiredNumber,
 } = require('../utils/assertion');
 
 const { HttpError } = require('../utils/errors');
@@ -20,6 +23,12 @@ const assertExpenseData = (expenseData) => {
   assertIsValuedString(expenseData.currency, 'Expense curreny');
   assertIsValuedString(expenseData.method, 'Payment method');
 };
+
+const EXPENSE_PAGE_PATH = 'expense/index';
+const EXPENSE_PAGE_TITLE = 'Expense';
+router.get('/', async (req, res) => {
+  res.render(EXPENSE_PAGE_PATH, getTemplateData(req, { title: EXPENSE_PAGE_TITLE }));
+});
 
 //Add Expense of trip
 router.post('/', async (req, res, next) => {
@@ -45,7 +54,7 @@ router.get('/trip/:tripId', async (req, res, next) => {
     if (!allExpenses) {
       throw new HttpError(`Expense not found with provided trip id: ${tripId}`, 404);
     }
-    res.status(200).json(allExpenses);
+    return res.status(200).json(allExpenses);
   } catch (error) {
     next(error);
   }

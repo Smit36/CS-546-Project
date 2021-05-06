@@ -1,3 +1,54 @@
-<div>
-  Hello there.
-</div>
+<nav>
+  <ul>
+    <li>
+      <a href="/expense">
+        Expenses
+      </a>
+    </li>
+    <li>
+      <a href="/trips">
+        Trips
+      </a>
+    </li>
+    {{#if isCorporateAdmin}}
+    <li>
+      <a href="/employees">
+        Employees
+      </a>
+    </li>
+    {{/if}}
+    {{#if isCorporateAdmin}}
+    <li>
+      <a href="/corporates">
+        Corporates
+      </a>
+    </li>
+    {{/if}}
+  </ul>
+</nav>
+
+<aside>
+  {{#if noUser}}
+  <a href="/login">
+    Login
+  </a>
+  {{else}}
+  {{#if corporate}}
+  <div>
+    Corporate:
+    {{corporate.name}}
+  </div>
+  {{/if}}
+  {{#if user}}
+  <div>
+    User:
+    {{user.name}}
+  </div>
+  <div>
+    <a href="/logout">
+      Logout
+    </a>
+  </div>
+  {{/if}}
+  {{/if}}
+</aside>

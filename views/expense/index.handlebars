@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-25">
+    <div id="new-expense">
+      <button onClick="addNewExpense()">New Expense</button>
+    </div>
+    <div id="show-expense" hidden>
+      <button onClick="showExpenses()">Show Expense</button>
+    </div>
+  </div>
+</div>
+
+<div id="show-form" hidden>
+  <form id="expense-form">
+    <div class="row">
+      <div class="col-25">
+        <label for="expense-name">Expense Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="name" name="expense_name" placeholder="Your expense">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="description">Description</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="description" name="description" placeholder="Air India Airlines">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="description">Payment Method</label>
+      </div>
+      <div class="col-25">
+        <input type="radio" id="method" name="method" value="card">
+        <label for="card">Card</label><br>
+        <input type="radio" id="method" name="method" value="cash">
+        <label for="cash">Cash</label>
+      </div>
+      <div class="col-25">
+        <input type="radio" id="method" name="method" value="gpay">
+        <label for="gpay">GPay</label><br>
+        <input type="radio" id="method" name="method" value="apple">
+        <label for="Apple">Apple</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="amount">Amount</label>
+      </div>
+      <div class="col-15">
+        <select id="currency" name="currency">
+          <option value="$">$-USD</option>
+          <option value="¥">¥-CNY</option>
+          <option value="₹">₹-INR</option>
+          <option value="€">¥-EUR</option>
+        </select>
+      </div>
+      <div class="col-35">
+        <input type="number" id="amount" name="amount" placeholder="100...">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="date">Date</label>
+      </div>
+      <div class="col-75">
+        <input type="date" id="date" name="date" value="2021-01-01">
+      </div>
+    </div>
+    <button type="button" class="submit">Submit</button>
+    <script src="/js/expense.js"></script>
+  </form>
+</div>
+
+<div id='get-expenses' hidden>
+  <div class="total-amount"></div>
+  <div class="row" id="header">
+    <div class="col-25">Name</div>
+    <div class="col-25">Date</div>
+    <div class="col-25">Amount</div>
+    <div class="col-25">User</div>
+  </div>
+  <div id="expense-list">
+  </div>
+  <div id="modal">
+  </div>
+</div>

@@ -2,79 +2,20 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>{{ title }} | Corporate Traveling Expense Management</title>
-    <link rel="stylesheet" href="/css/main.css">
+  <meta charset="utf-8">
+  <title>{{ title }} | Corporate Traveling Expense Management</title>
+  <link rel="stylesheet" href="/css/main.css">
+
 </head>
 
 <body>
-
-  <header>
+  <main>
     <h1>
       Corporate Traveling Expense Management
     </h1>
     <h2>
       {{title}}
     </h2>
-
-    <nav>
-      <ul>
-        <li>
-          <a href="/expenses">
-            Expenses
-          </a>
-        </li>
-        <li>
-          <a href="/trips">
-            Trips
-          </a>
-        </li>
-        {{#if isCorporateAdmin}}
-          <li>
-            <a href="/employees">
-              Employees
-            </a>
-          </li>
-        {{/if}}
-        {{#if isCorporateAdmin}}
-          <li>
-            <a href="/corporates">
-              Corporates
-            </a>
-          </li>
-        {{/if}}
-      </ul>
-    </nav>
-
-    <aside>
-      {{#if noUser}}
-        <a href="/login">
-          Login
-        </a>
-      {{else}}
-        {{#if corporate}}
-          <div>
-            Corporate:
-            {{corporate.name}}
-          </div>
-        {{/if}}
-        {{#if user}}
-          <div>
-            User:
-            {{user.name}}
-          </div>
-          <div>
-            <a href="/logout">
-              Logout
-            </a>
-          </div>
-        {{/if}}
-      {{/if}}
-    </aside>
-
-  </header>
-
-  <main>
     {{{body}}}
   </main>
 
@@ -108,11 +49,9 @@
     </dl>
   </footer>
 
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
     integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
-    crossorigin="anonymous"
-  ></script>
+    crossorigin="anonymous"></script>
   <script src="/js/index.js"></script>
 </body>
 
