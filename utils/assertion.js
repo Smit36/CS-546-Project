@@ -1,5 +1,6 @@
 const { ValidationError } = require("./errors");
 const { isObjectIdString } = require("./mongodb");
+const { USER_ROLE } = require('./routes');
 
 const stringifyData = (data) =>
   data === undefined
@@ -146,6 +147,21 @@ const assertPasswordString = (password, description = 'Password') => {
     }
 }
 
+const assertHashedPasswordString = (password, description = 'Password') => {
+  assertIsValuedString(password, description);
+  if (password.trim().length !== 60) {
+    throw new ValidationError(`${description} is not a valid Password: ${password}`);
+  }
+}
+
+const assertUserRole = (role, description = 'User Role') => {
+  assertIsValuedString(role, description);
+
+  if (role ==! USER_ROLE.ADMIN || role ==! USER_ROLE.CORPORATE || role ==! USER_ROLE.EMPLOYEE) {
+    throw new ValidationError(`${description} is not valid: ${password}`);
+  }
+}
+
 module.exports = {
   checkFieldTypes,
   assertType,
@@ -158,5 +174,7 @@ module.exports = {
   assertObjectIdString,
   assertEmailString,
   assertContactString,
-  assertPasswordString
+  assertPasswordString,
+  assertUserRole,
+  assertHashedPasswordString
 };

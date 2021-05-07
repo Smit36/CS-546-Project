@@ -1,6 +1,5 @@
 const { ObjectId, ObjectID } = require('mongodb');
 const { expensePayment: getExpensePaymentsCollection } = require('../config/mongoCollections');
-const { getExpense } = require('./expenses');
 
 const { QueryError, ValidationError } = require('../utils/errors');
 const { idQuery, parseMongoData, stringifyObjectId } = require('../utils/mongodb');
