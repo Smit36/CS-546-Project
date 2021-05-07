@@ -8,6 +8,19 @@ const {
   ValidationError,
 } = require("../utils/errors");
 
+const LOGIN_PATH = "/user/login";
+const authenticationGuard = (req, res, next) => {
+  if (req.path.startsWith(LOGIN_PATH) || req.path.startsWith(`/user/logout`)) {
+    return next();
+  }
+
+  const { user } = req.session;
+  if (!user) {
+    res.redirect(LOGIN_PATH);
+  } else return next();
+  return next();
+};
+
 const applyMiddleware = (app) =>
   app
     .use(express.json())
@@ -20,6 +33,7 @@ const applyMiddleware = (app) =>
         saveUninitialized: true,
       })
     )
+    .use(authenticationGuard)
     .engine("handlebars", exphbs({ defaultLayout: "main" }))
     .set("view engine", "handlebars");
 
@@ -41,4 +55,5 @@ const defaultErrorHandling = (error, req, res, next) => {
 module.exports = {
   applyMiddleware,
   defaultErrorHandling,
+  authenticationGuard,
 };

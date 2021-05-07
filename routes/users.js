@@ -17,6 +17,7 @@ const {
   USER_ROLE
 } = require('../utils/constants')
 const { QueryError, ValidationError } = require("../utils/errors");
+const { getTemplateData } = require('../utils/routes');
 
 //add user
 router.post('/', async (req, res) => {
@@ -166,15 +167,14 @@ router.post('/login', async (req, res) => {
     return;
   }
 
-  user.password = await bcrypt.hash(user.password, 8);
-  console.log(user.password);
+  // user.password = await bcrypt.hash(user.password, 8);
 
   let match = await bcrypt.compare(password, user.password);
 
   if (user.email === email && match) {
     req.session.user = user;
-    res.status(200).json(user);
-      // res.redirect('/private');
+    // res.status(200).json(user);
+    res.redirect('/');
   }
   else {
     errors.push('Invalid username or password.');
@@ -189,10 +189,18 @@ router.post('/login', async (req, res) => {
 router.get('/logout', async (req, res) => {
   try {  
     req.session.destroy();
-    res.status(200).json({ message : 'User logged out' });
+    // res.status(200).json({ message : 'User logged out' });
+    res.redirect('/user/login');
   } catch (e) {
     res.status(400).json({ error: e });
   }
+});
+
+
+const LOGIN_PAGE_PATH = "user/login";
+const LOGIN_PAGE_TITLE = "User Login";
+router.get('/login', async (req, res) => {
+    res.render(LOGIN_PAGE_PATH, getTemplateData(req, { noUser: false, title: LOGIN_PAGE_TITLE }));
 });
 
 //get user by Id
@@ -205,5 +213,6 @@ router.get('/:userId', async (req, res) => {
     res.status(400).json({ error: e });
   }
 });
+
 
 module.exports = router;
