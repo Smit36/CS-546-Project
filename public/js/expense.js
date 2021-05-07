@@ -15,6 +15,13 @@ function addNewExpense() {
     const month = dateFormat.slice(5, 7);
     const day = dateFormat.slice(8, 10);
     dateFormat = `${month}/${day}/${year}`;
+    let method = document.getElementsByName('method');
+    for (let i = 0; i < method.length; i++) {
+      if (method[i].checked) {
+        method = method[i].value;
+        break;
+      }
+    }
     data = {
       userId: '60832c0f8b6948b77e6dc3c5',
       tripId: '60832c49d9bafeae5372234c',
@@ -22,7 +29,7 @@ function addNewExpense() {
       description: document.getElementById('description').value,
       currency: document.getElementById('currency').value,
       amount: Number(document.getElementById('amount').value),
-      method: document.getElementById('method').value,
+      method,
       date: dateFormat,
     };
     $.ajax({
@@ -30,8 +37,7 @@ function addNewExpense() {
       type: 'POST',
       data: JSON.stringify(data),
       contentType: 'application/json; charset=utf-8',
-      success(data) {
-        console.log(data);
+      success() {
         $('#expense-form')[0].reset();
         alert('Successfully added');
       },
@@ -55,7 +61,6 @@ function showExpenses() {
   $.ajax(`http://localhost:3000/expense/trip/${tripId}`, {
     dataType: 'json',
     success: function (data, status, xhr) {
-      console.log(status);
       if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
           totalExpense += data[i].payment.amount;
@@ -86,7 +91,8 @@ function showExpenses() {
                 <p>Payment Amount:${data[i].payment.currency} ${data[i].payment.amount}</p>
                 <p>Payment Mode: ${data[i].payment.method}</p>
                 <p>Date: ${data[i].payment.date}</p>
-                <p>Note*: ${data[i].payment.notes}</p>                
+                <p>Note*: ${data[i].payment.notes}</p> 
+                <input id="expenseId" value=${data[i]._id} hidden></input>               
                 <button class="delete-button">Delete</button>
                 <button class="update-button">Update</button>              
               </div>
@@ -101,73 +107,136 @@ function showExpenses() {
               event.preventDefault();
               let modal = $('#modal');
               modal.empty();
+              let dateFormat = data[i].payment.date;
+              const year = dateFormat.slice(6, 10);
+              const month = dateFormat.slice(3, 5);
+              const day = dateFormat.slice(0, 2);
+              dateFormat = `${year}-${month}-${day}`;
               modal.append(`<span onclick="document.getElementById('modal').style.display='none'" class="close" title="Close Modal">×</span>
               `);
-              modal.append(`<div class="row detail">
-              <div class="col-25">
-                <label for="expense-name">Expense Name</label>
-              </div>
-              <div class="col-75">
-                <input type="text" id="expense-name" name="expense_name"  value=${data[i].name}>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-25">
-                <label for="description">Description</label>
-              </div>
-              <div class="col-75">
-                <input type="text" id="description" name="description" value=${data[i].description}>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-25">
-                <label for="method">Payment Method</label>
-              </div>
-              <div class="col-25">
-                <input type="radio" id="card" name="currency" value="card">
-                <label for="card">Card</label><br>
-                <input type="radio" id="cash" name="currency" value="cash">
-                <label for="cash">Cash</label>
-              </div>
-              <div class="col-25">
-                <input type="radio" id="gpay" name="currency" value="gpay">
-                <label for="gpay">GPay</label><br>
-                <input type="radio" id="apple" name="currency" value="apple">
-                <label for="Apple">Apple</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-25">
-                <label for="currency">Currency</label>
-              </div>
-              <div class="col-10">
-                <select id="currency" name="currency" value=${data[i].payment.currency}>
-                  <option value="usd">$-USD</option>
-                  <option value="cny">¥-CNY</option>
-                  <option value="inr">₹-INR</option>
-                  <option value="jpy">¥-JPY</option>
-                </select>
-              </div>
-              <div class="col-25">
-                <label for="amount">Amount</label>
-              </div>
-              <div class="col-35">
-                <input type="text" id="amount" name="amount" value=${data[i].payment.amount}">
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-25">
-                <label for="date">Date</label>
-              </div>
-              <div class="col-75">
-                <input type="date" id="expense-date" name="expense-date" value=${data[i].payment.date}>
-              </div>
-            </div>
-            <button type="submit">Save Changes</button>`);
+              let card = false,
+                cash = false,
+                gpay = false,
+                apple = false;
+              if (data[i].payment.method == 'card') {
+                card = true;
+              } else if (data[i].payment.method == 'cash') {
+                cash = true;
+              } else if (data[i].payment.method == 'gpay') {
+                gpay = true;
+              } else {
+                apple = true;
+              }
+              modal.append(`
+                <div class="detail">
+                  <div id="update-expense-form">
+                  <div class="row">
+                  <div class="col-25">
+                    <label for="name">Expense Name</label>
+                  </div>
+                  <div class="col-75">
+                    <input type="text" id="update-name" name="expense_name" value=${data[i].name}>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-25">
+                    <label for="update-description">Description</label>
+                  </div>
+                  <div class="col-75">
+                    <input type="text" id="update-description" name="update-description" value=${data[i].description}>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-25">
+                    <label for="update-method">Payment Method</label>
+                  </div>
+                  <div class="col-25">
+                    <input type="radio" id="card" name="update-method" value="card" checked=${card}>
+                    <label for="card">Card</label><br>
+                    <input type="radio" id="cash" name="update-method" value="cash" checked=${cash}>
+                    <label for="cash">Cash</label>
+                  </div>
+                  <div class="col-25">
+                    <input type="radio" id="gpay" name="update-method" value="gpay" checked=${gpay}>
+                    <label for="gpay">GPay</label><br>
+                    <input type="radio" id="apple" name="update-method" value="apple" checked=${apple}>
+                    <label for="Apple">Apple</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-25">
+                    <label for="update-amount">Amount</label>
+                  </div>
+                  <div class="col-15">
+                    <select id="update-currency" name="currency" value=${data[i].payment.currency}>
+                      <option id="$" value="$">$-USD</option>
+                      <option id="¥" value="¥">¥-CNY</option>
+                      <option id="₹" value="₹">₹-INR</option>
+                      <option id="€" value="€">€-EUR</option>
+                    </select>
+                  </div>
+                  <div class="col-35">
+                    <input type="number" id="update-amount" name="amount" value=${data[i].payment.amount}>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-25">
+                    <label for="update-date">Date</label>
+                  </div>
+                  <div class="col-75">
+                    <input type="date" id="update-date" name="date" value=${dateFormat}>
+                  </div>
+                </div>
+                <button type="button" class="update">Save Changes</button>
+                  </div>
+                </div>
+              `);
+
+              var updateExpense = $('.update');
+              $(updateExpense).on('click', function (event) {
+                event.preventDefault();
+                let update = {};
+                let dateFormat = document.getElementById('update-date').value;
+                const year = dateFormat.slice(0, 4);
+                const month = dateFormat.slice(5, 7);
+                const day = dateFormat.slice(8, 10);
+                dateFormat = `${month}/${day}/${year}`;
+                let method = document.getElementsByName('update-method');
+                for (let i = 0; i < method.length; i++) {
+                  if (method[i].checked) {
+                    method = method[i].value;
+                    break;
+                  }
+                }
+                console.log(document.getElementById('update-description').value);
+                update = {
+                  userId: '60832c0f8b6948b77e6dc3c5',
+                  tripId: '60832c49d9bafeae5372234c',
+                  name: document.getElementById('update-name').value,
+                  description: document.getElementById('update-description').value,
+                  currency: document.getElementById('update-currency').value,
+                  amount: Number(document.getElementById('update-amount').value),
+                  method,
+                  date: dateFormat,
+                };
+                console.log(update);
+                $.ajax({
+                  url: `http://localhost:3000/expense/${data[i]._id}`,
+                  type: 'PUT',
+                  data: JSON.stringify(update),
+                  contentType: 'application/json; charset=utf-8',
+                  success() {
+                    //$('#update-expense-form')[0].reset();
+                    alert('Successfully updated');
+                    modal.hide();
+                  },
+                  error() {},
+                });
+              });
             });
+
             $('.delete-button').on('click', function (event) {
               event.preventDefault();
-              console.log('hi');
               let modal = $('#modal');
               modal.empty();
               modal.append(`                

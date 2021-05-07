@@ -45,6 +45,7 @@ label {
 }
 
 .submit,
+.update,
 #new-expense button,
 #show-expense button {
   background-color: #358aeb;
@@ -56,10 +57,12 @@ label {
   margin: 5px 0 0 45%;
 }
 
-.submit {
+.submit,
+.update {
   background-color: #4caf50;
 }
-.submit:hover {
+.submit:hover,
+.update:hover {
   background-color: #45a049;
 }
 
@@ -160,6 +163,7 @@ label {
   background-color: #fefefe;
   opacity: 1;
   margin: 5% auto 5% auto; /* 5% from the top, 15% from the bottom and centered */
+  padding: 20px 15px 20px 15px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
 }
