@@ -34,8 +34,6 @@ const seed = async () => {
     const admin1Id = new ObjectId(admin1._id);
     const admin2Id = new ObjectId(admin2._id);
 
-    console.log(admin1Id, admin2Id);
-
     const { corporate1, corporate2 } = await seedCorporates({
       admin1Id,
       admin2Id,
@@ -43,8 +41,6 @@ const seed = async () => {
 
     const corporate1Id = new ObjectId(corporate1._id);
     const corporate2Id = new ObjectId(corporate2._id);
-
-    console.log("corps", corporate1Id, corporate2Id);
 
     const { corporate1Admin, corporate2Admin } = await seedCorporateAdminUsers({
       admin1Id,
@@ -54,7 +50,6 @@ const seed = async () => {
       password: qwer,
     });
 
-    console.log(corporate1Admin.createdBy, corporate2Admin.createdBy);
     const {
       corporate1RankManager,
       corporate1RankAccountant,
@@ -88,8 +83,10 @@ const seed = async () => {
       password: qwer,
     });
 
-    const { trip1: corporate1Trip, trip2: corporate2Trip } = await seedTripsAndApprovals({
-      // TODO
+    const {
+      trip1: corporate1Trip,
+      trip2: corporate2Trip,
+    } = await seedTripsAndApprovals({
       corporate1Id,
       corporate2Id,
       user1Id: new ObjectId(corporate1Manager._id),
@@ -105,7 +102,7 @@ const seed = async () => {
       trip1Id: new ObjectId(corporate1Trip._id),
       trip2Id: new ObjectId(corporate2Trip._id),
     });
-  
+
     return {
       // ...seedData,
     };

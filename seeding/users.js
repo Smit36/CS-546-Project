@@ -44,7 +44,6 @@ const seedCorporateAdminUsers = async ({
   timestamp1 = new Date().getTime(),
   password,
 } = {}) => {
-  console.log(admin1Id, admin2Id, "c");
   const corporateAdminData1 = {
     name: "Gigasoft Admin",
     corporateId: stringifyObjectId(corporate1Id),
