@@ -8,22 +8,22 @@ const {
 } = require("../data/approvals");
 
 const seedTripsAndApprovals = async ({
-  userId1 = new ObjectId(),
-  userId2 = new ObjectId(),
-  userId3 = new ObjectId(),
-  userId4 = new ObjectId(),
-  userId5 = new ObjectId(),
+  user1Id = new ObjectId(),
+  user2Id = new ObjectId(),
+  user3Id = new ObjectId(),
+  user4Id = new ObjectId(),
+  user5Id = new ObjectId(),
   timestamp1 = new Date().getTime(),
   timestamp2 = new Date().getTime(),
   timestamp3 = new Date().getTime(),
-  corporateId1 = new ObjectId(),
-  corporateId2 = new ObjectId(),
+  corporate1Id = new ObjectId(),
+  corporate2Id = new ObjectId(),
 } = {}) => {
   const tripData1 = {
-    userId: stringifyObjectId(userId1),
-    corporateId: stringifyObjectId(corporateId1),
-    managerId: stringifyObjectId(userId1),
-    employeeIdList: [stringifyObjectId(userId2)],
+    userId: stringifyObjectId(user1Id),
+    corporateId: stringifyObjectId(corporate1Id),
+    managerId: stringifyObjectId(user1Id),
+    employeeIdList: [stringifyObjectId(user2Id)],
     name: "Business trip to Death Star",
     description: "Business trip to Death Star traveling on the Star Destroyer",
     startTime: timestamp1,
@@ -31,10 +31,10 @@ const seedTripsAndApprovals = async ({
   };
 
   const tripData2 = {
-    userId: stringifyObjectId(userId3),
-    corporateId: stringifyObjectId(corporateId2),
-    managerId: stringifyObjectId(userId3),
-    employeeIdList: [stringifyObjectId(userId4), stringifyObjectId(userId5)],
+    userId: stringifyObjectId(user3Id),
+    corporateId: stringifyObjectId(corporate2Id),
+    managerId: stringifyObjectId(user3Id),
+    employeeIdList: [stringifyObjectId(user4Id), stringifyObjectId(user5Id)],
     name: "Business trip to Terra",
     description: "Intersteller business trip to Earth for secret meeting",
     startTime: timestamp1,
@@ -50,7 +50,7 @@ const seedTripsAndApprovals = async ({
   const lastUpdate1 = approval1.updates[approval1.updates.length - 1];
   const approvalUpdateData = {
     lastUpdateId: lastUpdate1._id,
-    userId: stringifyObjectId(userId2),
+    userId: stringifyObjectId(user2Id),
     message: "please approve thanks",
     status: APPROVAL_STATUS.PENDING,
   };

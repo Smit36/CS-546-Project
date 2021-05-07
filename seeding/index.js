@@ -1,9 +1,18 @@
+const { ObjectId } = require("mongodb");
 const { connect, disconnect } = require("../config/mongoConnection");
 
-const { seedUsers, seedAdminUsers } = require("./users");
+const {
+  seedUsers,
+  seedCorporateAdminUsers,
+  seedPortalAdminUsers,
+} = require("./users");
 const seedRanks = require("./ranks");
 const seedTripsAndApprovals = require("./tripApprovals");
-const { seedCorporate } = require("./corporate");
+const { seedCorporates } = require("./corporates");
+const { stringifyObjectId } = require("../utils/mongodb");
+const seedExpense = require("./expense");
+
+const qwer = "$2b$08$HXw/sdQ4tgsgPf9wAHiSuuqOZefJNy9YuKrRviBwnLQmxhTlHCyE.";
 
 const unseed = async (db) => {
   if (!!db) {
@@ -14,33 +23,89 @@ const unseed = async (db) => {
 
 const seed = async () => {
   let db = await connect();
-  const seedData = {};
 
   try {
     await unseed(db);
 
-    // TODO: seed admins
-    const { admin1, admin2 } = await seedAdminUsers();
-
-    const {
-      corporate1,
-      corporate2,
-      corporate3,
-      corporate4,
-      corporate5,
-    } = await seedCorporate();
-
-    // TODO: fix rank seeding
-    // const { rank1, rank2, rank3, rank4, rank5, rank6 } = await seedRanks();
-
-    // TODO: fix user seeding
-    // const { user1, user2, user3, user4, user5 } = await seedUsers({});
-
-    const { trip1, trip2, approval1, approval2 } = await seedTripsAndApprovals({
-      // TODO
+    const { admin1, admin2 } = await seedPortalAdminUsers({
+      password: qwer,
     });
 
-    console.log("Seeding completed.");
+    const admin1Id = new ObjectId(admin1._id);
+    const admin2Id = new ObjectId(admin2._id);
+
+    console.log(admin1Id, admin2Id);
+
+    const { corporate1, corporate2 } = await seedCorporates({
+      admin1Id,
+      admin2Id,
+    });
+
+    const corporate1Id = new ObjectId(corporate1._id);
+    const corporate2Id = new ObjectId(corporate2._id);
+
+    console.log("corps", corporate1Id, corporate2Id);
+
+    const { corporate1Admin, corporate2Admin } = await seedCorporateAdminUsers({
+      admin1Id,
+      admin2Id,
+      corporate1Id,
+      corporate2Id,
+      password: qwer,
+    });
+
+    console.log(corporate1Admin.createdBy, corporate2Admin.createdBy);
+    const {
+      corporate1RankManager,
+      corporate1RankAccountant,
+      corporate1RankAssociate,
+      corporate2RankTechLead,
+      corporate2RankSeniorDeveloper,
+      corporate2RankDeveloper,
+    } = await seedRanks({
+      corporate1Id,
+      corporate2Id,
+    });
+
+    const {
+      corporate1User1: corporate1Manager,
+      corporate1User2: corporate1Accountant,
+      corporate1User3: corporate1Associate,
+      corporate2User1: corporate2TechLead,
+      corporate2User2: corporate2SeniorDeveloper,
+      corporate2User3: corporate2Developer,
+    } = await seedUsers({
+      corporate1Id,
+      corporate2Id,
+      corporateAdmin1Id: new ObjectId(corporate1Admin._id),
+      corporateAdmin2Id: new ObjectId(corporate2Admin._id),
+      rank1: corporate1RankManager,
+      rank2: corporate1RankAccountant,
+      rank3: corporate1RankAssociate,
+      rank4: corporate2RankTechLead,
+      rank5: corporate2RankSeniorDeveloper,
+      rank6: corporate2RankDeveloper,
+      password: qwer,
+    });
+
+    const { trip1: corporate1Trip, trip2: corporate2Trip } = await seedTripsAndApprovals({
+      // TODO
+      corporate1Id,
+      corporate2Id,
+      user1Id: new ObjectId(corporate1Manager._id),
+      user2Id: new ObjectId(corporate1Accountant._id),
+      user3Id: new ObjectId(corporate2TechLead._id),
+      user4Id: new ObjectId(corporate2SeniorDeveloper._id),
+      user5Id: new ObjectId(corporate2Developer._id),
+    });
+
+    const seedExpenses = await seedExpense({
+      user1Id: new ObjectId(corporate1Accountant._id),
+      user2Id: new ObjectId(corporate2Developer._id),
+      trip1Id: new ObjectId(corporate1Trip._id),
+      trip2Id: new ObjectId(corporate2Trip._id),
+    });
+  
     return {
       // ...seedData,
     };

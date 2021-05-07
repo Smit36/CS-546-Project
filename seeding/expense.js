@@ -3,14 +3,14 @@ const { addExpense } = require('../data/expenses');
 const { stringifyObjectId } = require('../utils/mongodb');
 
 const seedExpense = async ({
-  userId1 = new ObjectId(),
-  userId2 = new ObjectId(),
-  tripId1 = new ObjectId(),
-  tripId2 = new ObjectId(),
-}) => {
+  user1Id = new ObjectId(),
+  user2Id = new ObjectId(),
+  trip1Id = new ObjectId(),
+  trip2Id = new ObjectId(),
+} = {}) => {
   const expenseData1 = {
-    userId: stringifyObjectId(userId1),
-    tripId: stringifyObjectId(tripId1),
+    userId: stringifyObjectId(user1Id),
+    tripId: stringifyObjectId(trip1Id),
     name: 'EWR to JFK',
     description: 'Travel',
     amount: 120,
@@ -21,8 +21,8 @@ const seedExpense = async ({
   };
 
   const expenseData2 = {
-    userId: stringifyObjectId(userId1),
-    tripId: stringifyObjectId(tripId1),
+    userId: stringifyObjectId(user1Id),
+    tripId: stringifyObjectId(trip1Id),
     name: 'Ramada Hotel',
     description: 'Accomodation',
     amount: 90,
@@ -33,8 +33,8 @@ const seedExpense = async ({
   };
 
   const expenseData3 = {
-    userId: stringifyObjectId(userId1),
-    tripId: stringifyObjectId(tripId1),
+    userId: stringifyObjectId(user1Id),
+    tripId: stringifyObjectId(trip1Id),
     name: 'Taxi',
     description: 'Travel from hotel to office',
     amount: 20,
@@ -45,8 +45,8 @@ const seedExpense = async ({
   };
 
   const expenseData4 = {
-    userId: stringifyObjectId(userId2),
-    tripId: stringifyObjectId(tripId2),
+    userId: stringifyObjectId(user2Id),
+    tripId: stringifyObjectId(trip2Id),
     name: 'USA to India',
     description: 'Air India airline',
     amount: 1200,
@@ -57,8 +57,8 @@ const seedExpense = async ({
   };
 
   const expenseData5 = {
-    userId: stringifyObjectId(userId2),
-    tripId: stringifyObjectId(tripId2),
+    userId: stringifyObjectId(user2Id),
+    tripId: stringifyObjectId(trip2Id),
     name: 'Taxi',
     description: 'Airport to Office',
     amount: 3,
