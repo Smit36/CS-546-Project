@@ -168,7 +168,6 @@ router.post('/login', async (req, res) => {
   }
 
   // user.password = await bcrypt.hash(user.password, 8);
-  console.log(user.password);
 
   let match = await bcrypt.compare(password, user.password);
 
@@ -191,7 +190,7 @@ router.get('/logout', async (req, res) => {
   try {  
     req.session.destroy();
     // res.status(200).json({ message : 'User logged out' });
-    res.redirect('/');
+    res.redirect('/user/login');
   } catch (e) {
     res.status(400).json({ error: e });
   }
