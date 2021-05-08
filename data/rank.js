@@ -15,6 +15,9 @@ const {
   assertRequiredObject,
   assertRequiredNumber,
 } = require("../utils/assertion");
+const {
+  USER_ROLE
+} = require('../utils/constants');
 
 const getByObjectId = async (objectId) => {
     const collection = await getRankCollection();
@@ -27,8 +30,13 @@ const getRank = async (id) => {
     return await getByObjectId(new ObjectId(id));
 };
 
-const getAllRanks = async () => {
+const getAllRanks = async (user) => {
     const collection = await getRankCollection();
+
+    if (user.role === USER_ROLE.CORPORATE) {
+      const rankList = await collection.find({ corporateId : user.corporateId }).toArray();
+      return parseMongoData(rankList);
+    }
 
     const rankList = await collection.find({}).toArray();
 

@@ -1,14 +1,17 @@
 const { Router } = require('express');
 const router = Router();
+const { getTemplateData } = require('../utils/routes');
 
 const rankData = require('../data/rank');
+const RANK_PAGE_PATH = 'rank/index';
+const RANK_PAGE_TITLE = 'Expense';
 
 //add rank
 router.post('/', async (req, res) => {
     try {
       const reqBody = req.body;
       const newRank = await rankData.createRank(reqBody);
-      res.status(200).json(newRank);
+      res.render(RANK_PAGE_PATH, getTemplateData(req, { title: RANK_PAGE_TITLE }));
     } catch (e) {
       res.status(400).json({ error: e });
     }
@@ -17,8 +20,9 @@ router.post('/', async (req, res) => {
 //Get all ranks
 router.get('/', async (req, res) => {
 try {  
-    const allRanks = await rankData.getAllRanks();
-    res.status(200).json(allRanks);
+    const user = req.session.user;
+    const allRanks = await rankData.getAllRanks(user);
+    return res.status(200).json(allRanks);
 } catch (e) {
     res.status(400).json({ error: e });
 }
