@@ -40,7 +40,7 @@ function showRanks() {
     var rankList = $('#rank-list');
     rankList.empty();
 
-    $.ajax(`http://localhost:3000/rank`, {
+    $.ajax(`http://localhost:3000/rank/all`, {
         dataType: 'json',
         success: function (data, status, xhr) {
         console.log(status);

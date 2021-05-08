@@ -34,7 +34,7 @@ const getAllRanks = async (user) => {
     const collection = await getRankCollection();
 
     if (user.role === USER_ROLE.CORPORATE) {
-      const rankList = await collection.find({ corporateId : user.corporateId }).toArray();
+      const rankList = await collection.find({ corporateId : new ObjectId(user.corporateId) }).toArray();
       return parseMongoData(rankList);
     }
 
@@ -47,17 +47,17 @@ const createRank = async (data) => {
     assertRequiredObject(data);
   
     const { corporateId, name, level, createdAt = new Date().getTime() } = data;
-  
+
     assertObjectIdString(corporateId, "Corporate ID");
     assertIsValuedString(name, "Rank name");
-    assertRequiredNumber(level, "Rank level");
+    assertRequiredNumber(parseInt(level), "Rank level");
     assertRequiredNumber(createdAt, "Rank created time");
   
     const rankData = {
       _id: new ObjectId(),
       corporateId: new ObjectId(corporateId),
       name : name,
-      level: level,
+      level: parseInt(level),
       createdAt: createdAt,
       updatedAt: createdAt,
     };
