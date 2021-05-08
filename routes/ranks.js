@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
     try {
       const reqBody = req.body;
       const newRank = await rankData.createRank(reqBody);
-      res.render(RANK_PAGE_PATH, getTemplateData(req, { title: RANK_PAGE_TITLE }));
+      return res.status(200).json(newRank);
     } catch (e) {
       res.status(400).json({ error: e });
     }
@@ -20,13 +20,26 @@ router.post('/', async (req, res) => {
 //Get all ranks
 router.get('/', async (req, res) => {
 try {  
-    const user = req.session.user;
-    const allRanks = await rankData.getAllRanks(user);
-    return res.status(200).json(allRanks);
+    // const user = req.session.user;
+    // const allRanks = await rankData.getAllRanks(user);
+    res.render(RANK_PAGE_PATH, getTemplateData(req, { title: RANK_PAGE_TITLE }));
+
+    // return res.status(200).json(allRanks);
 } catch (e) {
     res.status(400).json({ error: e });
 }
 });
+
+router.get('/all', async (req, res) => {
+  try {  
+      const user = req.session.user;
+      const allRanks = await rankData.getAllRanks(user);
+  
+      return res.status(200).json(allRanks);
+  } catch (e) {
+      res.status(400).json({ error: e });
+  }
+  });
 
   //Update rank
 router.put('/:rankId', async (req, res) => {
