@@ -62,7 +62,7 @@ router.post("/", async (req, res, next) => {
 
     const newCorporate = await createCorporate(corporateData);
     isCorporateAdd(newCorporate._id, newCorporate);
-    res.status(200).json(newCorporate);
+    res.status(200).render('corporate/corporate', {corporate: newCorporate, title: `Corporate Information for ${newCorporate.name}`});
   } catch (error) {
     next(error);
   }
@@ -72,12 +72,20 @@ router.post("/", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const allCorporate = await getAllCorporates();
-    console.log(allCorporate)
-    res.render('corporate/landing', {corporates: allCorporate});
+    // TODO: Add User at created by
+    res.status(200).render('corporate/corporates', {corporates: allCorporate, user: allCorporate.user});
   } catch (error) {
     next(error);
   }
 });
+
+router.get("/create", async (req, res, next) => {
+    try {
+      res.status(200).render('corporate/create');
+    } catch (error) {
+      next(error);
+    }
+  });
 
 //Get single corporate by cororateId
 router.get("/:corporateId", async (req, res, next) => {
@@ -86,7 +94,8 @@ router.get("/:corporateId", async (req, res, next) => {
     assertObjectIdString(corporateId);
     const corporate = await getCorporate(corporateId);
     corporateExist(corporate._id, corporate);
-    res.status(200).json(corporate);
+    // TODO: Add User at created by
+    res.status(200).render('corporate/corporate', {corporate: corporate, title: `Corporate Information for ${corporate.name}`});
   } catch (error) {
     next(error);
   }
@@ -113,7 +122,7 @@ router.put("/:corporateId", async (req, res, next) => {
 
     const updatedCorporate = await updateCorporate(corporateId, corporateData);
     isCorporateUpdate(updatedCorporate._id, updatedCorporate);
-    res.status(200).json(updatedCorporate);
+    res.status(200).json({corporate: updatedCorporate})
   } catch (error) {
     next(error);
   }

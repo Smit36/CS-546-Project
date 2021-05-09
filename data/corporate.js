@@ -86,7 +86,7 @@ const updateCorporate = async (id, updates) => {
     assertObjectIdString(id);
     assertRequiredObject(updates, "Corporate updates data");
 
-    const { name, emailDomain, contactNo, address, updatedBy, updatedAt = new Date().getTime() } = data;
+    const { name, emailDomain, contactNo, address, updatedBy, updatedAt = new Date().getTime() } = updates;
     
     assertIsValuedString(name, "Corporate name");
     assertIsValuedString(emailDomain, "Email");
@@ -94,7 +94,7 @@ const updateCorporate = async (id, updates) => {
     assertIsValuedString(contactNo, "Contact Number");
     assertContactString(contactNo, "Contact Number");
     assertIsValuedString(address, "Address");
-    assertObjectIdString(updatedBy, "Update By");
+    assertRequiredObject(updatedBy, "Update By");
     assertRequiredNumber(updatedAt, "Corporate updated time");
   
     const corporate = await getCorporate(id);
@@ -113,12 +113,9 @@ const updateCorporate = async (id, updates) => {
       emailDomain: emailDomain,
       contactNo: contactNo,
       address: address,
-      createdBy: createdBy,
       updatedBy: updatedBy,
-      createdAt: createdAt,
-      updatedAt: currentTimestamp,
+      updatedAt: updatedAt,
     };
-
     const ops = {
       $set: newUpdate      
     };

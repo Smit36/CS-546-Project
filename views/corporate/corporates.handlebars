@@ -1,0 +1,21 @@
+<p id="corporate-list">Corporate Lists</p>
+<div>
+<nav>
+<a href='/corporate/create' id="nav-a">Create Corporate</a>
+
+</nav>
+</div>
+
+{{#each corporates}}
+<p></p>
+<a href='/corporate/{{_id}}' id={{_id}} class="link">
+    <div class="card">
+        <div class="container">
+            <h2>Corporate Name: <span>{{name}}</span></h2>
+            <h3>Corporate Email: <span>{{emailDomain}}</span></h3>
+            <h3>Corporate Contact Number: <span>{{contactNo}}</span></h3>
+            <h3>Corporate Contact Address: <span>{{address}}</span></h3>
+        </div>
+    </div>
+</a>
+{{/each}}
