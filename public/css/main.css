@@ -8,9 +8,9 @@ body {
 }
 
 header {
-	/* position: absolute;
+  /* position: absolute;
 	top: 0; */
-	width: 100%;
+  width: 100%;
 }
 
 main {
@@ -19,9 +19,39 @@ main {
 }
 
 footer {
-  position: relative;
-  bottom: 0;
+  margin-top: 20%;
   width: 100%;
+  background-color: rgb(95, 95, 95);
+  color: white;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: rgb(212, 211, 211);
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: rgb(43, 42, 42);
+  text-align: center;
+  padding: 18px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: rgb(150, 150, 150);
+}
+
+.active {
+  background-color: #358aeb;
+  color: white;
 }
 
 input[type='text'],
@@ -44,33 +74,46 @@ label {
   display: inline-block;
 }
 
-.submit,
-.update,
-#new-expense button,
-#show-expense button {
+button {
   background-color: #358aeb;
   color: white;
   padding: 12px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin: 5px 0 0 45%;
 }
 
 .submit,
-.update {
+.update,
+.confirm,
+.cancel {
   background-color: #4caf50;
 }
+
+.submit {
+  margin-left: 45%;
+}
+
 .submit:hover,
 .update:hover {
   background-color: #45a049;
+}
+
+.cancel,
+.delete {
+  background-color: #f44336;
+}
+
+.cancel:hover,
+.delete:hover {
+  background-color: #f81707;
 }
 
 #show-form {
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 20px;
-  margin-left: 10%;
+  margin: 10px 10% 2% 10%;
   width: 75%;
 }
 
@@ -86,9 +129,9 @@ label {
   margin-top: 6px;
 }
 
-.col-15 {
+.col-20 {
   float: left;
-  width: 15%;
+  width: 20%;
   margin-top: 6px;
 }
 
@@ -103,6 +146,7 @@ label {
   color: rgb(66, 66, 66);
   padding: 18px;
   width: 100%;
+  margin: 0;
   border: none;
   text-align: left;
   outline: none;
@@ -123,26 +167,6 @@ label {
   width: 100%;
   text-align: left;
   font-size: 15px;
-}
-
-.delete-button,
-.update-button {
-  float: left;
-  width: 50%;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  opacity: 0.9;
-}
-
-.delete-button {
-  background-color: #f44336;
-}
-
-.update-button {
-  background-color: #04aa6d;
-  color: white;
 }
 
 #modal {
@@ -198,4 +222,27 @@ label {
     width: 100%;
     margin-top: 0;
   }
+}
+
+#name-error,
+#description-error,
+#method-error,
+#currency-error,
+#amount-error,
+#date-error,
+#update-name-error,
+#update-description-error,
+#update-method-error,
+#update-currency-error,
+#update-amount-error,
+#update-date-error {
+  font-size: small;
+  color: red;
+}
+
+#success-expense,
+#expense-update-success {
+  font-size: large;
+  color: green;
+  padding-left: 35%;
 }

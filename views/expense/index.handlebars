@@ -4,7 +4,7 @@
       <button onClick="addNewExpense()">New Expense</button>
     </div>
     <div id="show-expense" hidden>
-      <button onClick="showExpenses()">Show Expense</button>
+      <button onClick="showExpense()">Show Expense</button>
     </div>
   </div>
 </div>
@@ -18,6 +18,7 @@
       <div class="col-75">
         <input type="text" id="name" name="expense_name" placeholder="Your expense">
       </div>
+      <span id="name-error" hidden>Enter expense name.</span>
     </div>
     <div class="row">
       <div class="col-25">
@@ -26,16 +27,20 @@
       <div class="col-75">
         <input type="text" id="description" name="description" placeholder="Air India Airlines">
       </div>
+      <span id="description-error" hidden>Enter expense description.</span>
     </div>
     <div class="row">
       <div class="col-25">
         <label for="description">Payment Method</label>
       </div>
       <div class="col-25">
-        <input type="radio" id="card" name="method" value="card">
-        <label for="card">Card</label><br>
-        <input type="radio" id="cash" name="method" value="cash">
-        <label for="cash">Cash</label>
+        <div class="row">
+          <input type="radio" id="card" name="method" value="card">
+          <label for="card">Card</label><br>
+          <input type="radio" id="cash" name="method" value="cash">
+          <label for="cash">Cash</label>
+        </div>
+        <span id="method-error" hidden>Select expense method.</span>
       </div>
       <div class="col-25">
         <input type="radio" id="gpay" name="method" value="gpay">
@@ -48,16 +53,23 @@
       <div class="col-25">
         <label for="amount">Amount</label>
       </div>
-      <div class="col-15">
-        <select id="currency" name="currency">
-          <option id="$" value="$">$-USD</option>
-          <option id="¥" value="¥">¥-CNY</option>
-          <option id="₹" value="₹">₹-INR</option>
-          <option id="€" value="€">€-EUR</option>
-        </select>
+      <div class="col-20">
+        <div class="row">
+          <select id="currency" name="currency">
+            <option default>Currency</option>
+            <option id="$" value="$">$-USD</option>
+            <option id="¥" value="¥">¥-CNY</option>
+            <option id="₹" value="₹">₹-INR</option>
+            <option id="€" value="€">€-EUR</option>
+          </select>
+        </div>
+        <span id="currency-error" hidden>Select expense currency.</span>
       </div>
       <div class="col-35">
-        <input type="number" id="amount" name="amount" placeholder="100...">
+        <div class="row">
+          <input type="number" id="amount" name="amount" placeholder="100...">
+        </div>
+        <span id="amount-error" hidden>Enter expense amount.</span>
       </div>
     </div>
     <div class="row">
@@ -65,10 +77,22 @@
         <label for="date">Date</label>
       </div>
       <div class="col-75">
-        <input type="date" id="date" name="date" value="2021-01-01">
+        <div class="row">
+          <input type="date" id="date" name="date" placeholder="2021-01-01">
+        </div>
+        <span id="date-error" hidden>Enter expense date.</span>
       </div>
     </div>
-    <button type="button" class="submit">Submit</button>
+    <div class="row">
+      <div class="col-25">
+        <label for="notes">Notes*</label>
+      </div>
+      <div class="col-75">
+        <textarea></textarea>
+      </div>
+    </div>
+    <span id="success-expense" hidden>Successfully expense added!</span>
+    <button type="button" class="submit" id="submit-expense">Submit</button>
     <script src="/js/expense.js"></script>
   </form>
 </div>

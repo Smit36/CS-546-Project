@@ -6,7 +6,7 @@ const router = Router();
 const expenseData = require('../data/expenses');
 
 const {
-  assertObjectIdString, 
+  assertObjectIdString,
   assertIsValuedString,
   assertDateString,
   assertRequiredNumber,
