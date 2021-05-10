@@ -81,9 +81,10 @@ const router = Router();
 router.get("/", async (req, res, next) => {
   try {
     const { user } = req.session;
-    const trips = await getUserTrips(user, id);
+    const trips = await getUserTrips(user._id);
+    // TODO: provide corporate users for template
 
-    res.status(200).json(trips);
+    res.render("trip/index", { trips, ...getTemplateData(req) });
   } catch (error) {
     next(error);
   }
@@ -91,9 +92,10 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { user } = req.session;
+    const { user, corporate } = req.session;
     const tripData = req.body;
     tripData.userId = user._id;
+    tripData.corporateId = corporate._id;
     assertTripData(tripData);
 
     const { managerId, employeeIdList } = tripData;
