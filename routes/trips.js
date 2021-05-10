@@ -20,6 +20,7 @@ const {
   assertNonEmptyArray,
 } = require("../utils/assertion");
 const { HttpError } = require("../utils/errors");
+const { getTemplateData } = require("../utils/routes");
 
 const assertTripID = (id) => assertObjectIdString(id, "Trip ID");
 const assertExpenseID = (id) => assertObjectIdString(id, "Expense ID");
@@ -40,7 +41,7 @@ const getAuthorizedTrip = async (user, id) => {
 
   if (
     user.corporteId !== trip.corporateId ||
-    !trip.employeeIdList.contains(user)
+    !trip.employeeIdList.includes(user)
   ) {
     throw new HttpError("Unauthorized approval thread", 401);
   }
