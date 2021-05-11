@@ -10,9 +10,7 @@ function addNewExpense() {
   showExpenses.show();
   getExpense.hide();
 
-  console.log('add');
   $(submitExpense).on('click', function (event) {
-    console.log('check');
     event.preventDefault();
     const validate = validateExpense();
     if (validate) {
@@ -29,7 +27,6 @@ function addNewExpense() {
           break;
         }
       }
-      console.log(method);
       data = {
         userId: '60832c0f8b6948b77e6dc3c5',
         tripId: '60832c49d9bafeae5372234c',
@@ -337,12 +334,18 @@ function showExpense() {
 
         expenseList.show();
         total.show();
+      } else {
+        $(expenseList).html(`<p>Expense not found</p>`);
+        expenseList.show();
       }
       $(getExpense).show();
     },
     error: function (jqXhr, textStatus, errorMessage) {
       // error callback
       console.log(errorMessage);
+      $(expenseList).html(`<p>Expense not found</p>`);
+      expenseList.show();
+      $(getExpense).show(); 
     },
   });
 }
