@@ -40,8 +40,8 @@ const getAuthorizedTrip = async (user, id) => {
   tripExist(id, trip);
 
   if (
-    user.corporteId !== trip.corporateId ||
-    !trip.employeeIdList.includes(user)
+    user.corporateId !== trip.corporateId ||
+    !trip.employeeIdList.includes(user._id)
   ) {
     throw new HttpError("Unauthorized approval thread", 401);
   }
@@ -56,7 +56,7 @@ const getAuthorizedTripData = async (user, id) => {
   const approval = await getApproval(approvalId);
   approvalExist(id, approval);
 
-  const expenses = await getAllExpensesByTrip(tripId);
+  const expenses = await getAllExpensesByTrip(id);
 
   return {
     approval,
@@ -139,12 +139,17 @@ router.get("/:id", async (req, res, next) => {
       status: approval.status,
       updatedAt: approval.updatedAt,
     };
+    const total = expenses.reduce(
+      (total, expense) => expense.payment.amount + total,
+      0
+    );
 
-    res.status(200).json({
-      ...trip,
+    res.render("trip/details", {
+      trip,
+      approvalInfo,
       expenses,
-      approval: approvalInfo,
-      // TODO: total
+      total,
+      ...getTemplateData(req),
     });
   } catch (error) {
     next(error);
