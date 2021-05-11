@@ -1,3 +1,4 @@
+
 <div>
 {{trip.name}}
 <div>
@@ -5,5 +6,16 @@
 {{approvalInfo.status}}
 <div>
 <div>
+        <p>userId:{{trip._id}}</p>
+         <p>corporateId:{{trip.corporateId}}</p>
+         <p>managerId:{{trip.managerId}}</p>
+         <p>employeeIdList:{{trip.employeeIdList}}</p>
+         <p>startTime:{{trip.startTime}}</p><p>endTime:{{trip.endTime}}</p>
+         <p>createdAt:{{trip.createdAt}}</p>
 {{expenses.length }} expenses, total expense: {{total}}
+    {{#each expenses}}
+       <li>
+         {{name}}
+       </li>
+    {{/each}}
 <div>

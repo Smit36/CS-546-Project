@@ -7,12 +7,6 @@
     {{#each trips}}
        <article class="Trip">
          <h2>{{name}}</h2>
-         <p>userId:{{_id}}</p>
-         <p>corporateId:{{corporateId}}</p>
-         <p>managerId:{{managerId}}</p>
-         <p>employeeIdList:{{employeeIdList}}</p>
-         <p>startTime:{{startTime}}</p><p>endTime:{{endTime}}</p>
-         <p>createdAt:{{createdAt}}</p>
          <a href="/trip/{{_id}}">trip details</a>
          <a href="/approval/{{approvalId}}">approval tread</a>
        </article>
