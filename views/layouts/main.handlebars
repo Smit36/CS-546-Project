@@ -3,23 +3,111 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ title }}</title>
+    <title>{{ title }} | Corporate Traveling Expense Management</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
 
   <header>
-    <h1 id = "title-info">
-      {{ title }}
+    <h1>
+      Corporate Traveling Expense Management
     </h1>
+    <h2>
+      {{title}}
+    </h2>
+    {{#if user}}
+    <nav>
+      <ul>
+        {{#if isCorporateAdmin}}
+          <li>
+            <a href="/employees">
+              Employees
+            </a>
+          </li>
+        {{else if isPortalAdmin}}
+          <li>
+            <a href="/corporates">
+              Corporates
+            </a>
+          </li>
+        {{else}}
+          <li>
+            <a href="/expenses">
+              Expenses
+            </a>
+          </li>
+          <li>
+            <a href="/trip">
+              Trips
+            </a>
+          </li>
+        {{/if}}
+      </ul>
+    </nav>
+    {{/if}}
+
+    <aside>
+      {{#if user}}
+        {{#if corporate}}
+          <div>
+            Corporate:
+            {{corporate.name}}
+          </div>
+        {{/if}}
+        {{#if user}}
+          <div>
+            User:
+            {{user.name}}
+          </div>
+          <div>
+            <a href="/user/logout">
+              Logout
+            </a>
+          </div>
+        {{/if}}
+      {{else}}
+        <a href="/user/login">
+          Login
+        </a>
+      {{/if}}
+    </aside>
+
   </header>
 
   <main>
     {{{body}}}
   </main>
 
-  <footer></footer>
+  <footer>
+    <dl>
+      <dt>
+        Spring 2021 CS-546
+      </dt>
+      <dd>
+        Web Programming I - Final Project
+      </dd>
+      <dt>
+        Professor
+      </dt>
+      <dd>
+        Patrick Hill
+      </dd>
+      <dt>
+        Group Members
+      </dt>
+      <dd>
+        Parthik Davra | Vivian Dbritto | Smit Gor | Ming-Wei Hu | Junhong Wu
+      </dd>
+      <dt>
+        GitHub
+      </dt>
+      <a href="https://github.com/Smit36/CS-546-Project">
+        https://github.com/Smit36/CS-546-Project
+      </a>
+      <dd></dd>
+    </dl>
+  </footer>
 
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"

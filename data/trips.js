@@ -31,7 +31,7 @@ const getUserTrips = async (userId) => {
   assertObjectIdString(userId);
   const collection = await getTripCollection();
   const trips = await collection
-    .find({ userId: new ObjectId(userId) })
+    .find({ employeeIdList: new ObjectId(userId) })
     .toArray();
   return parseMongoData(trips);
 };
@@ -70,6 +70,10 @@ const createTrip = async (data) => {
   assertTripData(data);
 
   const {
+    name,
+    description,
+    startTime,
+    endTime,
     userId,
     corporateId,
     managerId,
@@ -87,6 +91,10 @@ const createTrip = async (data) => {
 
   const tripData = {
     _id: tripId,
+    name,
+    description,
+    startTime,
+    endTime,
     corporateId: new ObjectId(corporateId),
     approvalId: new ObjectId(approval._id),
     managerId: new ObjectId(managerId),
