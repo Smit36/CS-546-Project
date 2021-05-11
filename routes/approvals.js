@@ -49,7 +49,7 @@ router.get("/:id", async (req, res, next) => {
     const { user } = req.session;
     const { approval, trip } = await getAuthorizedData(user, id);
 
-    res.render("trip/approval", { trip, approval, ...getTemplateData(req) });
+    res.render("trip/approval", { trip, approval });
     // res.status(200).json(approval);
   } catch (error) {
     next(error);

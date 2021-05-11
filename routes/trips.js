@@ -78,6 +78,17 @@ const getAuthorizedExpense = async (user, expenseId) => {
 };
 
 const router = Router();
+router.get('/new', async (req, res) => {
+  try {
+    const { user } = req.session;
+    const trips = await getUserTrips(user._id);
+    // TODO: provide corporate users for template
+
+    res.render("trip/new", { trips, trips });
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get("/", async (req, res, next) => {
   try {
@@ -85,7 +96,7 @@ router.get("/", async (req, res, next) => {
     const trips = await getUserTrips(user._id);
     // TODO: provide corporate users for template
 
-    res.render("trip/index", { trips, ...getTemplateData(req) });
+    res.render("trip/index", { trips, trips });
   } catch (error) {
     next(error);
   }

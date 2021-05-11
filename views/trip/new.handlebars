@@ -1,0 +1,48 @@
+<article class="new-post">
+  <h1>Add a Trip</h1>
+  <form action="/trip" method="POST" class="new-post-form">
+    <label>
+      Trip name
+      <input type="text" name="name" placeholder="name" value="{{post.title}}" class="full-width-input"/>
+    </label>
+    <label>
+      Description of the trip
+      <input type="text" name="description" placeholder="description" value="{{post.title}}" class="full-width-input"/>
+    </label>
+    <label for="text">
+      Start time
+    </label>
+    <textarea id="start time" name="start time" rows="2" placeholder="start time" class="full-width-input">{{post.body}}</textarea>
+
+    <label for="text">
+      End time
+    </label>
+    <textarea id="end time" name="end time" rows="2" placeholder="end time" class="full-width-input">{{post.body}}</textarea>
+
+    <label for="text">
+      employeeldList
+    </label>
+    <textarea id="employeeldList" name="employeeldList" rows="2" placeholder="employeeld" class="full-width-input">{{post.body}}</textarea>
+
+    <label for="poster">
+      managerId
+    </label>
+    <select class="full-width-input" name="managerId">
+      <option value="">Select managerId...</option>
+      {{#each users}}
+        <option value="{{_id}}">{{name}}</option>
+      {{/each}}
+    </select>
+    <button type="submit">Create New Trip</button>
+    <button type="reset">Clear Form</button>
+  </form>
+  {{#if hasErrors}}
+  <ul class="error-list">
+    {{#each errors}}
+    <li>
+      {{this}}
+    </li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</article>

@@ -1,6 +1,13 @@
-<div>
-{{trip.name}}
-<div>
-<div>
-{{approval.status}}
-<div>
+
+    <div>
+    Trip name:{{trip.name}}
+    <div>
+    <div>
+        <form action="/approval/{{approvalId}}" method="POST" class="new-status-form"></form>
+        <p>Click Status to edit</p>
+        <p contenteditable="true">{{approval.status}}</p>
+        <button type="submit">Sent New status</button>
+      </form>
+    <div>
+
+
