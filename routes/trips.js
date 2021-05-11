@@ -20,6 +20,7 @@ const {
   assertNonEmptyArray,
 } = require("../utils/assertion");
 const { HttpError } = require("../utils/errors");
+const { getTemplateData } = require("../utils/routes");
 
 const assertTripID = (id) => assertObjectIdString(id, "Trip ID");
 const assertExpenseID = (id) => assertObjectIdString(id, "Expense ID");
@@ -39,8 +40,8 @@ const getAuthorizedTrip = async (user, id) => {
   tripExist(id, trip);
 
   if (
-    user.corporteId !== trip.corporateId ||
-    !trip.employeeIdList.contains(user)
+    user.corporateId !== trip.corporateId ||
+    !trip.employeeIdList.includes(user._id)
   ) {
     throw new HttpError("Unauthorized approval thread", 401);
   }
@@ -55,7 +56,7 @@ const getAuthorizedTripData = async (user, id) => {
   const approval = await getApproval(approvalId);
   approvalExist(id, approval);
 
-  const expenses = await getAllExpensesByTrip(tripId);
+  const expenses = await getAllExpensesByTrip(id);
 
   return {
     approval,
@@ -81,9 +82,10 @@ const router = Router();
 router.get("/", async (req, res, next) => {
   try {
     const { user } = req.session;
-    const trips = await getUserTrips(user, id);
+    const trips = await getUserTrips(user._id);
+    // TODO: provide corporate users for template
 
-    res.status(200).json(trips);
+    res.render("trip/index", { trips, ...getTemplateData(req) });
   } catch (error) {
     next(error);
   }
@@ -91,9 +93,10 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { user } = req.session;
+    const { user, corporate } = req.session;
     const tripData = req.body;
     tripData.userId = user._id;
+    tripData.corporateId = corporate._id;
     assertTripData(tripData);
 
     const { managerId, employeeIdList } = tripData;
@@ -136,12 +139,17 @@ router.get("/:id", async (req, res, next) => {
       status: approval.status,
       updatedAt: approval.updatedAt,
     };
+    const total = expenses.reduce(
+      (total, expense) => expense.payment.amount + total,
+      0
+    );
 
-    res.status(200).json({
-      ...trip,
+    res.render("trip/details", {
+      trip,
+      approvalInfo,
       expenses,
-      approval: approvalInfo,
-      // TODO: total
+      total,
+      ...getTemplateData(req),
     });
   } catch (error) {
     next(error);

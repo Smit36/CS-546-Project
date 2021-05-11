@@ -1,0 +1,9 @@
+<div>
+  {{#if trips}}
+    {{#each trips}}
+      <div>{{name}}</div>
+      <a href="/trip/{{_id}}">trip details</a>
+      <a href="/approval/{{approvalId}}">approval tread</a>
+    {{/each}}
+  {{/if}}
+</div>

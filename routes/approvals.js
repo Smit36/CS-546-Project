@@ -7,6 +7,7 @@ const {
 const { getTrip } = require("../data/trips");
 const { assertObjectIdString } = require("../utils/assertion");
 const { HttpError } = require("../utils/errors");
+const { getTemplateData } = require("../utils/routes");
 
 const dataExist = (id, data, desc = "data") => {
   if (!data) throw new HttpError(`Cannot find approval with ID: ${id}`, 404);
@@ -18,16 +19,16 @@ const tripExist = (id, trip) => dataExist(id, trip, "trip");
 const getAuthorizedData = async (user, approvalId) => {
   assertObjectIdString(approvalId);
 
-  const approval = await getApproval(id);
-  approvalExist(id, approval);
+  const approval = await getApproval(approvalId);
+  approvalExist(approvalId, approval);
 
   const { tripId } = approval;
   const trip = await getTrip(tripId);
   tripExist(tripId, trip);
 
   if (
-    user.corporteId !== trip.corporateId ||
-    !trip.employeeIdList.contains(user)
+    user.corporateId !== trip.corporateId ||
+    !trip.employeeIdList.includes(user._id)
   ) {
     throw new HttpError("Unauthorized approval thread", 401);
   }
@@ -46,9 +47,10 @@ router.get("/:id", async (req, res, next) => {
     assertObjectIdString(id);
 
     const { user } = req.session;
-    const { approval } = await getAuthorizedData(user, id);
+    const { approval, trip } = await getAuthorizedData(user, id);
 
-    res.status(200).json(approval);
+    res.render("trip/approval", { trip, approval, ...getTemplateData(req) });
+    // res.status(200).json(approval);
   } catch (error) {
     next(error);
   }

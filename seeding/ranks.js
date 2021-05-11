@@ -6,12 +6,12 @@ const seedRanks = async ({
   timestamp1 = new Date().getTime(),
   timestamp2 = new Date().getTime(),
   timestamp3 = new Date().getTime(),
-  corporateId1 = new ObjectId(),
-  corporateId2 = new ObjectId(),
+  corporate1Id = new ObjectId(),
+  corporate2Id = new ObjectId(),
 } = {}) => {
   const rankData1 = {
     _id: new ObjectId(),
-    corporateId: stringifyObjectId(corporateId1),
+    corporateId: stringifyObjectId(corporate1Id),
     name: "Manager",
     level: 3,
     createdAt: timestamp1,
@@ -20,7 +20,7 @@ const seedRanks = async ({
 
   const rankData2 = {
     _id: new ObjectId(),
-    corporateId: stringifyObjectId(corporateId1),
+    corporateId: stringifyObjectId(corporate1Id),
     name: "Accountant",
     level: 2,
     createdAt: timestamp2,
@@ -29,7 +29,7 @@ const seedRanks = async ({
 
   const rankData3 = {
     _id: new ObjectId(),
-    corporateId: stringifyObjectId(corporateId1),
+    corporateId: stringifyObjectId(corporate1Id),
     name: "Associate",
     level: 1,
     createdAt: timestamp1,
@@ -38,7 +38,7 @@ const seedRanks = async ({
 
   const rankData4 = {
     _id: new ObjectId(),
-    corporateId: stringifyObjectId(corporateId2),
+    corporateId: stringifyObjectId(corporate2Id),
     name: "Tech Lead",
     level: 3,
     createdAt: timestamp1,
@@ -47,7 +47,7 @@ const seedRanks = async ({
 
   const rankData5 = {
     _id: new ObjectId(),
-    corporateId: stringifyObjectId(corporateId2),
+    corporateId: stringifyObjectId(corporate2Id),
     name: "Senior Developer",
     level: 2,
     createdAt: timestamp1,
@@ -56,7 +56,7 @@ const seedRanks = async ({
 
   const rankData6 = {
     _id: new ObjectId(),
-    corporateId: stringifyObjectId(corporateId2),
+    corporateId: stringifyObjectId(corporate2Id),
     name: "Developer",
     level: 1,
     createdAt: timestamp1,
