@@ -3,26 +3,26 @@
   <form action="/trip" method="PUT" class="new-post-form">
     <label>
       Trip name
-      <input type="text" name="name" placeholder="name" value="{{post.title}}" class="full-width-input"/>
+      <input type="text" name="name" placeholder="name" value="{{trip.name}}" class="full-width-input"/>
     </label>
     <label>
       Description of the trip
-      <input type="text" name="description" placeholder="description" value="{{post.title}}" class="full-width-input"/>
+      <input type="text" name="description" placeholder="description" value="{{trip.description}}" class="full-width-input"/>
     </label>
     <label for="text">
       Start time
     </label>
-    <textarea id="start time" name="start time" rows="2" placeholder="start time" class="full-width-input">{{post.body}}</textarea>
+    <textarea id="start time" name="start time" rows="2" placeholder="start time" class="full-width-input">{{trip.startTime}}</textarea>
 
     <label for="text">
       End time
     </label>
-    <textarea id="end time" name="end time" rows="2" placeholder="end time" class="full-width-input">{{post.body}}</textarea>
+    <textarea id="end time" name="end time" rows="2" placeholder="end time" class="full-width-input">{{trip.endTime}}</textarea>
 
     <label for="text">
       employeeldList
     </label>
-    <textarea id="employeeldList" name="employeeldList" rows="2" placeholder="employeeld" class="full-width-input">{{post.body}}</textarea>
+    <textarea id="employeeldList" name="employeeldList" rows="2" placeholder="employeeld" class="full-width-input">{{trip.employeedldList}}</textarea>
 
     <label for="poster">
       managerId
