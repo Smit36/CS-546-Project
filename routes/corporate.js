@@ -15,7 +15,7 @@ const {
   assertRequiredObject,
   assertIsValuedString,
   assertEmailString,
-  assertContactString
+  assertContactString,
 } = require("../utils/assertion");
 
 const { HttpError } = require("../utils/errors");
@@ -62,7 +62,7 @@ router.post("/", async (req, res, next) => {
 
     const newCorporate = await createCorporate(corporateData);
     isCorporateAdd(newCorporate._id, newCorporate);
-    res.status(200).render('corporate/corporate', {corporate: newCorporate, title: `Corporate Information for ${newCorporate.name}`});
+    res.status(200).json({ corporate: newCorporate });
   } catch (error) {
     next(error);
   }
@@ -73,19 +73,17 @@ router.get("/", async (req, res, next) => {
   try {
     const allCorporate = await getAllCorporates();
     // TODO: Add User at created by
-    res.status(200).render('corporate/corporates', {corporates: allCorporate, user: allCorporate.user});
+    res
+      .status(200)
+      .render("corporate/corporates", {
+        corporates: allCorporate,
+        user: allCorporate.user,
+        title: "Corporate List",
+      });
   } catch (error) {
     next(error);
   }
 });
-
-router.get("/create", async (req, res, next) => {
-    try {
-      res.status(200).render('corporate/create');
-    } catch (error) {
-      next(error);
-    }
-  });
 
 //Get single corporate by cororateId
 router.get("/:corporateId", async (req, res, next) => {
@@ -95,7 +93,12 @@ router.get("/:corporateId", async (req, res, next) => {
     const corporate = await getCorporate(corporateId);
     corporateExist(corporate._id, corporate);
     // TODO: Add User at created by
-    res.status(200).render('corporate/corporate', {corporate: corporate, title: `Corporate Information for ${corporate.name}`});
+    res
+      .status(200)
+      .render("corporate/corporate", {
+        corporate: corporate,
+        title: `Corporate Information for ${corporate.name}`,
+      });
   } catch (error) {
     next(error);
   }
@@ -114,7 +117,7 @@ router.put("/:corporateId", async (req, res, next) => {
     let corporateData = req.body;
     assertEmailString(corporateData.emailDomain, "Corporate Email");
     assertContactString(corporateData.contactNo, "Contact Number");
-    
+
     corporateData.updatedBy = user._id;
 
     const corporate = await getCorporate(corporateId);
@@ -122,7 +125,7 @@ router.put("/:corporateId", async (req, res, next) => {
 
     const updatedCorporate = await updateCorporate(corporateId, corporateData);
     isCorporateUpdate(updatedCorporate._id, updatedCorporate);
-    res.status(200).json({corporate: updatedCorporate})
+    res.status(200).json({ corporate: updatedCorporate });
   } catch (error) {
     next(error);
   }
@@ -136,12 +139,10 @@ router.delete("/:corporateId", async (req, res, next) => {
 
     const corporate = await deleteCorporate(corporateId);
     if (corporate) {
-      res
-        .status(200)
-        .json({
-          deletedId: corporateId,
-          deleteCorporate: "Corporate Successfully deleted",
-        });
+      res.status(200).json({
+        deletedId: corporateId,
+        deleteCorporate: "Corporate Successfully deleted",
+      });
     }
   } catch (error) {
     next(error);

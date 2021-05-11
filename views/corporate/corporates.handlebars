@@ -1,21 +1,20 @@
+<h1 id="title-info">{{title}}</h1>
 <p id="corporate-list">Corporate Lists</p>
-<div>
-<nav>
-<a href='/corporate/create' id="nav-a">Create Corporate</a>
-
+<nav class="add-create">
+    <button id="nav-a" class="corporate-create">Create Corporate</button>
 </nav>
-</div>
-
-{{#each corporates}}
-<p></p>
-<a href='/corporate/{{_id}}' id={{_id}} class="link">
-    <div class="card">
-        <div class="container">
-            <h2>Corporate Name: <span>{{name}}</span></h2>
-            <h3>Corporate Email: <span>{{emailDomain}}</span></h3>
-            <h3>Corporate Contact Number: <span>{{contactNo}}</span></h3>
-            <h3>Corporate Contact Address: <span>{{address}}</span></h3>
+<div class="corporates-list">
+    {{#each corporates}}
+    <p></p>
+    <a href='/corporate/{{_id}}' id={{_id}} class="link">
+        <div class="card">
+            <div class="container">
+                <h2>Corporate Name: <span>{{name}}</span></h2>
+                <h3>Corporate Email: <span>{{emailDomain}}</span></h3>
+                <h3>Corporate Contact Number: <span>{{contactNo}}</span></h3>
+                <h3>Corporate Contact Address: <span>{{address}}</span></h3>
+            </div>
         </div>
-    </div>
-</a>
-{{/each}}
+    </a>
+    {{/each}}
+</div>
