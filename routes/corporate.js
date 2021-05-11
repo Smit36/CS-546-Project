@@ -8,6 +8,7 @@ const {
   getAllCorporates,
   updateCorporate,
   deleteCorporate,
+  getCorporateByEmail
 } = require("../data/corporate");
 
 const {
@@ -48,21 +49,23 @@ const assertCorporateData = (corporateData) => {
   assertRequiredObject(corporateData.updatedBy, "Update By");
 };
 
-//Add Corporate
+//Add New Corporate
 router.post("/", async (req, res, next) => {
   try {
-    // const { user } = req.session;
-    // For Testing only(set user id statically)
-    const user = { _id: new ObjectId("608c14d031a2df4a7cc07372") };
-    assertRequiredObject(user._id);
-    const corporateData = req.body;
-    corporateData.createdBy = user._id;
-    corporateData.updatedBy = user._id;
-    assertCorporateData(corporateData);
+    const { user } = req.session;
+    const userId = ObjectId(user._id);
 
-    const newCorporate = await createCorporate(corporateData);
-    isCorporateAdd(newCorporate._id, newCorporate);
-    res.status(200).json({ corporate: newCorporate });
+    assertRequiredObject(userId);
+    const corporateData = req.body;
+    corporateData.createdBy = userId;
+    corporateData.updatedBy = userId;
+    assertCorporateData(corporateData);
+    const emailExist = await getCorporateByEmail(corporateData.emailDomain);
+    if(!emailExist){
+      const newCorporate = await createCorporate(corporateData);
+      isCorporateAdd(newCorporate._id, newCorporate);
+      res.status(200).json({ corporate: newCorporate });
+    }
   } catch (error) {
     next(error);
   }
@@ -72,10 +75,10 @@ router.post("/", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const allCorporate = await getAllCorporates();
-    // TODO: Add User at created by
+
     res
       .status(200)
-      .render("corporate/corporates", {
+      .render("corporates/corporates", {
         corporates: allCorporate,
         user: allCorporate.user,
         title: "Corporate List",
@@ -92,10 +95,10 @@ router.get("/:corporateId", async (req, res, next) => {
     assertObjectIdString(corporateId);
     const corporate = await getCorporate(corporateId);
     corporateExist(corporate._id, corporate);
-    // TODO: Add User at created by
+    
     res
       .status(200)
-      .render("corporate/corporate", {
+      .render("corporates/corporate", {
         corporate: corporate,
         title: `Corporate Information for ${corporate.name}`,
       });
@@ -109,16 +112,15 @@ router.put("/:corporateId", async (req, res, next) => {
   try {
     const { corporateId } = req.params;
     assertObjectIdString(corporateId);
-    // const { user } = req.session;
-    // For Testing only(set user id statically)
-    const user = { _id: new ObjectId("608c1f4817e05f82c4b7ce1b") };
-    assertRequiredObject(user._id);
+    const { user } = req.session;
+    const userId = ObjectId(user._id);
+    assertRequiredObject(userId);
 
     let corporateData = req.body;
     assertEmailString(corporateData.emailDomain, "Corporate Email");
     assertContactString(corporateData.contactNo, "Contact Number");
 
-    corporateData.updatedBy = user._id;
+    corporateData.updatedBy = userId;
 
     const corporate = await getCorporate(corporateId);
     corporateExist(corporate._id, corporate);
