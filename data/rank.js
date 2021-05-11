@@ -31,6 +31,8 @@ const getRank = async (id) => {
 };
 
 const getAllRanks = async (user) => {
+    assertRequiredObject(user);
+
     const collection = await getRankCollection();
 
     if (user.role === USER_ROLE.CORPORATE) {

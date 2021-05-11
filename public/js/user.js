@@ -1,3 +1,7 @@
+const bcrypt = require('bcrypt');
+
+var rankData = {};
+
 function addNewUser() {
     document.getElementById('new-user').style.display = 'none';
     document.getElementById('show-form').style.display = 'block';
@@ -5,7 +9,21 @@ function addNewUser() {
   
     var getUser = $('#get-users');
     getUser.hide();
-  
+
+    let requestConfig = {
+      method: 'GET',
+      url: 'http://localhost:3000/rank/all',
+    };
+
+    $.ajax(requestConfig).then(function(responseMessage) {
+        rankData = responseMessage;
+        console.log(rankData);
+        var rank = $('#rank');
+        for (let i = 0; i < rankData.length; i++) {
+        rank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}">${rankData[i].name}</option>`)
+    }
+    });    
+
     var submitUser = $('.submit');
     $(submitUser).on('click', function (event) {
       event.preventDefault();
@@ -18,12 +36,29 @@ function addNewUser() {
             break;
         }
       }
+
+      let selectedRank = $('#rank :selected').val();
+      let rankId = null;
+      let level = 0;
+
+      for (let r of rankData) {
+        if (r.name === selectedRank.trim()) {
+            rankId = r._id.toString();
+            level = r.level;
+        }
+      }
+
+      let password = document.getElementById('password').value;
+      let hashPassword = bcrypt.hash(password, 8);
       
       data = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
         contact: document.getElementById('contact').value,
-        rank: document.getElementById('role').value,
+        designation: selectedRank,
+        rankId: rankId,
+        rank: level,
         role: role,
       };
 
@@ -40,6 +75,18 @@ function addNewUser() {
       });
     });
   }
+
+  function getRankData() {
+    let requestConfig = {
+      method: 'GET',
+      url: 'http://localhost:3000/rank/all',
+    };
+
+    $.ajax(requestConfig).then(function(responseMessage) {
+        let ranksData = responseMessage;
+        return ranksData;
+    });
+  }
   
   function showUsers() {
     document.getElementById('show-user').style.display = 'none';
@@ -53,7 +100,6 @@ function addNewUser() {
     $.ajax(`http://localhost:3000/user/all`, {
       dataType: 'json',
       success: function (data, status, xhr) {
-        console.log(data);  
         if (data.length > 0) {
           for (let i = 0; i < data.length; i++) {
             $(userList).append(
@@ -232,7 +278,7 @@ function addNewUser() {
           }
           userList.show();
         }
-        $(getUser).show();
+        getUser.show();
       },
       error: function (jqXhr, textStatus, errorMessage) {
         // error callback
