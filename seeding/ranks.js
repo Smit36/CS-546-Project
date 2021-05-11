@@ -63,12 +63,12 @@ const seedRanks = async ({
     updatedAt: timestamp1,
   };
 
-  const corporate1RankManager = await createRank(rankData1);
-  const corporate1RankAccountant = await createRank(rankData2);
-  const corporate1RankAssociate = await createRank(rankData3);
-  const corporate2RankTechLead = await createRank(rankData4);
-  const corporate2RankSeniorDeveloper = await createRank(rankData5);
-  const corporate2RankDeveloper = await createRank(rankData6);
+  const corporate1RankManager = await createRank(rankData1, stringifyObjectId(corporate1Id));
+  const corporate1RankAccountant = await createRank(rankData2, stringifyObjectId(corporate1Id));
+  const corporate1RankAssociate = await createRank(rankData3, stringifyObjectId(corporate1Id));
+  const corporate2RankTechLead = await createRank(rankData4, stringifyObjectId(corporate2Id));
+  const corporate2RankSeniorDeveloper = await createRank(rankData5, stringifyObjectId(corporate2Id));
+  const corporate2RankDeveloper = await createRank(rankData6, stringifyObjectId(corporate2Id));
 
   return {
     corporate1RankManager,

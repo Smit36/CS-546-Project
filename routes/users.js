@@ -18,6 +18,8 @@ const {
 } = require('../utils/constants')
 const { QueryError, ValidationError } = require("../utils/errors");
 const { getTemplateData } = require('../utils/routes');
+const USER_PAGE_PATH = 'users/index';
+const USER_PAGE_TITLE = 'Employee';
 
 //add user
 router.post('/', async (req, res) => {
@@ -65,9 +67,18 @@ router.post('/', async (req, res) => {
 //Get all users
 router.get('/', async (req, res) => {
   try {  
+    res.render(USER_PAGE_PATH, getTemplateData(req, { title: USER_PAGE_TITLE }));
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
+});
+
+//Get all users
+router.get('/all', async (req, res) => {
+  try {  
     const user = req.session.user;
     const allUsers = await usersData.getAllUsers(user);
-    res.status(200).json(allUsers);
+    return res.status(200).json(allUsers);
   } catch (e) {
     res.status(400).json({ error: e });
   }

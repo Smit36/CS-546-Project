@@ -47,7 +47,9 @@ label {
 .submit,
 .update,
 #new-rank button,
-#show-rank button {
+#show-rank button,
+#new-user button,
+#show-user button {
   background-color: #358aeb;
   color: white;
   padding: 12px 20px;
@@ -98,7 +100,7 @@ label {
   margin-top: 6px;
 }
 
-#rank-list button {
+#rank-list, #user-list button {
   background-color: #f2f2f2;
   color: rgb(66, 66, 66);
   padding: 18px;
@@ -110,7 +112,7 @@ label {
   border-bottom: 1px solid rgb(66, 66, 66);
 }
 
-#rank-list button:hover {
+#rank-list, #user-list button:hover {
   cursor: pointer;
   background-color: #ebebeb;
   color: rgb(66, 66, 66);

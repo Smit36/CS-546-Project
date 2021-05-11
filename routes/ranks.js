@@ -10,7 +10,8 @@ const RANK_PAGE_TITLE = 'Expense';
 router.post('/', async (req, res) => {
     try {
       const reqBody = req.body;
-      const newRank = await rankData.createRank(reqBody);
+      const user = req.session.user;
+      const newRank = await rankData.createRank(reqBody, user.corporateId);
       return res.status(200).json(newRank);
     } catch (e) {
       res.status(400).json({ error: e });

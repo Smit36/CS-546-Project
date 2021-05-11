@@ -12,10 +12,10 @@ function addNewRank() {
       let data = {};
 
       data = {
-        corporateId: '60832c0f8b6948b77e6dc3c5',
         name: document.getElementById('name').value,
         level: document.getElementById('level').value,
       };
+      
       $.ajax({
         url: 'http://localhost:3000/rank',
         type: 'POST',

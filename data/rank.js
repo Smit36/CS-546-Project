@@ -43,10 +43,10 @@ const getAllRanks = async (user) => {
     return parseMongoData(rankList);
 };
 
-const createRank = async (data) => {
+const createRank = async (data, corporateId) => {
     assertRequiredObject(data);
   
-    const { corporateId, name, level, createdAt = new Date().getTime() } = data;
+    const { name, level, createdAt = new Date().getTime() } = data;
 
     assertObjectIdString(corporateId, "Corporate ID");
     assertIsValuedString(name, "Rank name");
