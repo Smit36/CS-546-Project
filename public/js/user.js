@@ -278,7 +278,7 @@ function addNewUser() {
           }
           userList.show();
         }
-        getUser.show();
+        $(getUser).show();
       },
       error: function (jqXhr, textStatus, errorMessage) {
         // error callback
