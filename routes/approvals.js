@@ -49,7 +49,8 @@ router.get("/:id", async (req, res, next) => {
     const { user } = req.session;
     const { approval, trip } = await getAuthorizedData(user, id);
 
-    res.render("trip/approval", { trip, approval });
+    const lastUpdateId = approval.updates[approval.updates.length - 1]._id;
+    res.render("trip/approval", { trip, approval, lastUpdateId });
     // res.status(200).json(approval);
   } catch (error) {
     next(error);
@@ -58,7 +59,7 @@ router.get("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const { user } = req.session;
     const updateData = req.body;
     updateData.userId = user._id;

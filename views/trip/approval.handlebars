@@ -1,22 +1,31 @@
-
+<div>
+  Trip name:{{trip.name}}
+<div>
+<div>
+  <p>Last Status:{{approval.status}}</p>
+  {{#each approval.updates}}
+    <p>status：{{status}}</p>
+    <p>messsage：{{message}}</p>
+  {{/each}}
+  <div id="approval-id">{{approval._id}}</div>
+  <div id="approval-last-id">{{lastUpdateId}}</div>
+  <form id="approval-update-form" class="new-status-form">
+    <p>Click Status to edit</p>
+    <p id="status "contenteditable="true">{{approval.status}}</p>
     <div>
-    Trip name:{{trip.name}}
-    <div>
-    <div>
-        <p>Last Status:{{approval.status}}</p>
-        {{#each approval.updates}}
-        <p>status：{{status}}</p>
-        <p>updates：{{message}}</p>
-        {{/each}}
-        <form action="/approval/{{approvalId}}" method="PUT" class="new-status-form"></form>
-        <p>Click Status to edit</p>
-        <p id="status "contenteditable="true">{{approval.status}}</p>
-        <label for="text">
-         Message
-        </label>
-        <textarea id="Message" name="Message" rows="2" placeholder="Message" class="full-width-input">{{message}}</textarea>
-        <button type="submit">Sent New status</button>
-      </form>
-    <div>
-
-
+      <input type="radio" id="approval-same" name="status" value="">
+      <label for="approval-pending">No new status</label>
+      <input type="radio" id="approval-pending" name="status" value="PENDING">
+      <label for="approval-pending">Pending</label>
+      <input type="radio" id="approval-approve" name="status" value="APPROVE">
+      <label for="approval-approve">Approve</label>
+      <input type="radio" id="approval-reject" name="status" value="REJECT">
+      <label for="approval-reject">Reject</label>
+    </div>
+    <label for="appoval-update-message">
+      Message
+    </label>
+    <textarea id="appoval-update-message" name="message" rows="2" placeholder="Message" class="full-width-input"></textarea>
+    <input type="submit" value="Send New Update"/>
+  </form>
+<div>
