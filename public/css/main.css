@@ -4,7 +4,11 @@
 
 html,
 body {
-	font-size: 14pt;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -13,92 +17,190 @@ body {
 }
 
 main {
-	max-width: 75%;
-	margin: auto;
+  width: 100%;
+  height: 100%;
 }
 
-header {
-	border-bottom: 1px solid #afafaf;
+footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	color: #222;
-	margin-bottom: 5px;
+input[type='text'],
+input[type='number'],
+input[type='date'],
+select {
+  width: 90%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
 }
 
-h1 {
-	font-size: 2rem;
-}
-
-h2 {
-	font-size: 1.5rem;
-}
-
-h3 {
-	font-size: 1.5rem;
-}
-
-h4 {
-	font-size: 1.25rem;
-}
-
-h5 {
-	font-size: 1.15rem;
-}
-
-h6 {
-	font-size: 1.05rem;
-}
-
-p {
-	font-size: 1rem;
-	line-height: 2;
-}
-
-.post {
-	width: 75%;
-	border-bottom: 1px dashed #333;
-}
-
-.new-post-form {
-	max-width: 300px;
-}
-
-.new-post-form .full-width-input {
-	display: block;
-	min-height: 3em;
-	margin: 10px 0;
-	width: 100%;
+input[type='date'] {
+  width: 25%;
 }
 
 label {
-	font-weight: bold;
+  padding: 12px 12px 12px 0;
+  display: inline-block;
 }
 
-.error-list li {
-	color: #ff0000;
+.submit,
+.update,
+#new-rank button,
+#show-rank button,
+#new-user button,
+#show-user button {
+  background-color: #358aeb;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px 0 0 45%;
 }
 
-.author-link,
-.author-link:link {
-	color: #228b22;
+.submit,
+.update {
+  background-color: #4caf50;
+}
+.submit:hover,
+.update:hover {
+  background-color: #45a049;
 }
 
-.author-link:visited {
-	font-style: italic;
-	color: saddlebrown;
+#show-form {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  margin-left: 10%;
+  width: 75%;
 }
 
-.author-link:hover {
-	font-style: normal;
-	font-weight: 700;
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
 }
 
-.author-link:active {
-	color: #ff0000;
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+.col-15 {
+  float: left;
+  width: 15%;
+  margin-top: 6px;
+}
+
+.col-35 {
+  float: left;
+  width: 35%;
+  margin-top: 6px;
+}
+
+#rank-list, #user-list button {
+  background-color: #f2f2f2;
+  color: rgb(66, 66, 66);
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  border-bottom: 1px solid rgb(66, 66, 66);
+}
+
+#rank-list, #user-list button:hover {
+  cursor: pointer;
+  background-color: #ebebeb;
+  color: rgb(66, 66, 66);
+}
+
+#header {
+  background-color: #777;
+  color: white;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+}
+
+.delete-button,
+.update-button {
+  float: left;
+  width: 50%;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.delete-button {
+  background-color: #f44336;
+}
+
+.update-button {
+  background-color: #04aa6d;
+  color: white;
+}
+
+#modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #474e5d;
+  opacity: 0.95;
+  padding-top: 50px;
+}
+
+.detail {
+  background-color: #fefefe;
+  opacity: 1;
+  margin: 5% auto 5% auto; /* 5% from the top, 15% from the bottom and centered */
+  padding: 20px 15px 20px 15px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+.close:hover {
+  cursor: pointer;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25,
+  .col-75,
+  .col-15,
+  .col-35,
+  input[type='submit'] {
+    width: 100%;
+    margin-top: 0;
+  }
 }

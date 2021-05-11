@@ -43,14 +43,13 @@ const getAllUsers = async (user) => {
 
     const role = user.role;
 
+    let userList = {};
+
     if (role === USER_ROLE.ADMIN) {
-      const userList = await collection.find({}).toArray();
+      userList = await collection.find({}).toArray();
     }
-    else if (role === USER_ROLE.CORPORATE) {
-      const userList = await collection.find({ corporateId : user.corporateId }).toArray();
-    }
-    else {
-      const userList = await collection.find({ _id : user._id }).toArray();
+    else{
+      userList = await collection.find({ corporateId : new ObjectId(user.corporateId) }).toArray();
     }
 
     return userList;

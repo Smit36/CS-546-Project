@@ -15,6 +15,9 @@ const {
   assertRequiredObject,
   assertRequiredNumber,
 } = require("../utils/assertion");
+const {
+  USER_ROLE
+} = require('../utils/constants');
 
 const getByObjectId = async (objectId) => {
     const collection = await getRankCollection();
@@ -27,29 +30,36 @@ const getRank = async (id) => {
     return await getByObjectId(new ObjectId(id));
 };
 
-const getAllRanks = async () => {
+const getAllRanks = async (user) => {
+    assertRequiredObject(user);
+
     const collection = await getRankCollection();
+
+    if (user.role === USER_ROLE.CORPORATE) {
+      const rankList = await collection.find({ corporateId : new ObjectId(user.corporateId) }).toArray();
+      return parseMongoData(rankList);
+    }
 
     const rankList = await collection.find({}).toArray();
 
     return parseMongoData(rankList);
 };
 
-const createRank = async (data) => {
+const createRank = async (data, corporateId) => {
     assertRequiredObject(data);
   
-    const { corporateId, name, level, createdAt = new Date().getTime() } = data;
-  
+    const { name, level, createdAt = new Date().getTime() } = data;
+
     assertObjectIdString(corporateId, "Corporate ID");
     assertIsValuedString(name, "Rank name");
-    assertRequiredNumber(level, "Rank level");
+    assertRequiredNumber(parseInt(level), "Rank level");
     assertRequiredNumber(createdAt, "Rank created time");
   
     const rankData = {
       _id: new ObjectId(),
       corporateId: new ObjectId(corporateId),
       name : name,
-      level: level,
+      level: parseInt(level),
       createdAt: createdAt,
       updatedAt: createdAt,
     };
