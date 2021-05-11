@@ -3,9 +3,18 @@
     Trip name:{{trip.name}}
     <div>
     <div>
+        <p>Last Status:{{approval.status}}</p>
+        {{#each approval.updates}}
+        <p>status：{{status}}</p>
+        <p>updates：{{message}}</p>
+        {{/each}}
         <form action="/approval/{{approvalId}}" method="PUT" class="new-status-form"></form>
         <p>Click Status to edit</p>
-        <p contenteditable="true">{{approval.status}}</p>
+        <p id="status "contenteditable="true">{{approval.status}}</p>
+        <label for="text">
+         Message
+        </label>
+        <textarea id="Message" name="Message" rows="2" placeholder="Message" class="full-width-input">{{message}}</textarea>
         <button type="submit">Sent New status</button>
       </form>
     <div>
