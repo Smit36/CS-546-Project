@@ -1,40 +1,59 @@
-<article class="new-post">
-  <h1>Add a Trip</h1>
-  <form action="/trip" method="PUT" class="new-post-form">
-    <label>
-      Trip name
-      <input type="text" name="name" placeholder="name" value="{{trip.name}}" class="full-width-input"/>
-    </label>
-    <label>
-      Description of the trip
-      <input type="text" name="description" placeholder="description" value="{{trip.description}}" class="full-width-input"/>
-    </label>
-    <label for="text">
-      Start time
-    </label>
-    <textarea id="start time" name="start time" rows="2" placeholder="start time" class="full-width-input">{{trip.startTime}}</textarea>
+<div class="new-post">
+  <form id="trip-form" class="new-post-form">
+    <div>
+      <label>
+        Trip name
+      </label>
+      <input id="trip-name" type="text" name="name" placeholder="name" value="{{trip.name}}" class="full-width-input"/>
+    </div>
+    <div>
+      <label>
+        Description of the trip
+      </label>
+      <input id="trip-description" type="text" name="description" placeholder="description" value="{{trip.description}}" class="full-width-input"/>
+    </div>
+    <div>
+      <label>
+        Start time
+      </label>
+      <input id="trip-start-time" type="date" name="start-time" placeholder="start time" class="full-width-input" value="{{trip.startTime}}"/>
+    </div>
+    <div>
+      <label>
+        End time
+      </label>
+      <input id="trip-end-time" type="date" name="end-time" placeholder="end time" class="full-width-input" value="{{trip.endTime}}" />
+    </div>
+    <div>
+      <label for="manager">
+        Manager
+      </label>
+      <select id="trip-manager" class="full-width-input" name="managerId">
+        <option value="">Select manager...</option>
+        {{#each users}}
+          <option value="{{_id}}">{{name}} ({{email}})</option>
+        {{/each}}
+      </select>
+    </div>
 
-    <label for="text">
-      End time
+    <div>
+    <label for="employee">
+      employee
     </label>
-    <textarea id="end time" name="end time" rows="2" placeholder="end time" class="full-width-input">{{trip.endTime}}</textarea>
-
-    <label for="text">
-      employeeldList
-    </label>
-    <textarea id="employeeldList" name="employeeldList" rows="2" placeholder="employeeld" class="full-width-input">{{trip.employeedldList}}</textarea>
-
-    <label for="poster">
-      managerId
-    </label>
-    <select class="full-width-input" name="managerId">
-      <option value="">Select managerId...</option>
+    <select id="trip-employee" class="full-width-input" name="managerId">
+      <option value="">Select employee...</option>
       {{#each users}}
-        <option value="{{_id}}">{{name}}</option>
+        <option value="{{_id}}">{{name}} ({{email}})</option>
       {{/each}}
     </select>
-    <button type="submit">Create New Trip</button>
-    <button type="reset">Clear Form</button>
+
+    <div>
+      <input type="submit" value="Create New Trip" />
+    </div>
+
+    <div>
+      <input type="reset"  value="Clear"/>
+    </div>
   </form>
   {{#if hasErrors}}
   <ul class="error-list">
@@ -45,4 +64,4 @@
     {{/each}}
   </ul>
   {{/if}}
-</article>
+</div>

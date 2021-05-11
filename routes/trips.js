@@ -14,7 +14,7 @@ const {
   getExpense,
   addExpense,
 } = require("../data/expenses");
-const { getUser } = require("../data/users");
+const { getUser, getAllUsers } = require("../data/users");
 const {
   assertObjectIdString,
   assertNonEmptyArray,
@@ -78,13 +78,13 @@ const getAuthorizedExpense = async (user, expenseId) => {
 };
 
 const router = Router();
-router.get('/new', async (req, res) => {
+router.get('/new', async (req, res, next) => {
   try {
     const { user } = req.session;
     const trips = await getUserTrips(user._id);
-    // TODO: provide corporate users for template
+    const users = await getAllUsers(user);
 
-    res.render("trip/new", { trips, trips });
+    res.render("trip/new", { users, trips, ...getTemplateData(req, {title:'New Trip'}) });
   } catch (error) {
     next(error);
   }
@@ -94,9 +94,8 @@ router.get("/", async (req, res, next) => {
   try {
     const { user } = req.session;
     const trips = await getUserTrips(user._id);
-    // TODO: provide corporate users for template
 
-    res.render("trip/index", { trips, trips });
+    res.render("trip/index", { trips, ...getTemplateData(req, {title:'My Trips'})});
   } catch (error) {
     next(error);
   }
@@ -104,15 +103,18 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { user, corporate } = req.session;
+    const { user } = req.session;
+    const corporateId = user.corporateId;
     const tripData = req.body;
     tripData.userId = user._id;
-    tripData.corporateId = corporate._id;
+    tripData.corporateId = corporateId;
+    tripData.startTime = Number(tripData.startTime);
+    tripData.endTime = Number(tripData.endTime);
     assertTripData(tripData);
 
     const { managerId, employeeIdList } = tripData;
     const manager = await getUser(managerId);
-    if (!manager.corporateId !== corporateId) {
+    if (manager.corporateId !== corporateId) {
       throw new HttpError(`Invalid corporate manager ${managerId}`, 400);
     }
 
