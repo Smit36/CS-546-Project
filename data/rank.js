@@ -25,11 +25,11 @@ const getByObjectId = async (objectId) => {
     return parseMongoData(rank);
 };
 
-const getRankByName = async (rank) => {
-  assertRequiredObject(rank);
+const getRankByName = async (rankReq) => {
+  assertRequiredObject(rankReq);
 
   const collection = await getRankCollection();
-  const rank = await collection.findOne({ name : rank.name });
+  const rank = await collection.findOne({ name : rankReq.name });
   return parseMongoData(rank);
 };
   

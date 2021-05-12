@@ -6,8 +6,8 @@ function addNewRank() {
     var getRank = $('#get-ranks');
     getRank.hide();
   
-    var submitRank = $('.submit');
-    $(submitRank).on('click', function (event) {
+    var submitRank = $('#rank-form');
+    submitRank.submit(function (event) {
       event.preventDefault();
       let data = {};
 
