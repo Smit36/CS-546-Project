@@ -1,19 +1,27 @@
 <div>
   <form id="login-form" method="POST" action="/user/login">
-    <div>
-      <label for="login-form__email">
-        User Email
-      </label>
-      <input id="login-form__email" name="email" type="email" />
-      <div id="login-form__user__error" hidden></div>
+    <div class="row">
+      <div class="col-25">
+        <label for="login-form-email">
+          User Email
+        </label>
+      </div>
+      <div class="col-75">
+        <input id="login-form-email" name="email" type="email" placeholder="abc@apple.com"/>
+      </div>
+      <div id="login-form-user-error" hidden></div>
     </div>
-    <div>
-      <label for="login-form__password">
-        Password
-      </label>
-      <input id="login-form__password" name="password" type="password" />
-      <div id="login-form__password__error" hidden></div>
+    <div class="row">
+      <div class="col-25">
+        <label for="login-form-password">
+          Password
+        </label>
+      </div>
+      <div class="col-75">
+        <input id="login-form-password" name="password" type="password" />
+      </div>
+      <div id="login-form-password-error" hidden></div>
     </div>
-    <input id="login-form__submit" type="submit" value="Search" />
+    <button class="submit" id="login-form-submit" type="submit">Login</button>
   </form>
 </div>

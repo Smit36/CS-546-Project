@@ -8,9 +8,9 @@ body {
 }
 
 header {
-	/* position: absolute;
+  /* position: absolute;
 	top: 0; */
-	width: 100%;
+  width: 100%;
 }
 
 main {
@@ -22,6 +22,39 @@ footer {
   position: relative;
   bottom: 0;
   width: 100%;
+  margin-top: 20%;
+  width: 100%;
+  background-color: rgb(95, 95, 95);
+  color: white;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: rgb(212, 211, 211);
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: rgb(43, 42, 42);
+  text-align: center;
+  padding: 18px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: rgb(150, 150, 150);
+}
+
+.active {
+  background-color: #358aeb;
+  color: white;
 }
 
 input[type='text'],
@@ -53,7 +86,8 @@ input[type='submit'],
 #new-rank button,
 #show-rank button,
 #new-user button,
-#show-user button {
+#show-user button,
+button {
   background-color: #358aeb;
   color: white;
   padding: 12px 20px;
@@ -67,6 +101,28 @@ input[type='submit'],
 .update {
   background-color: #4caf50;
 }
+
+button a{
+  color:white;
+  text-decoration: none;
+}
+
+button:hover{
+  background-color: #1279ee;
+}
+
+.submit,
+.update,
+.confirm,
+.cancel {
+  background-color: #4caf50;
+}
+
+.submit {
+  margin-top: 5%;
+  margin-left: 45%;
+}
+
 .submit:hover,
 .update:hover {
   background-color: #45a049;
@@ -78,6 +134,44 @@ input[type='submit'],
   padding: 20px;
   margin-left: 10%;
   width: 75%;
+}
+
+.cancel,
+.delete {
+  background-color: #f44336;
+}
+
+.cancel:hover,
+.delete:hover {
+  background-color: #f81707;
+}
+
+#show-form,
+#login-form {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  margin: 10px 10% 2% 10%;
+  width: 75%;
+}
+#login-form {
+  width: 35%;
+  padding: 50px;
+  margin-left: 30%;
+}
+
+#trip-card{
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  background-color: rgb(235, 241, 247);
+  transition: 0.3s;
+  margin: 5px 5px 5px 50px;
+  padding: 10px 5px 25px 15px;
+  width: 20%;
+}
+
+#trip-card:hover{  
+  cursor: pointer;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
 .col-25 {
@@ -95,6 +189,10 @@ input[type='submit'],
 .col-15 {
   float: left;
   width: 15%;
+}
+.col-20 {
+  float: left;
+  width: 20%;
   margin-top: 6px;
 }
 
@@ -102,6 +200,112 @@ input[type='submit'],
   float: left;
   width: 35%;
   margin-top: 6px;
+}
+
+#expense-list button {
+  background-color: #f2f2f2;
+  color: rgb(66, 66, 66);
+  padding: 18px;
+  width: 100%;
+  margin: 0;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  border-bottom: 1px solid rgb(66, 66, 66);
+}
+
+#expense-list button:hover {
+  cursor: pointer;
+  background-color: #ebebeb;
+  color: rgb(66, 66, 66);
+}
+
+#header {
+  background-color: #777;
+  color: white;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+}
+
+#modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #474e5d;
+  opacity: 0.95;
+  padding-top: 50px;
+}
+
+.detail {
+  background-color: #fefefe;
+  opacity: 1;
+  margin: 5% auto 5% auto; /* 5% from the top, 15% from the bottom and centered */
+  padding: 20px 15px 20px 15px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+.close:hover {
+  cursor: pointer;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25,
+  .col-75,
+  .col-15,
+  .col-35,
+  input[type='submit'] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+#name-error,
+#description-error,
+#method-error,
+#currency-error,
+#amount-error,
+#date-error,
+#update-name-error,
+#update-description-error,
+#update-method-error,
+#update-currency-error,
+#update-amount-error,
+#update-date-error {
+  font-size: small;
+  color: red;
+}
+
+#success-expense,
+#expense-update-success {
+  font-size: large;
+  color: green;
+  padding-left: 35%;
 }
 
 #rank-list, #user-list button {
