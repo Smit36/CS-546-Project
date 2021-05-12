@@ -1,0 +1,138 @@
+.card {
+  block-size: 250px;
+  box-shadow: 0 4px 8px 0 rgba(216, 209, 206, 0);
+  transition: 0.3s;
+  width: 100%;
+  background-color: #b7bec5;
+}
+
+.single-card {
+  block-size: 250px;
+  box-shadow: 0 4px 8px 0 rgba(216, 209, 206, 0);
+  transition: 0.3s;
+  width: 100%;
+  background-color: #b7bec5;
+  text-align: center;
+}
+
+#title-info {
+  text-align: center;
+}
+#link-list {
+  list-style-type: none;
+}
+.card:hover {
+  background-color: #949091;
+  box-shadow: 0 8px 16px 0 rgba(175, 54, 54, 0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+#list {
+  list-style: none;
+}
+
+#corporate-list {
+  text-align: center;
+  background-color: #8b818a;
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.link {
+  list-style: none;
+  text-decoration: none;
+  color: black;
+}
+
+#nav-a {
+  display: block;
+  text-align: right;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  background-color: #41494e;
+  color: white;
+  padding: 14px 25px;
+  margin-left: 1350px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.container,
+.container-edit {
+  padding: 16px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type="submit"] {
+  background-color: #41494e;
+  border: none;
+  font-size: 15px;
+  color: white;
+  padding: 16px 38px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #02270a;
+}
+
+input[type="text"]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+.nav:link,
+.nav:visited {
+  background-color: #41494e;
+  color: white;
+  padding: 15px 38px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 30px;
+  font-size: 16.5px;
+}
+
+.nav:hover,
+.nav:active {
+  background-color: #02270a;
+}
+
+nav a:hover {
+  background-color: #111;
+}
+
+label {
+  font-weight: 800;
+  font-size: large;
+}
+
+#name-error,
+#email-error,
+#contact-error,
+#address-error {
+  color: red;
+  background-color: rgb(245, 200, 200);
+}
+#myForm {
+  margin: auto;
+}

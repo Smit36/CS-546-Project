@@ -20,8 +20,8 @@ create.on("click", function (event) {
   event.preventDefault();
   corporateList.hide();
   $(createAdd).append(`<form id='myform'>
-    <h1>New Corporate Information</h1>
-    <p>Please Fill all the Information to Add New Corporate Data.</p>
+    <h1 id = "info">New Corporate Information</h1>
+    <p id="info-data">Please Fill all the Information to Add New Corporate Data.</p>
     <hr>
     <div id='input'>
     <label for="name" >Corporate Name
