@@ -1,3 +1,5 @@
+const $queryObjectList = (qs) => $(qs).map((i, e) => $(e)).get();
+
 /**
  * New trip page
  */
@@ -10,9 +12,7 @@ const $tripManager = $("#trip-manager");
 const $tripEmployees = $("#trip-employees");
 
 const $tripEmployeeSelection = $("#trip-employee-selection");
-const $tripEmployeeOptions = $("#trip-employee-selection>option")
-  .map((i, e) => $(e))
-  .get();
+const $tripEmployeeOptions = $queryObjectList("#trip-employee-selection>option");
 const $tripEmployeeOptionsById = $tripEmployeeOptions.reduce(
   (result, $option) => {
     const employeeId = $option.val();
@@ -134,18 +134,19 @@ $tripEmployeeAddButton.click(handleAddEmployee);
  * Trip detail page
  */
 
-const $tripExpenseRemovals = $("li button[id^=trip-remove-]")
-  .map((i, e) => $(e))
-  .get();
+const redirect = (url) => window.location.replace(url);
+const $tripExpenseRemovals = $queryObjectList("li button[id^=trip-delete-]");
+const $tripExpenseEdits = $queryObjectList("li button[id^=trip-edit-]");
 
-const $tripId = $("#trip-id");
+const tripId = $("#trip-id").html().trim();
 
 function removeExpense(expenseId) {
   $.ajax({
-    url: `/trip/${$tripId.html()}/expense/${expenseId}`,
+    url: `/expense/${expenseId}`,
     type: "DELETE",
-    success: function (response) {
+    success(response) {
       console.log(response);
+      redirect(`/trip/${tripId}`);
     },
   });
 }
@@ -155,5 +156,13 @@ for (const $expenseRemoval of $tripExpenseRemovals) {
   $expenseRemoval.click((e) => {
     e.preventDefault();
     removeExpense(expenseId);
+  });
+}
+
+for (const $expenseEdit of $tripExpenseEdits) {
+  const expenseId = $expenseEdit.attr("id").slice(10);
+  $expenseEdit.click((e) => {
+    e.preventDefault();
+    redirect(`/trip/${tripId}/expense/${expenseId}/edit`);
   });
 }

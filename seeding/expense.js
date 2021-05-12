@@ -16,7 +16,7 @@ const seedExpense = async ({
     amount: 120,
     currency: '$',
     notes: 'Flight tickets',
-    method: 'Card',
+    method: 'card',
     date: '04/21/2021',
   };
 
@@ -28,7 +28,7 @@ const seedExpense = async ({
     amount: 90,
     currency: '$',
     notes: 'Hotel rent',
-    method: 'Card',
+    method: 'card',
     date: '04/22/2021',
   };
 
@@ -40,7 +40,7 @@ const seedExpense = async ({
     amount: 20,
     currency: '$',
     notes: 'Taxi rent',
-    method: 'Card',
+    method: 'card',
     date: '04/23/2021',
   };
 
@@ -52,7 +52,7 @@ const seedExpense = async ({
     amount: 1200,
     currency: '$',
     notes: 'Flight tickets',
-    method: 'Card',
+    method: 'card',
     date: '02/01/2021',
   };
 

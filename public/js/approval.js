@@ -23,7 +23,7 @@ function handleApprovalUpdateSubmit(e) {
       message: inputMessage,
       lastUpdateId: lastId,
     },
-    success: function (response) {
+    success (response) {
       console.log(response);
       window.location.replace(`/approval/${id}`);
     },

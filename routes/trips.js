@@ -371,4 +371,35 @@ router.delete("/:id/expenses", async (req, res, next) => {
   }
 });
 
+
+router.get("/:id/expense/:expenseId/edit", async (req, res, next) => {
+  try {
+    const { id, expenseId } = req.params;
+    assertTripID(id);
+    assertExpenseID(expenseId);
+
+    const { user } = req.session;
+    const trip = await getAuthorizedTrip(user, id);
+    const expense = await getAuthorizedExpense(user, expenseId);
+    const paymentMethodChecked = {
+      'cash': false,
+      'card': false,
+      'gpay': false,
+      'apple': false,
+    };
+    paymentMethodChecked[expense.payment.method] = true;
+    res.render("trip/expense", {
+      trip,
+      expense: {
+        ...expense,
+        paymentMethodChecked,
+        paymentDateValue: new Date(expense.payment.date).toISOString().split('T')[0],
+      },
+      ...getTemplateData(req, { title: `Edit Trip Expense (${trip.name})` }),
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
