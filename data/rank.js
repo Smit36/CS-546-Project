@@ -23,7 +23,15 @@ const getByObjectId = async (objectId) => {
     const collection = await getRankCollection();
     const rank = await collection.findOne(idQuery(objectId));
     return parseMongoData(rank);
-  };
+};
+
+const getRankByName = async (rank) => {
+  assertRequiredObject(rank);
+
+  const collection = await getRankCollection();
+  const rank = await collection.findOne({ name : rank.name });
+  return parseMongoData(rank);
+};
   
 const getRank = async (id) => {
     assertObjectIdString(id);
@@ -125,5 +133,6 @@ module.exports = {
     createRank,
     getRank,
     getAllRanks,
-    updateRank
+    updateRank,
+    getRankByName
 };
