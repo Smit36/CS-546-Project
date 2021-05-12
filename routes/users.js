@@ -26,10 +26,15 @@ router.post('/', async (req, res) => {
   try {
     const reqBody = req.body;
     assertRequiredObject(reqBody);
+    let sessionUser = req.session.user;
+    reqBody.corporateId = sessionUser.corporateId;
+    reqBody.createdBy = sessionUser._id.toString();
 
     const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = reqBody;
   
     assertUserRole(role, "User Role");
+    assertPasswordString(password, "Password");
+    let hashPassword = await bcrypt.hash(password, 8);
 
     if (role == USER_ROLE.ADMIN && corporateId && rankId && designation && rank) {
       throw new ValidationError(`Super Admin has invalid data`);
@@ -45,7 +50,7 @@ router.post('/', async (req, res) => {
       assertObjectIdString(rankId, "Rank ID"); 
     }   
     assertIsValuedString(name, "User name");
-    assertHashedPasswordString(password, "Password");
+    assertHashedPasswordString(hashPassword, "Password");
     assertEmailString(email, "Email");
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
@@ -57,6 +62,7 @@ router.post('/', async (req, res) => {
     assertIsValuedString(createdBy, "Created By");
     assertRequiredNumber(createdAt, "User created time");
 
+    reqBody.password = hashPassword;
     const newUser = await usersData.createUser(reqBody);
     res.status(200).json(newUser);
   } catch (e) {
