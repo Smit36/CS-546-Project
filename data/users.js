@@ -43,14 +43,13 @@ const getAllUsers = async (user) => {
 
     const role = user.role;
 
+    let userList = {};
+
     if (role === USER_ROLE.ADMIN) {
-      const userList = await collection.find({}).toArray();
+      userList = await collection.find({}).toArray();
     }
-    else if (role === USER_ROLE.CORPORATE) {
-      const userList = await collection.find({ corporateId : user.corporateId }).toArray();
-    }
-    else {
-      const userList = await collection.find({ _id : user._id }).toArray();
+    else{
+      userList = await collection.find({ corporateId : new ObjectId(user.corporateId) }).toArray();
     }
 
     return userList;
@@ -126,7 +125,7 @@ const updateUser = async (id, updatedBy, updates) => {
     assertObjectIdString(id);
     assertRequiredObject(updates, "User updates data");
 
-    const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = updates;
+    const { corporateId, rankId, name, email, contact, designation, rank, role } = updates;
   
     assertUserRole(role, "User Role");
 
@@ -144,7 +143,6 @@ const updateUser = async (id, updatedBy, updates) => {
       assertObjectIdString(rankId, "Rank ID"); 
     }   
     assertIsValuedString(name, "User name");
-    assertHashedPasswordString(password, "Password");
     assertEmailString(email, "Email");
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
@@ -153,8 +151,6 @@ const updateUser = async (id, updatedBy, updates) => {
     if (role === USER_ROLE.EMPLOYEE) {
       assertRequiredNumber(rank, "Rank");
     }
-    assertIsValuedString(createdBy, "Created By");
-    assertRequiredNumber(createdAt, "User created time");
   
     const user = await getUser(id);
 
@@ -172,7 +168,6 @@ const updateUser = async (id, updatedBy, updates) => {
       corporateId: role == USER_ROLE.ADMIN ? null : new ObjectId(corporateId),
       rankId: role == USER_ROLE.ADMIN || role == USER_ROLE.CORPORATE ? null : new ObjectId(rankId),
       name : name,
-      password: password,
       email: email,
       contact: contact,
       designation: ( role == USER_ROLE || role == USER_ROLE.CORPORATE ) ? null : designation,

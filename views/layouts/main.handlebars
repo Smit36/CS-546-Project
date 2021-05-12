@@ -21,8 +21,13 @@
       <ul>
         {{#if isCorporateAdmin}}
           <li>
-            <a href="/employees">
+            <a href="/user">
               Employees
+            </a>
+          </li>
+          <li>
+            <a href="/rank">
+              Ranks
             </a>
           </li>
         {{else if isPortalAdmin}}
@@ -79,7 +84,8 @@
     {{{body}}}
   </main>
 
-  <footer>
+
+ <footer>
     <dl>
       <dt>
         Spring 2021 CS-546
@@ -116,6 +122,8 @@
   ></script>
   <script src="/js/index.js"></script>
   <script src="/js/corporate.js"></script>
+  <script src="/js/trip.js"></script>
+  <script src="/js/approval.js"></script>
 </body>
 
 </html>

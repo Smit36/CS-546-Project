@@ -1,0 +1,100 @@
+<div class="row">
+  <div class="col-25">
+    <div id="new-user">
+      <button onClick="addNewUser()">New Employee</button>
+    </div>
+    <div id="show-user" hidden>
+      <button onClick="showUsers()">Show Employee</button>
+    </div>
+  </div>
+</div>
+
+<div id="show-form" hidden>
+  <form id="user-form">
+
+    <div class="row">
+      <div class="col-25">
+        <label for="user-name">Employee Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="name" name="name" pattern="^[a-zA-Z ']{2,50}$" placeholder="Name" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="email">Email</label>
+      </div>
+      <div class="col-75">
+        <input type="email" id="email" name="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" placeholder="Corporate Email ID" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="password">Password</label>
+      </div>
+      <div class="col-75">
+        <input type="password" id="password" name="password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$" placeholder="password" required>
+        <p style="color: red;"><small>Password should consist of Capital letter, small letter, digits and special symbol and be atleast 8 characters</small></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="contact">Contact Number</label>
+      </div>
+      <div class="col-75">
+        <input type="tel" id="contact" name="contact" placeholder="Contact Number" pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
+        <p style="color: red;"><small>Contact should be in XXX-XXX-XXXX format</small></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="role">Role</label>
+      </div>
+      <div class="col-25">
+        <div class="row">
+          <input type="radio" id="admin" name="role" value="ADMIN" required>
+          <label for="admin">Portal Admin</label><br>
+          <input type="radio" id="corporate" name="role" value="CORPORATE">
+          <label for="corporate">Corporate Admin</label><br>
+          <input type="radio" id="employee" name="role" value="EMPLOYEE">
+          <label for="employee">Employee</label>
+        </div>
+        <span id="role-error" style="color: red;" hidden><small>Select role</small></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="rank">Rank</label>
+      </div>
+      <div class="col-20">
+        <div class="row">
+          <select id="rank" name="rank">
+          </select>
+        </div>
+        <span id="rank-error" style="color: red;" hidden><small>Select rank.</small></span>
+      </div>
+    </div>  
+
+    <span id="success-user" hidden>Successfully user added!</span>
+    <input type="submit" id="submit-user">
+    <script src="/js/user.js"></script>
+  </form>
+</div>
+
+<div id='get-users' hidden>
+  <div class="row" id="header">
+    <div class="col-25">Name</div>
+    <div class="col-25">Email</div>
+    <div class="col-25">Contact</div>
+    <div class="col-25">Role</div>
+  </div>
+  <div id="user-list">
+  </div>
+  <div id="modal">
+  </div>
+</div>

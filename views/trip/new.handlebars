@@ -1,0 +1,117 @@
+<div class="new-post">
+  <form id="trip-form" class="new-post-form">
+    <div>
+      <label>
+        Trip name
+      </label>
+      <input
+        id="trip-name"
+        type="text"
+        name="name"
+        placeholder="name"
+        value="{{trip.name}}"
+        class="full-width-input"
+      />
+    </div>
+    <div>
+      <label>
+        Description of the trip
+      </label>
+      <input
+        id="trip-description"
+        type="text"
+        name="description"
+        placeholder="description"
+        value="{{trip.description}}"
+        class="full-width-input"
+      />
+    </div>
+    <div>
+      <label>
+        Start time
+      </label>
+      <input
+        id="trip-start-time"
+        type="date"
+        name="start-time"
+        placeholder="start time"
+        class="full-width-input"
+        value="{{trip.startTime}}"
+      />
+    </div>
+    <div>
+      <label>
+        End time
+      </label>
+      <input
+        id="trip-end-time"
+        type="date"
+        name="end-time"
+        placeholder="end time"
+        class="full-width-input"
+        value="{{trip.endTime}}"
+      />
+    </div>
+    <div>
+      <label for="manager">
+        Manager
+      </label>
+      <select id="trip-manager" class="full-width-input" name="managerId">
+        <option value="">
+          Select manager...
+        </option>
+        {{#each users}}
+          <option value="{{_id}}">
+            {{name}}
+            (
+            {{email}}
+            )
+          </option>
+        {{/each}}
+      </select>
+    </div>
+    <div>
+      <input hidden id="trip-employees" name="trip-employees" value="" />
+      <label for="trip-employee-selection">
+        employees
+      </label>
+      <select id="trip-employee-selection">
+        <option value="">
+          Select employee...
+        </option>
+        {{#each users}}
+          <option value="{{_id}}">
+            {{name}}
+            (
+            {{email}}
+            )
+          </option>
+        {{/each}}
+      </select>
+      <button disabled id="trip-employee-add">
+        Add employee
+      </button>
+    </div>
+    <div>
+      <p>
+        Employees in Trip
+      </p>
+      <ul id="trip-employee-selection-preview"></ul>
+    </div>
+    <div>
+      <input type="submit" value="Create New Trip" />
+    </div>
+    <div>
+      <input type="reset" value="Clear" />
+    </div>
+  </form>
+  {{#if hasErrors}}
+    <ul class="error-list">
+      {{#each errors}}
+        <li>
+          {{this}}
+        </li>
+      {{/each}}
+    </ul>
+  {{/if}}
+</div>
