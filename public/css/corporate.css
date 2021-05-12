@@ -1,9 +1,9 @@
 .card {
   block-size: 250px;
-  box-shadow: 0 4px 8px 0 rgba(216, 209, 206, 0);
+  box-shadow: 0 4px 8px 0 rgba(97, 71, 61, 0);
   transition: 0.3s;
   width: 100%;
-  background-color: #b7bec5;
+  background-color: #ebecec;
 }
 
 .single-card {
@@ -22,8 +22,8 @@
   list-style-type: none;
 }
 .card:hover {
-  background-color: #949091;
-  box-shadow: 0 8px 16px 0 rgba(175, 54, 54, 0.2);
+  background-color: #5e4249;
+  box-shadow: 0 8px 16px 0 rgba(43, 53, 190, 0.2);
 }
 
 .container {
@@ -76,22 +76,22 @@ input[type="text"] {
 }
 
 input[type="submit"] {
-  background-color: #41494e;
+  background-color: #97daff;
   border: none;
   font-size: 15px;
-  color: white;
+  color: black;
   padding: 16px 38px;
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
 }
 
-input[type="submit"]:hover {
-  background-color: #02270a;
-}
+/* input[type="submit"]:hover {
+  background-color: #010201;
+} */
 
 input[type="text"]:focus {
-  background-color: #ddd;
+  background-color: rgb(192, 186, 186);
   outline: none;
 }
 
@@ -102,8 +102,8 @@ hr {
 
 .nav:link,
 .nav:visited {
-  background-color: #41494e;
-  color: white;
+  background-color: #97daff;
+  color: black;
   padding: 15px 38px;
   text-align: center;
   text-decoration: none;
@@ -114,11 +114,11 @@ hr {
 
 .nav:hover,
 .nav:active {
-  background-color: #02270a;
+  background-color: #656ff0;  
 }
 
 nav a:hover {
-  background-color: #111;
+  background-color: #010201;
 }
 
 label {
