@@ -133,6 +133,22 @@ const assertEmailString = (email, description= "Email") => {
   }
 };
 
+const assertDomainString = (domain, description= "Domain") => {
+  assertIsValuedString(domain, description);
+  if (!domain.match(/^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$/i)) {
+    throw new ValidationError(`${description} is not a valid Corporate Domain: ${domain}`);
+  }
+};
+
+const assertCorporateDomainString = (corpDomain, userEmail, description= "User Email") => {
+  assertDomainString(corpDomain);
+
+  const userArr = userEmail.split('@');
+  if (corpDomain !== userArr[1]) {
+    throw new ValidationError(`${description} is not a valid Corporate email: ${userEmail}`);
+  }
+};
+
 const assertContactString = (contact, description= "Contact") => {
   assertIsValuedString(contact, description);
   if (!contact.match(/^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$/)){
@@ -176,5 +192,7 @@ module.exports = {
   assertContactString,
   assertPasswordString,
   assertUserRole,
-  assertHashedPasswordString
+  assertHashedPasswordString,
+  assertDomainString,
+  assertCorporateDomainString
 };

@@ -5,11 +5,11 @@
   <meta charset="utf-8">
   <title>{{ title }} | Corporate Traveling Expense Management</title>
   <link rel="stylesheet" href="/css/main.css">
-
 </head>
 
 <body>
-  <main>
+
+  <header>
     <h1>
       Corporate Traveling Expense Management
     </h1>
@@ -20,28 +20,33 @@
     <nav>
       <ul>
         {{#if isCorporateAdmin}}
-          <li>
-            <a href="/employees">
-              Employees
-            </a>
-          </li>
+        <li>
+          <a href="/user">
+            Employees
+          </a>
+        </li>
+        <li>
+          <a href="/rank">
+            Ranks
+          </a>
+        </li>
         {{else if isPortalAdmin}}
-          <li>
-            <a href="/corporates">
-              Corporates
-            </a>
-          </li>
+        <li>
+          <a href="/corporates">
+            Corporates
+          </a>
+        </li>
         {{else}}
-          <li>
-            <a href="/expense">
-              Expenses
-            </a>
-          </li>
-          <li>
-            <a href="/trip">
-              Trips
-            </a>
-          </li>
+        <li>
+          <a href="/expenses">
+            Expenses
+          </a>
+        </li>
+        <li>
+          <a href="/trip">
+            Trips
+          </a>
+        </li>
         {{/if}}
       </ul>
     </nav>
@@ -49,29 +54,33 @@
 
     <aside>
       {{#if user}}
-        {{#if corporate}}
-          <div>
-            Corporate:
-            {{corporate.name}}
-          </div>
-        {{/if}}
-        {{#if user}}
-          <div>
-            User:
-            {{user.name}}
-          </div>
-          <div>
-            <a href="/user/logout">
-              Logout
-            </a>
-          </div>
-        {{/if}}
-      {{else}}
-        <a href="/user/login">
-          Login
+      {{#if corporate}}
+      <div>
+        Corporate:
+        {{corporate.name}}
+      </div>
+      {{/if}}
+      {{#if user}}
+      <div>
+        User:
+        {{user.name}}
+      </div>
+      <div>
+        <a href="/user/logout">
+          Logout
         </a>
+      </div>
+      {{/if}}
+      {{else}}
+      <a href="/user/login">
+        Login
+      </a>
       {{/if}}
     </aside>
+
+  </header>
+
+  <main>
     {{{body}}}
   </main>
 
@@ -109,6 +118,9 @@
     integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
     crossorigin="anonymous"></script>
   <script src="js/index.js"></script>
+  <script src="js/corporate.js"></script>
+  <script src="js/trip.js"></script>
+  <script src="js/approval.js"></script>
 </body>
 
 </html>

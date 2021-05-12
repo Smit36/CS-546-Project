@@ -1,11 +1,61 @@
 <div>
-{{trip.name}}
+  {{trip.name}}
+</div>
+<div hidden id="trip-id">
+  {{trip._id}}
+</div>
 <div>
+  <a href="/approval/{{trip.approvalId}}">
+    Approval:
+    {{approvalInfo.status}}
+  </a>
+</div>
 <div>
-{{approvalInfo.status}}
-<div>
-<div>
-{{expenses.length }} expenses, total expense: {{total}}
-<div>
-<div>
+  <p>
+    Corporate:
+    {{corporate.name}}
+  </p>
+  <p>
+    Manager:
+    {{manager.name}}
+  </p>
+  <p>
+    Employees:
+  </p>
+  <ul>
+    {{#each employees}}
+      <li>
+        {{name}}
+      </li>
+    {{/each}}
+  </ul>
+  <p>
+    Start time:
+    {{startTime}}
+  </p>
+  <p>
+    End time:
+    {{endTime}}
+  </p>
+  <p>
+    Trip expense items:
+  </p>
+  <ol>
+    {{#each expenses}}
+      <li>
+        {{user.name}}
+        :
+        {{name}}
+        {{#if isMine}}
+          <button id="trip-remove-{{_id}}">
+            remove from trip
+          </button>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ol>
+  <p>
+    Total Trip Expense:
+    {{total}}
+  </p>
 </div>

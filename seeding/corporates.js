@@ -7,7 +7,7 @@ const seedCorporates = async ({
 } = {}) => {
   const corporateData1 = {
     name: "Gigasoft",
-    emailDomain: "x@gigasoft.com",
+    emailDomain: "gigasoft.com",
     contactNo: "201-234-5678",
     address: "123 Fake St, Hoboken, NJ",
     createdBy: admin1Id,
@@ -16,7 +16,7 @@ const seedCorporates = async ({
 
   const corporateData2 = {
     name: "Microhard",
-    emailDomain: "x@microhard.com",
+    emailDomain: "microhard.com",
     contactNo: "800-123-4567",
     address: "567 Real St, Palo Alto, CA",
     createdBy: admin2Id,

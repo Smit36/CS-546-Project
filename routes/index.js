@@ -15,7 +15,7 @@ const configRoutes = (app) =>
     .use("/approval", approvalRouter)
     .use("/user", usersRouter)
     .use("/rank", rankRouter)
-    .use("/corporate", corporateRouter)
+    .use("/corporates", corporateRouter)
     .use(defaultErrorHandling);
 
 module.exports = {

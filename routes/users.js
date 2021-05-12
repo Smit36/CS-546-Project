@@ -2,6 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const bcrypt = require('bcrypt');
 const usersData = require('../data/users');
+const corporateData = require('../data/corporate');
 const {
   assertObjectIdString,
   assertIsValuedString,
@@ -11,23 +12,31 @@ const {
   assertEmailString,
   assertContactString,
   assertPasswordString,
-  assertHashedPasswordString
+  assertHashedPasswordString,
+  assertCorporateDomainString
 } = require("../utils/assertion");
 const {
   USER_ROLE
 } = require('../utils/constants')
 const { QueryError, ValidationError } = require("../utils/errors");
 const { getTemplateData } = require('../utils/routes');
+const USER_PAGE_PATH = 'users/index';
+const USER_PAGE_TITLE = 'Employee';
 
 //add user
 router.post('/', async (req, res) => {
   try {
     const reqBody = req.body;
     assertRequiredObject(reqBody);
+    let sessionUser = req.session.user;
+    reqBody.corporateId = sessionUser.corporateId;
+    reqBody.createdBy = sessionUser._id.toString();
 
     const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = reqBody;
   
     assertUserRole(role, "User Role");
+    assertPasswordString(password, "Password");
+    let hashPassword = await bcrypt.hash(password, 8);
 
     if (role == USER_ROLE.ADMIN && corporateId && rankId && designation && rank) {
       throw new ValidationError(`Super Admin has invalid data`);
@@ -43,7 +52,7 @@ router.post('/', async (req, res) => {
       assertObjectIdString(rankId, "Rank ID"); 
     }   
     assertIsValuedString(name, "User name");
-    assertHashedPasswordString(password, "Password");
+    assertHashedPasswordString(hashPassword, "Password");
     assertEmailString(email, "Email");
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
@@ -55,6 +64,17 @@ router.post('/', async (req, res) => {
     assertIsValuedString(createdBy, "Created By");
     assertRequiredNumber(createdAt, "User created time");
 
+    reqBody.password = hashPassword;
+
+    const corporate = await corporateData.getCorporate(corporateId);
+    assertCorporateDomainString(corporate.emailDomain, email);
+
+    const userPresent = await usersData.getUserByEmail(email);
+
+    if (userPresent) {
+      throw new ValidationError(`User already exists.`);
+    }
+
     const newUser = await usersData.createUser(reqBody);
     res.status(200).json(newUser);
   } catch (e) {
@@ -65,9 +85,18 @@ router.post('/', async (req, res) => {
 //Get all users
 router.get('/', async (req, res) => {
   try {  
+    res.render(USER_PAGE_PATH, getTemplateData(req, { title: USER_PAGE_TITLE }));
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
+});
+
+//Get all users
+router.get('/all', async (req, res) => {
+  try {  
     const user = req.session.user;
     const allUsers = await usersData.getAllUsers(user);
-    res.status(200).json(allUsers);
+    return res.status(200).json(allUsers);
   } catch (e) {
     res.status(400).json({ error: e });
   }
@@ -80,8 +109,11 @@ router.put('/:userId', async (req, res) => {
     let userReq = req.body;
 
     assertRequiredObject(userReq);
+    let sessionUser = req.session.user;
+    userReq.corporateId = sessionUser.corporateId;
+    let updatedBy = sessionUser._id.toString();
 
-    const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = userReq;
+    const { corporateId, rankId, name, email, contact, designation, rank, role } = userReq;
   
     assertUserRole(role, "User Role");
 
@@ -99,7 +131,6 @@ router.put('/:userId', async (req, res) => {
       assertObjectIdString(rankId, "Rank ID"); 
     }   
     assertIsValuedString(name, "User name");
-    assertHashedPasswordString(password, "Password");
     assertEmailString(email, "Email");
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
@@ -108,12 +139,8 @@ router.put('/:userId', async (req, res) => {
     if (role === USER_ROLE.EMPLOYEE) {
       assertRequiredNumber(rank, "Rank");
     }
-    assertIsValuedString(createdBy, "Created By");
-    assertRequiredNumber(createdAt, "User created time");
 
-    const sessionUser = req.session.user;
-
-    const user = await usersData.updateUser(userId, sessionUser._id, userReq);
+    const user = await usersData.updateUser(userId, updatedBy, userReq);
     res.status(200).json(user);
   } catch (e) {
     res.status(400).json({ error: e });
@@ -149,8 +176,6 @@ router.post('/login', async (req, res) => {
   }
 
   if (errors.length > 0) {
-      // res.status(401)
-      //    .render('login', { errors : errors, hasErrors : true, userInfo : userInfo, title : title });
     res.status(401).json({ errors : errors });
     return;
   }
@@ -160,28 +185,25 @@ router.post('/login', async (req, res) => {
   if (!user) {
     errors.push(`No user with ${email} found.`); 
     res.status(401).json({ errors : errors });
-
-      // TODO: HTTP 401 status code
-      // res.status(401)
-      //    .render('login', { errors : errors, hasErrors : true, userInfo : userInfo, title : title });
     return;
   }
-
-  // user.password = await bcrypt.hash(user.password, 8);
 
   let match = await bcrypt.compare(password, user.password);
 
   if (user.email === email && match) {
+    if (user.corporateId) {
+      const corporate = await corporateData.getCorporate(user.corporateId);
+      if (corporate) {
+        req.session.corporate = corporate;
+      }
+    }
+
     req.session.user = user;
-    // res.status(200).json(user);
     res.redirect('/');
   }
   else {
     errors.push('Invalid username or password.');
     res.status(401).json({ errors : errors });
-
-      // res.status(401)
-      //    .render('login', { errors : errors, hasErrors : true, userInfo : userInfo, title : title });
     return;
   }    
 });
@@ -189,7 +211,6 @@ router.post('/login', async (req, res) => {
 router.get('/logout', async (req, res) => {
   try {  
     req.session.destroy();
-    // res.status(200).json({ message : 'User logged out' });
     res.redirect('/user/login');
   } catch (e) {
     res.status(400).json({ error: e });

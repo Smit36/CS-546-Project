@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-25">
+    <div id="new-rank">
+      <button onClick="addNewRank()">Add Rank</button>
+    </div>
+    <div id="show-rank" hidden>
+      <button onClick="showRanks()">Show Ranks</button>
+    </div>
+  </div>
+</div>
+
+<div id="show-form" hidden>
+  <form id="rank-form">
+    <div class="row">
+      <div class="col-25">
+        <label for="name">Rank Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="name" name="name" pattern="^[a-zA-Z0-9 ']{2,50}$" placeholder="Name" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="level">Level</label>
+      </div>
+      <div class="col-75">
+        <input type="number" id="level" name="level" pattern="[0-9]{3}" placeholder="Hierarchy level" required>
+      </div>
+    </div>
+    
+    <input type="submit">
+    <script src="/js/rank.js"></script>
+  </form>
+</div>
+
+<div id='get-ranks' hidden>
+  <div class="row" id="header">
+    <div class="col-25">Rank Name</div>
+    <div class="col-25">Level</div>
+  </div>
+  <div id="rank-list">
+  </div>
+  <div id="modal">
+  </div>
+</div> 
