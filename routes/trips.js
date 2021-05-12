@@ -26,7 +26,7 @@ const assertTripID = (id) => assertObjectIdString(id, "Trip ID");
 const assertExpenseID = (id) => assertObjectIdString(id, "Expense ID");
 
 const dataExist = (id, data, desc = "data") => {
-  if (!data) throw new HttpError(`Cannot find approval with ID: ${id}`, 404);
+  if (!data) throw new HttpError(`Cannot find ${desc} with ID: ${id}`, 404);
 };
 
 const approvalExist = (id, approval) => dataExist(id, approval, "approval");
@@ -57,6 +57,7 @@ const getAuthorizedTripData = async (user, id) => {
   approvalExist(id, approval);
 
   const expenses = await getAllExpensesByTrip(id);
+  // const expenses = await Promise.all(trip.expenseIdList.map(expenseId => getExpense(expenseId)));
 
   return {
     approval,
@@ -157,11 +158,29 @@ router.get("/:id", async (req, res, next) => {
       0
     );
 
+    for (const employeeId of trip.employeeIdList) {
+
+    }
+    const employees = await Promise.all(trip.employeeIdList.map(id => getUser(id)));
+    const employeeById = employees.reduce((result, employee) => {
+      result[employee._id] = employee;
+      return result;
+    }, {});
+
     res.render("trip/details", {
       trip,
       approvalInfo,
-      expenses,
       total,
+      startTime: new Date(trip.startTime).toLocaleString(),
+      endTime: new Date(trip.endTime).toLocaleString(),
+      expenses: expenses.map((expense) => ({
+        ...expense,
+        user: employeeById[expense.userId],
+        isMine: expense.userId === user._id,
+      })),
+      manager: employeeById[trip.managerId],
+      employees: employees.filter((employee) => employee._id !== trip.managerId),
+      // TODO: corporate
       ...getTemplateData(req),
     });
   } catch (error) {
@@ -204,8 +223,8 @@ const addAuthorizedTripExpenses = async (user, tripId, expenseIdList) => {
     expenseIdList.map((expenseId) => getAddableExpense(user, expenseId))
   );
 
-  const updatedTrip = await addTripExpenses(id, user._id, expenseIdList);
-  tripExist(id, updatedTrip);
+  const updatedTrip = await addTripExpenses(tripId, user._id, expenseIdList);
+  tripExist(tripId, updatedTrip);
 
   return updatedTrip;
 };
@@ -288,10 +307,11 @@ router.post("/:id/expense", async (req, res, next) => {
 });
 
 const removeAuthorizedTripExpenses = async (user, tripId, expenseIdList) => {
-  const trip = await getAuthorizedTrip(user, tripId);
-
-  const existingExpenseIdSet = new Set(trip.expneseIdList);
-  const invalidIdList = expneseIdList.filter(
+  // const trip = await getAuthorizedTrip(user, tripId);
+  // const existingExpenseIdSet = new Set(trip.expenseIdList);
+  const { trip, expenses } = await getAuthorizedTripData(user, tripId);
+  const existingExpenseIdSet = new Set(expenses.map(expense => expense._id));
+  const invalidIdList = expenseIdList.filter(
     (expenseId) => !existingExpenseIdSet.has(expenseId)
   );
 
@@ -306,8 +326,8 @@ const removeAuthorizedTripExpenses = async (user, tripId, expenseIdList) => {
     expenseIdList.map((expenseId) => getAuthorizedExpense(user, expenseId))
   );
 
-  const updatedTrip = await removeTripExpenses(id, user._id, expenseIdList);
-  tripExist(id, updatedTrip);
+  const updatedTrip = await removeTripExpenses(tripId, user._id, expenseIdList);
+  tripExist(tripId, updatedTrip);
 
   return updatedTrip;
 };
@@ -344,7 +364,8 @@ router.delete("/:id/expenses", async (req, res, next) => {
       expenseIdList
     );
 
-    res.status(200).json(updatedTrip);
+    res.redirect(`/trip/${id}`);
+    // res.status(200).json(updatedTrip);
   } catch (error) {
     next(error);
   }

@@ -5,6 +5,7 @@ const {
   assertApprovalUpdates,
 } = require("../data/approvals");
 const { getTrip } = require("../data/trips");
+const { getUser } = require("../data/users");
 const { assertObjectIdString } = require("../utils/assertion");
 const { HttpError } = require("../utils/errors");
 const { getTemplateData } = require("../utils/routes");
@@ -49,9 +50,28 @@ router.get("/:id", async (req, res, next) => {
     const { user } = req.session;
     const { approval, trip } = await getAuthorizedData(user, id);
 
+    let userById = {};
+    let updates = [];
+    for (const update of approval.updates) {
+      if (!userById[update.userId]) {
+        userById[update.userId] = await getUser(update.userId);
+      }
+      updates.push({
+        user: userById[update.userId],
+        status: update.status,
+        message: update.message,
+        time: new Date(update.createdAt).toLocaleString(),
+      });
+    }
+
     const lastUpdateId = approval.updates[approval.updates.length - 1]._id;
-    res.render("trip/approval", { trip, approval, lastUpdateId });
-    // res.status(200).json(approval);
+    res.render("trip/approval", {
+      trip,
+      approval,
+      updates,
+      lastUpdateId,
+      ...getTemplateData(req, { title: `Approval Thread (${trip.name})` }),
+    });
   } catch (error) {
     next(error);
   }

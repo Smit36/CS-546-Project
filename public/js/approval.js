@@ -22,6 +22,7 @@ function handleApprovalUpdateSubmit(e) {
     },
     success: function(response) {
       console.log(response);
+      window.location.replace(`/approval/${id}`);
     },
  });
 }

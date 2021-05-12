@@ -1,31 +1,59 @@
 <div>
-  Trip name:{{trip.name}}
+  Trip name:
+  {{trip.name}}
+</div>
 <div>
+  <p>
+    Current Status:
+    {{approval.status}}
+  </p>
+</div>
 <div>
-  <p>Last Status:{{approval.status}}</p>
-  {{#each approval.updates}}
-    <p>status：{{status}}</p>
-    <p>messsage：{{message}}</p>
-  {{/each}}
-  <div id="approval-id">{{approval._id}}</div>
-  <div id="approval-last-id">{{lastUpdateId}}</div>
-  <form id="approval-update-form" class="new-status-form">
-    <p>Click Status to edit</p>
-    <p id="status "contenteditable="true">{{approval.status}}</p>
-    <div>
-      <input type="radio" id="approval-same" name="status" value="">
-      <label for="approval-pending">No new status</label>
-      <input type="radio" id="approval-pending" name="status" value="PENDING">
-      <label for="approval-pending">Pending</label>
-      <input type="radio" id="approval-approve" name="status" value="APPROVE">
-      <label for="approval-approve">Approve</label>
-      <input type="radio" id="approval-reject" name="status" value="REJECT">
-      <label for="approval-reject">Reject</label>
-    </div>
-    <label for="appoval-update-message">
-      Message
+  <ul>
+    {{#each updates}}
+      <li>
+        [
+        {{status}}
+        ] (
+        {{user.name}}
+        @
+        {{time}}
+        )
+        {{message}}
+      </li>
+    {{/each}}
+  </ul>
+</div>
+<div hidden id="approval-id">{{approval._id}}</div>
+<div hidden id="approval-last-id">{{lastUpdateId}}</div>
+<form id="approval-update-form" class="new-status-form">
+  <div>
+    <input type="radio" id="approval-same" name="status" value="" checked/>
+    <label for="approval-pending">
+      No new status
     </label>
-    <textarea id="appoval-update-message" name="message" rows="2" placeholder="Message" class="full-width-input"></textarea>
-    <input type="submit" value="Send New Update"/>
-  </form>
-<div>
+    <input type="radio" id="approval-pending" name="status" value="PENDING" />
+    <label for="approval-pending">
+      Pending
+    </label>
+    <input type="radio" id="approval-approve" name="status" value="APPROVED" />
+    <label for="approval-approve">
+      Approved
+    </label>
+    <input type="radio" id="approval-reject" name="status" value="REJECTED" />
+    <label for="approval-reject">
+      Rejected
+    </label>
+  </div>
+  <label for="appoval-update-message">
+    Message
+  </label>
+  <textarea
+    id="appoval-update-message"
+    name="message"
+    rows="2"
+    placeholder="Message"
+    class="full-width-input"
+  ></textarea>
+  <input type="submit" value="Send New Update" />
+</form>

@@ -1,3 +1,6 @@
+/**
+ * New trip page
+ */
 const $tripForm = $("#trip-form");
 const $tripName = $("#trip-name");
 const $tripDescription = $("#trip-description");
@@ -45,6 +48,8 @@ function handleTripSubmit(e) {
   const inputManager = $tripManager.val();
   const inputEmployees = getEmployeeIdList();
 
+  // TODO: error handling
+
   $.ajax({
     url: `/trip`,
     type: "POST",
@@ -67,12 +72,14 @@ function createEmployeePreviewItem(employeeId, isManager) {
   const employeeDescription = $employeeOption.html();
   const $previewItem = $("<li>").html(employeeDescription);
   if (isManager) {
-    const managerTag = $("<span>").text(' (manager)');
+    const managerTag = $("<span>").text(" (manager)");
     $previewItem.append(managerTag);
   } else {
-    const removalButton = $("<button>").text('remove').click(() => removeEmployeeId(employeeId));
+    const removalButton = $("<button>")
+      .text("remove")
+      .click(() => removeEmployeeId(employeeId));
     $previewItem.append(removalButton);
-  };
+  }
   return $previewItem;
 }
 
@@ -122,3 +129,32 @@ $tripForm.submit(handleTripSubmit);
 $tripForm.on("reset", handleTripReset);
 $tripEmployeeSelection.change(handleEmployeeSelection);
 $tripEmployeeAddButton.click(handleAddEmployee);
+
+
+/**
+ * Trip detail page
+ */
+
+const $tripExpenseRemovals = $("li button[id^=trip-remove-]")
+  .map((i, e) => $(e))
+  .get();
+
+const $tripId = $("#trip-id");
+
+function removeExpense(expenseId) {
+  $.ajax({
+    url: `/trip/${$tripId.html()}/expense/${expenseId}`,
+    type: "DELETE",
+    success: function (response) {
+      console.log(response);
+    },
+  });
+}
+
+for (const $expenseRemoval of $tripExpenseRemovals) {
+  const expenseId = $expenseRemoval.attr("id").slice(12);
+  $expenseRemoval.click((e) => {
+    e.preventDefault();
+    removeExpense(expenseId);
+  });
+}
