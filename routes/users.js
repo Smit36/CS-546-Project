@@ -12,7 +12,8 @@ const {
   assertEmailString,
   assertContactString,
   assertPasswordString,
-  assertHashedPasswordString
+  assertHashedPasswordString,
+  assertCorporateDomainString
 } = require("../utils/assertion");
 const {
   USER_ROLE
@@ -64,6 +65,9 @@ router.post('/', async (req, res) => {
     assertRequiredNumber(createdAt, "User created time");
 
     reqBody.password = hashPassword;
+
+    const corporate = await corporateData.getCorporate(corporateId);
+    assertCorporateDomainString(corporate.emailDomain, email);
 
     const userPresent = await usersData.getUserByEmail(email);
 
