@@ -194,7 +194,6 @@ router.post('/login', async (req, res) => {
       }
     }
 
-    console.log(req.session.corporate);
     req.session.user = user;
     res.redirect('/');
   }
