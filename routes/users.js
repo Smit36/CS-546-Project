@@ -2,6 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const bcrypt = require('bcrypt');
 const usersData = require('../data/users');
+const corporateData = require('../data/corporate');
 const {
   assertObjectIdString,
   assertIsValuedString,
@@ -63,6 +64,13 @@ router.post('/', async (req, res) => {
     assertRequiredNumber(createdAt, "User created time");
 
     reqBody.password = hashPassword;
+
+    const userPresent = await usersData.getUserByEmail(email);
+
+    if (userPresent) {
+      throw new ValidationError(`User already exists.`);
+    }
+
     const newUser = await usersData.createUser(reqBody);
     res.status(200).json(newUser);
   } catch (e) {
@@ -164,8 +172,6 @@ router.post('/login', async (req, res) => {
   }
 
   if (errors.length > 0) {
-      // res.status(401)
-      //    .render('login', { errors : errors, hasErrors : true, userInfo : userInfo, title : title });
     res.status(401).json({ errors : errors });
     return;
   }
@@ -175,28 +181,26 @@ router.post('/login', async (req, res) => {
   if (!user) {
     errors.push(`No user with ${email} found.`); 
     res.status(401).json({ errors : errors });
-
-      // TODO: HTTP 401 status code
-      // res.status(401)
-      //    .render('login', { errors : errors, hasErrors : true, userInfo : userInfo, title : title });
     return;
   }
-
-  // user.password = await bcrypt.hash(user.password, 8);
 
   let match = await bcrypt.compare(password, user.password);
 
   if (user.email === email && match) {
+    if (user.corporateId) {
+      const corporate = await corporateData.getCorporate(user.corporateId);
+      if (corporate) {
+        req.session.corporate = corporate;
+      }
+    }
+
+    console.log(req.session.corporate);
     req.session.user = user;
-    // res.status(200).json(user);
     res.redirect('/');
   }
   else {
     errors.push('Invalid username or password.');
     res.status(401).json({ errors : errors });
-
-      // res.status(401)
-      //    .render('login', { errors : errors, hasErrors : true, userInfo : userInfo, title : title });
     return;
   }    
 });
@@ -204,7 +208,6 @@ router.post('/login', async (req, res) => {
 router.get('/logout', async (req, res) => {
   try {  
     req.session.destroy();
-    // res.status(200).json({ message : 'User logged out' });
     res.redirect('/user/login');
   } catch (e) {
     res.status(400).json({ error: e });
