@@ -103,6 +103,47 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
+  let tripformdata = req.body;
+  let errors=[];
+  if (!tripformdata.userId) {
+    errors.push('No userId provided');
+  }
+
+  if (!tripformdata.name) {
+    errors.push('No name provided');
+  }
+
+  if (!tripformdata.description) {
+    errors.push('No description provided');
+  }
+  if (!tripformdata.startTime) {
+    errors.push('No start-time provided');
+  }
+
+  if (!tripformdata.endTime) {
+    errors.push('No end-time provided');
+  }
+
+  if (!tripformdata.managerId) {
+    errors.push('No manager selected');
+  }
+
+  if (errors.length > 0) {
+    const { user } = req.session;
+    const trips = await getUserTrips(user._id);
+    const users = await getAllUsers(user);
+    res.render('trip/new', {
+      errors: errors,
+      hasErrors: true,
+      post: tripformdata,
+      users, 
+      trips, 
+      ...getTemplateData(req, {title:'My Trips'})
+
+
+    });
+    return;
+  }
   try {
     const { user } = req.session;
     const corporateId = user.corporateId;
