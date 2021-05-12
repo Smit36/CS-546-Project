@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-
 var rankData = {};
 
 function addNewUser() {
@@ -19,6 +17,8 @@ function addNewUser() {
         rankData = responseMessage;
         console.log(rankData);
         var rank = $('#rank');
+        rank.empty();
+        rank.append(`<option default>Select Rank</option>`);
         for (let i = 0; i < rankData.length; i++) {
         rank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}">${rankData[i].name}</option>`)
     }
@@ -47,9 +47,6 @@ function addNewUser() {
             level = r.level;
         }
       }
-
-      let password = document.getElementById('password').value;
-      let hashPassword = bcrypt.hash(password, 8);
       
       data = {
         name: document.getElementById('name').value,
@@ -61,6 +58,8 @@ function addNewUser() {
         rank: level,
         role: role,
       };
+
+      console.log(data);
 
       $.ajax({
         url: 'http://localhost:3000/user',
@@ -127,7 +126,7 @@ function addNewUser() {
                   <p>Email: ${data[i].email}</p>
                   <p>Contact: ${data[i].contact}</p>
                   <p>Role: ${data[i].role}</p>
-                  <p>Rank: ${data[i].rank}</p>
+                  <p>Designation: ${data[i].designation}</p>
                   <input id="userId" value=${data[i]._id} hidden></input>               
                   <button class="delete-button">Delete</button>
                   <button class="update-button">Update</button>              
@@ -190,11 +189,11 @@ function addNewUser() {
                       <label for="update-role">Role</label>
                     </div>
                     <div class="col-25">
-                      <input type="radio" id="admin" name="update-role" value="ADMIN" checked=${admin}>
+                      <input type="radio" id="admin" name="update-role" value="ADMIN" ${admin  ? checked="checked" : ''}>
                       <label for="admin">Portal Admin</label><br>
-                      <input type="radio" id="corporate" name="update-role" value="CORPORATE" checked=${corporate}>
+                      <input type="radio" id="corporate" name="update-role" value="CORPORATE" ${corporate  ? checked="checked" : ''}>
                       <label for="corporate">Corporate Admin</label>
-                      <input type="radio" id="employee" name="update-role" value="EMPLOYEE" checked=${employee}>
+                      <input type="radio" id="employee" name="update-role" value="EMPLOYEE" ${employee  ? checked="checked" : ''}>
                       <label for="employee">Employee</label>
                     </div>
                   </div>
@@ -203,7 +202,7 @@ function addNewUser() {
                       <label for="update-rank">Rank</label>
                     </div>
                     <div class="col-15">
-                      <select id="update-rank" name="rank" value=${data[i].rank}>
+                      <select id="update-rank" name="rank">
 
                       </select>
                     </div>
@@ -212,6 +211,11 @@ function addNewUser() {
                     </div>
                   </div>
                 `);
+                let updateRank = $('#update-rank');
+                for (let i = 0; i < rankData.length; i++) {
+                  updateRank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}"
+                  ${ data[i].designation == rankData[i].name ? 'selected' : '' }>${rankData[i].name}</option>`)
+                }
   
                 var updateUser = $('.update');
                 $(updateUser).on('click', function (event) {
@@ -226,11 +230,24 @@ function addNewUser() {
                     }
                   }
 
+                  let selectedRank = $('#rank :selected').val();
+                  let rankId = null;
+                  let level = 0;
+
+                  for (let r of rankData) {
+                    if (r.name === selectedRank.trim()) {
+                        rankId = r._id.toString();
+                        level = r.level;
+                    }
+                  }
+
                   update = {
                     name: document.getElementById('name').value,
                     email: document.getElementById('email').value,
                     contact: document.getElementById('contact').value,
-                    rank: document.getElementById('role').value,
+                    designation: selectedRank,
+                    rank: level,
+                    rankId: rankId,
                     role: role,
                   };
                   console.log(update);

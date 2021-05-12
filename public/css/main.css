@@ -27,6 +27,9 @@ footer {
 input[type='text'],
 input[type='number'],
 input[type='date'],
+input[type='email'],
+input[type='tel'],
+input[type='password'],
 select {
   width: 90%;
   padding: 12px;
@@ -46,6 +49,7 @@ label {
 
 .submit,
 .update,
+input[type='submit'],
 #new-rank button,
 #show-rank button,
 #new-user button,

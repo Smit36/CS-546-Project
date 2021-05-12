@@ -38,6 +38,7 @@
       </div>
       <div class="col-75">
         <input type="password" id="password" name="password" placeholder="password" required>
+        <p style="color: red;"><small>Password should consist of Capital letter, small letter, digits and special symbol and be atleast 8 characters</small></p>
       </div>
       <span id="password-error" hidden>Enter password.</span>
     </div>
@@ -48,6 +49,7 @@
       </div>
       <div class="col-75">
         <input type="tel" id="contact" name="contact" placeholder="Contact Number" required>
+        <p style="color: red;"><small>Contact should be in XXX-XXX-XXXX format</small></p>
       </div>
       <span id="contact-error" hidden>Enter contact Number.</span>
     </div>
@@ -76,7 +78,6 @@
       <div class="col-20">
         <div class="row">
           <select id="rank" name="rank">
-            <option default>Select Rank</option>
           </select>
         </div>
         <span id="rank-error" hidden>Select rank.</span>
@@ -84,7 +85,7 @@
     </div>  
 
     <span id="success-user" hidden>Successfully user added!</span>
-    <button type="button" class="submit" id="submit-user">Submit</button>
+    <input type="submit" id="submit-user">
     <script src="/js/user.js"></script>
   </form>
 </div>
