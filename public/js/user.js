@@ -24,8 +24,9 @@ function addNewUser() {
     }
     });    
 
+    var userForm = $('#user-form');
     var submitUser = $('.submit');
-    $(submitUser).on('click', function (event) {
+    userForm.submit(function(event) {
       event.preventDefault();
 
       const validate = validateUser();
@@ -163,13 +164,13 @@ function addNewUser() {
 
                 modal.append(`
                   <div class="detail">
-                    <div id="update-user-form">
+                  <form id="update-user-form">
                     <div class="row">
                     <div class="col-25">
                       <label for="update-name">Name</label>
                     </div>
                     <div class="col-75">
-                      <input type="text" id="update-name" name="name" value=${data[i].name}>
+                      <input type="text" id="update-name" name="name" pattern="^[a-zA-Z ']{2,30}$" value=${data[i].name} required>
                     </div>
                   </div>
                   <div class="row">
@@ -177,7 +178,7 @@ function addNewUser() {
                       <label for="update-email">Email</label>
                     </div>
                     <div class="col-75">
-                      <input type="email" id="update-email" name="update-email" value=${data[i].email}>
+                      <input type="email" id="update-email" name="update-email" value=${data[i].email} pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" required>
                     </div>
                   </div>
                   <div class="row">
@@ -185,7 +186,7 @@ function addNewUser() {
                       <label for="update-contact">Contact</label>
                     </div>
                     <div class="col-75">
-                      <input type="tel" id="update-contact" name="update-contact" value=${data[i].contact}>
+                      <input type="tel" id="update-contact" name="update-contact" value=${data[i].contact} pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
                     </div>
                   </div>  
                   <div class="row">
@@ -193,10 +194,10 @@ function addNewUser() {
                       <label for="update-role">Role</label>
                     </div>
                     <div class="col-25">
-                      <input type="radio" id="admin" name="update-role" value="ADMIN" ${admin  ? checked="checked" : ''}>
+                      <input type="radio" id="admin" name="update-role" value="ADMIN" ${admin  ? checked="checked" : '' } required>
                       <label for="admin">Portal Admin</label><br>
                       <input type="radio" id="corporate" name="update-role" value="CORPORATE" ${corporate  ? checked="checked" : ''}>
-                      <label for="corporate">Corporate Admin</label>
+                      <label for="corporate">Corporate Admin</label><br>
                       <input type="radio" id="employee" name="update-role" value="EMPLOYEE" ${employee  ? checked="checked" : ''}>
                       <label for="employee">Employee</label>
                     </div>
@@ -211,18 +212,20 @@ function addNewUser() {
                       </select>
                     </div>
                   </div>
-                  <button type="button" class="update">Save Changes</button>
-                    </div>
+                  <input type="submit" class="update">
+                  
+                  </form>
                   </div>
                 `);
                 let updateRank = $('#update-rank');
+                let designation = data[i].designation;
                 for (let i = 0; i < rankData.length; i++) {
                   updateRank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}"
-                  ${ data[i].designation == rankData[i].name ? 'selected' : '' }>${rankData[i].name}</option>`)
+                  ${ designation == rankData[i].name ? 'selected' : '' }>${rankData[i].name}</option>`);
                 }
   
-                var updateUser = $('.update');
-                $(updateUser).on('click', function (event) {
+                var updateUserForm = $('#update-user-form');
+                updateUserForm.submit(function(event) {
                   event.preventDefault();
                   let update = {};
                   
@@ -234,7 +237,7 @@ function addNewUser() {
                     }
                   }
 
-                  let selectedRank = $('#rank :selected').val();
+                  let selectedRank = $('#update-rank :selected').val();
                   let rankId = null;
                   let level = 0;
 
@@ -246,9 +249,9 @@ function addNewUser() {
                   }
 
                   update = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    contact: document.getElementById('contact').value,
+                    name: document.getElementById('update-name').value,
+                    email: document.getElementById('update-email').value,
+                    contact: document.getElementById('update-contact').value,
                     designation: selectedRank,
                     rank: level,
                     rankId: rankId,
@@ -306,37 +309,29 @@ function addNewUser() {
         console.log(errorMessage);
       },
     });
+  }
 
-    function validateUser() {
-      let error = 0;
-      if (!$('#name').val()) {
-        $('#name-error').show();
-        error++;
-      } else {
-        $('#name-error').hide();
-      }
-      if (!$('#password').val()) {
-        $('#password-error').show();
-        error++;
-      } else {
-        $('#password-error').hide();
-      }
-      if (!$('input[name="role"]:checked').val()) {
-        $('#role-error').show();
-        error++;
-      } else {
-        $('#role-error').hide();
-      }
-      if (
-        !$('#rank').find(':selected').text() ||
-        $('#rank').find(':selected').text() == 'Select Rank'
-      ) {
-        $('#rank-error').show();
-        error++;
-      } else {
-        $('#rank-error').hide();
-      }
-      if (error == 0) return true;
-      return false;
+  function validateUser() {
+    let error = 0;
+    if (!$('input[name="role"]:checked').val()) {
+      $('#role-error').show();
+      error++;
+    } else {
+      $('#role-error').hide();
     }
+
+    if (
+      !$('#rank').find(':selected').text() ||
+      $('#rank').find(':selected').text() == 'Select Rank'
+    ) {
+      $('#rank-error').show();
+      error++;
+    } else {
+      $('#rank-error').hide();
+    }
+
+    if (error == 0) 
+      return true;
+
+    return false;
   }

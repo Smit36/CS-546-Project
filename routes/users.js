@@ -97,8 +97,11 @@ router.put('/:userId', async (req, res) => {
     let userReq = req.body;
 
     assertRequiredObject(userReq);
+    let sessionUser = req.session.user;
+    userReq.corporateId = sessionUser.corporateId;
+    let updatedBy = sessionUser._id.toString();
 
-    const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = userReq;
+    const { corporateId, rankId, name, email, contact, designation, rank, role } = userReq;
   
     assertUserRole(role, "User Role");
 
@@ -116,7 +119,6 @@ router.put('/:userId', async (req, res) => {
       assertObjectIdString(rankId, "Rank ID"); 
     }   
     assertIsValuedString(name, "User name");
-    assertHashedPasswordString(password, "Password");
     assertEmailString(email, "Email");
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
@@ -125,12 +127,8 @@ router.put('/:userId', async (req, res) => {
     if (role === USER_ROLE.EMPLOYEE) {
       assertRequiredNumber(rank, "Rank");
     }
-    assertIsValuedString(createdBy, "Created By");
-    assertRequiredNumber(createdAt, "User created time");
 
-    const sessionUser = req.session.user;
-
-    const user = await usersData.updateUser(userId, sessionUser._id, userReq);
+    const user = await usersData.updateUser(userId, updatedBy, userReq);
     res.status(200).json(user);
   } catch (e) {
     res.status(400).json({ error: e });

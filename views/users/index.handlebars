@@ -17,9 +17,8 @@
         <label for="user-name">Employee Name</label>
       </div>
       <div class="col-75">
-        <input type="text" id="name" name="name" placeholder="Name" required>
+        <input type="text" id="name" name="name" pattern="^[a-zA-Z ']{2,30}$" placeholder="Name" required>
       </div>
-      <span id="name-error" hidden>Enter name</span>
     </div>
 
     <div class="row">
@@ -29,7 +28,6 @@
       <div class="col-75">
         <input type="email" id="email" name="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" placeholder="Corporate Email ID" required>
       </div>
-      <span id="email-error" hidden>Enter corporate email ID.</span>
     </div>
 
     <div class="row">
@@ -37,10 +35,9 @@
         <label for="password">Password</label>
       </div>
       <div class="col-75">
-        <input type="password" id="password" name="password" placeholder="password" required>
+        <input type="password" id="password" name="password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$" placeholder="password" required>
         <p style="color: red;"><small>Password should consist of Capital letter, small letter, digits and special symbol and be atleast 8 characters</small></p>
       </div>
-      <span id="password-error" hidden>Enter password.</span>
     </div>
 
     <div class="row">
@@ -51,7 +48,6 @@
         <input type="tel" id="contact" name="contact" placeholder="Contact Number" pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
         <p style="color: red;"><small>Contact should be in XXX-XXX-XXXX format</small></p>
       </div>
-      <span id="contact-error" hidden>Enter contact Number.</span>
     </div>
 
     <div class="row">
@@ -60,14 +56,14 @@
       </div>
       <div class="col-25">
         <div class="row">
-          <input type="radio" id="admin" name="role" value="ADMIN">
-          <label for="admin">Portal Admin</label>
+          <input type="radio" id="admin" name="role" value="ADMIN" required>
+          <label for="admin">Portal Admin</label><br>
           <input type="radio" id="corporate" name="role" value="CORPORATE">
-          <label for="corporate">Corporate Admin</label>
+          <label for="corporate">Corporate Admin</label><br>
           <input type="radio" id="employee" name="role" value="EMPLOYEE">
           <label for="employee">Employee</label>
         </div>
-        <span id="role-error" hidden>Select role.</span>
+        <span id="role-error" style="color: red;" hidden><small>Select role</small></span>
       </div>
     </div>
 
@@ -80,7 +76,7 @@
           <select id="rank" name="rank">
           </select>
         </div>
-        <span id="rank-error" hidden>Select rank.</span>
+        <span id="rank-error" style="color: red;" hidden><small>Select rank.</small></span>
       </div>
     </div>  
 
