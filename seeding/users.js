@@ -94,7 +94,7 @@ const seedUsers = async ({
 } = {}) => {
   const userData1 = {
     corporateId: stringifyObjectId(corporate1Id),
-    name: "Deck Reed Mega",
+    name: "Man Man Giga",
     password: password,
     email: "user1@gigasoft.com",
     contact: "101-117-7890",
@@ -109,7 +109,7 @@ const seedUsers = async ({
 
   const userData2 = {
     corporateId: stringifyObjectId(corporate1Id),
-    name: "Deck Reed Mega",
+    name: "Accounting Giga",
     password: password,
     email: "user2@gigasoft.com",
     contact: "201-227-7890",
@@ -124,7 +124,7 @@ const seedUsers = async ({
 
   const userData3 = {
     corporateId: stringifyObjectId(corporate1Id),
-    name: "Deck Reed Mega",
+    name: "Associating Giga",
     password: password,
     email: "user3@gigasoft.com",
     contact: "201-337-7890",

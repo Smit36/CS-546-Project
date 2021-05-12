@@ -92,7 +92,7 @@ const assertApprovalUpdates = (id, updates) => {
 
 const updateApproval = async (id, updates) => {
   assertApprovalUpdates(id, updates);
-  const { lastUpdateId, userId, status, message } = updates;
+  const { lastUpdateId, userId, message } = updates;
 
   const approval = await getApproval(id);
   if (
@@ -108,6 +108,7 @@ const updateApproval = async (id, updates) => {
     throw new QueryError(`Approval thread request is out-of-date.`);
   }
 
+  const status = updates.status || lastUpdate.status;
   const options = { returnOriginal: false };
   const collection = await getApprovalCollection();
   const currentTimestamp = new Date().getTime();
@@ -120,7 +121,7 @@ const updateApproval = async (id, updates) => {
   };
   const ops = {
     $set: {
-      status: status,
+      status,
       updatedAt: currentTimestamp,
       updatedBy: new ObjectId(userId),
     },

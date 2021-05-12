@@ -1,3 +1,7 @@
+* {
+	box-sizing: border-box;
+}
+
 html,
 body {
   box-sizing: border-box;
@@ -5,6 +9,8 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background: #dedede;
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 header {
