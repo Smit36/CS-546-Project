@@ -130,7 +130,6 @@ $tripForm.on("reset", handleTripReset);
 $tripEmployeeSelection.change(handleEmployeeSelection);
 $tripEmployeeAddButton.click(handleAddEmployee);
 
-
 /**
  * Trip detail page
  */

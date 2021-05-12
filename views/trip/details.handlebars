@@ -12,15 +12,15 @@
 </div>
 <div>
   <p>
-    corporate:
+    Corporate:
     {{corporate.name}}
   </p>
   <p>
-    manager:
+    Manager:
     {{manager.name}}
   </p>
   <p>
-    employees:
+    Employees:
   </p>
   <ul>
     {{#each employees}}
@@ -30,17 +30,17 @@
     {{/each}}
   </ul>
   <p>
-    startTime:
+    Start time:
     {{startTime}}
   </p>
   <p>
-    endTime:
+    End time:
     {{endTime}}
   </p>
-  {{expenses.length}}
-  expenses, total expense:
-  {{total}}
-  <ul>
+  <p>
+    Trip expense items:
+  </p>
+  <ol>
     {{#each expenses}}
       <li>
         {{user.name}}
@@ -53,5 +53,9 @@
         {{/if}}
       </li>
     {{/each}}
-  </ul>
+  </ol>
+  <p>
+    Total Trip Expense:
+    {{total}}
+  </p>
 </div>
