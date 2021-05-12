@@ -402,4 +402,32 @@ router.get("/:id/expense/:expenseId/edit", async (req, res, next) => {
   }
 });
 
+
+router.get("/:id/expense/new", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    assertTripID(id);
+
+    const { user } = req.session;
+    const trip = await getAuthorizedTrip(user, id);
+    const paymentMethodChecked = {
+      cash: false,
+      card: false,
+      gpay: false,
+      apple: false,
+    };
+    res.render("trip/expense", {
+      trip,
+      expense: {
+        userId: user._id,
+        tripId: trip._id,
+        paymentMethodChecked,
+      },
+      ...getTemplateData(req, { title: `New Trip Expense (${trip.name})` }),
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

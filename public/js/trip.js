@@ -67,6 +67,7 @@ function handleTripSubmit(e) {
       employeeIdList: inputEmployees,
     },
     success: function (response) {
+      redirect(`/trip/${response._id}`);
       console.log(response);
     },
   });
@@ -200,7 +201,7 @@ function handleTripExpenseSubmit(e) {
   const inputCurrency = $teCurrencySelect.val();
   let inputPaymentMethod = "";
   for (const $paymentRadio of $tePaymentRadios) {
-    if (!!$paymentRadio.attr("checked")) {
+    if (!!$paymentRadio.prop("checked")) {
       inputPaymentMethod = $paymentRadio.val();
       break;
     }
@@ -212,8 +213,8 @@ function handleTripExpenseSubmit(e) {
   const expenseId = getTripExpenseId();
   const userId = getTripExpenseUserId();
   $.ajax({
-    url: `/expense/${expenseId}`,
-    method: "PUT",
+    url: !!expenseId ? `/expense/${expenseId}` : '/expense',
+    method: !!expenseId ? "PUT" : "POST",
     data: JSON.stringify({
       userId: userId,
       tripId: tripId,
