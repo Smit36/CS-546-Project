@@ -27,7 +27,7 @@
         <label for="email">Email</label>
       </div>
       <div class="col-75">
-        <input type="email" id="email" name="email" placeholder="Corporate Email ID" required>
+        <input type="email" id="email" name="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" placeholder="Corporate Email ID" required>
       </div>
       <span id="email-error" hidden>Enter corporate email ID.</span>
     </div>
@@ -48,7 +48,7 @@
         <label for="contact">Contact Number</label>
       </div>
       <div class="col-75">
-        <input type="tel" id="contact" name="contact" placeholder="Contact Number" required>
+        <input type="tel" id="contact" name="contact" placeholder="Contact Number" pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
         <p style="color: red;"><small>Contact should be in XXX-XXX-XXXX format</small></p>
       </div>
       <span id="contact-error" hidden>Enter contact Number.</span>
@@ -61,7 +61,7 @@
       <div class="col-25">
         <div class="row">
           <input type="radio" id="admin" name="role" value="ADMIN">
-          <label for="admin">Portal Admin</label><br>
+          <label for="admin">Portal Admin</label>
           <input type="radio" id="corporate" name="role" value="CORPORATE">
           <label for="corporate">Corporate Admin</label>
           <input type="radio" id="employee" name="role" value="EMPLOYEE">

@@ -27,51 +27,55 @@ function addNewUser() {
     var submitUser = $('.submit');
     $(submitUser).on('click', function (event) {
       event.preventDefault();
-      let data = {};
 
-      let role = document.getElementsByName('role');
-      for (let i = 0; i < role.length; i++) {
-        if (role[i].checked) {
-            role = role[i].value;
-            break;
+      const validate = validateUser();
+      if (validate) {
+        let data = {};
+
+        let role = document.getElementsByName('role');
+        for (let i = 0; i < role.length; i++) {
+          if (role[i].checked) {
+              role = role[i].value;
+              break;
+          }
         }
-      }
 
-      let selectedRank = $('#rank :selected').val();
-      let rankId = null;
-      let level = 0;
+        let selectedRank = $('#rank :selected').val();
+        let rankId = null;
+        let level = 0;
 
-      for (let r of rankData) {
-        if (r.name === selectedRank.trim()) {
-            rankId = r._id.toString();
-            level = r.level;
+        for (let r of rankData) {
+          if (r.name === selectedRank.trim()) {
+              rankId = r._id.toString();
+              level = r.level;
+          }
         }
+        
+        data = {
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value,
+          contact: document.getElementById('contact').value,
+          designation: selectedRank,
+          rankId: rankId,
+          rank: level,
+          role: role,
+        };
+
+        console.log(data);
+
+        $.ajax({
+          url: 'http://localhost:3000/user',
+          type: 'POST',
+          data: JSON.stringify(data),
+          contentType: 'application/json; charset=utf-8',
+          success() {
+            $('#user-form')[0].reset();
+            alert('Successfully added');
+          },
+          error() {},
+        });
       }
-      
-      data = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-        contact: document.getElementById('contact').value,
-        designation: selectedRank,
-        rankId: rankId,
-        rank: level,
-        role: role,
-      };
-
-      console.log(data);
-
-      $.ajax({
-        url: 'http://localhost:3000/user',
-        type: 'POST',
-        data: JSON.stringify(data),
-        contentType: 'application/json; charset=utf-8',
-        success() {
-          $('#user-form')[0].reset();
-          alert('Successfully added');
-        },
-        error() {},
-      });
     });
   }
 
@@ -302,4 +306,37 @@ function addNewUser() {
         console.log(errorMessage);
       },
     });
+
+    function validateUser() {
+      let error = 0;
+      if (!$('#name').val()) {
+        $('#name-error').show();
+        error++;
+      } else {
+        $('#name-error').hide();
+      }
+      if (!$('#password').val()) {
+        $('#password-error').show();
+        error++;
+      } else {
+        $('#password-error').hide();
+      }
+      if (!$('input[name="role"]:checked').val()) {
+        $('#role-error').show();
+        error++;
+      } else {
+        $('#role-error').hide();
+      }
+      if (
+        !$('#rank').find(':selected').text() ||
+        $('#rank').find(':selected').text() == 'Select Rank'
+      ) {
+        $('#rank-error').show();
+        error++;
+      } else {
+        $('#rank-error').hide();
+      }
+      if (error == 0) return true;
+      return false;
+    }
   }
