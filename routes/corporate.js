@@ -8,14 +8,15 @@ const {
   getAllCorporates,
   updateCorporate,
   deleteCorporate,
-  getCorporateByEmail
+  getCorporateByDomain,
+  getCorporateDomainEmail
 } = require("../data/corporate");
 
 const {
   assertObjectIdString,
   assertRequiredObject,
   assertIsValuedString,
-  assertEmailString,
+  assertDomainString,
   assertContactString,
 } = require("../utils/assertion");
 
@@ -41,7 +42,7 @@ const corporateExist = (id, corporate) =>
 const assertCorporateData = (corporateData) => {
   assertIsValuedString(corporateData.name, "Corporate name");
   assertIsValuedString(corporateData.emailDomain, "Email");
-  assertEmailString(corporateData.emailDomain, "Corporate Email");
+  assertDomainString(corporateData.emailDomain, "Corporate Domain");
   assertIsValuedString(corporateData.contactNo, "Contact Number");
   assertContactString(corporateData.contactNo, "Contact Number");
   assertIsValuedString(corporateData.address, "Address");
@@ -60,7 +61,7 @@ router.post("/", async (req, res, next) => {
     corporateData.createdBy = userId;
     corporateData.updatedBy = userId;
     assertCorporateData(corporateData);
-    const emailExist = await getCorporateByEmail(corporateData.emailDomain);
+    const emailExist = await getCorporateByDomain(corporateData.emailDomain);
     if(!emailExist){
       const newCorporate = await createCorporate(corporateData);
       isCorporateAdd(newCorporate._id, newCorporate);
@@ -107,6 +108,19 @@ router.get("/:corporateId", async (req, res, next) => {
   }
 });
 
+// Get Single Corporate by Domain Email
+router.get("/domain/:domain", async (req, res, next) => {
+  try{
+    const {domain} = req.params;
+    assertDomainString(domain);
+    const corporate = await getCorporateDomainEmail(domain);
+    corporateExist(corporate._id, corporate);
+    res.status(200).json({corporate: corporate});
+  }catch (error){
+    next(error);
+  }
+})
+
 //Update corporate
 router.put("/:corporateId", async (req, res, next) => {
   try {
@@ -117,7 +131,7 @@ router.put("/:corporateId", async (req, res, next) => {
     assertRequiredObject(userId);
 
     let corporateData = req.body;
-    assertEmailString(corporateData.emailDomain, "Corporate Email");
+    assertDomainString(corporateData.emailDomain, "Corporate Domain");
     assertContactString(corporateData.contactNo, "Contact Number");
 
     corporateData.updatedBy = userId;

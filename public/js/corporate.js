@@ -30,9 +30,9 @@ create.on("click", function (event) {
     </label>
     </div>
     <div>
-    <label for="email">Corporate Email
-      <input type="text" id="email"  placeholder="Enter Email" required>
-      <span id="email-error" hidden>Please Enter Valid Email</span>
+    <label for="email">Corporate Domain Email
+      <input type="text" id="email"  placeholder="Enter Domain" required>
+      <span id="email-error" hidden>Please Enter Valid Domain Email</span>
     </label>
     </div>
     <div>
@@ -135,9 +135,9 @@ edit.on("click", function (event) {
     </label>
     </div>
     <div>
-    <label for="email">Corporate Email
-      <input type="text" id="email"  placeholder="Enter Email">
-      <span id="email-error" hidden>Please Enter Valid Email</span>
+    <label for="email">Corporate Domain Email
+      <input type="text" id="email"  placeholder="Enter Domain">
+      <span id="email-error" hidden>Please Enter Valid Domain Email</span>
     </label>
     </div>
     <div>
@@ -199,7 +199,7 @@ function corporateEmptyValidation() {
   } else {
     $("#name-error").hide();
   }
-  if (!$("#email").val() || !($("#email").val().match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/))) {
+  if (!$("#email").val() || !($("#email").val().match(/^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$/i))) {
     $("#email-error").show();
     error += 1;
   } else {
