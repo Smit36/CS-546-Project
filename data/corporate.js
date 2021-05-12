@@ -11,17 +11,17 @@ const {
   assertRequiredObject,
   assertRequiredNumber,
   assertContactString,
-  assertEmailString,
+  assertDomainString,
 } = require("../utils/assertion");
 
 const isDataExist = (id, data, desc = "data") => {
   if (!data)
     throw new QueryError(`Cannot find corporate data with ID: ${id}`, 404);
 };
-const isDataExistByEmail = (email, data, desc = "data") => {
+const isDataExistByDomain = (domain, data, desc = "data") => {
   if (data)
     throw new QueryError(
-      `Corporate data already Exist with Email: ${email}`,
+      `Corporate data already Exist with Email: ${domain}`,
       409
     );
 };
@@ -34,10 +34,10 @@ const getByObjectId = async (objectId) => {
   return parseMongoData(corporate);
 };
 
-const getByEmail = async (email) => {
+const getByDomain = async (domain) => {
   const collection = await getCorporatesCollection();
-  const corporate = await collection.findOne({ emailDomain: email });
-  isDataExistByEmail(email, corporate, "corporate");
+  const corporate = await collection.findOne({ emailDomain: domain });
+  isDataExistByDomain(domain, corporate, "corporate");
 
   return false;
 };
@@ -57,10 +57,23 @@ const getCorporate = async (id) => {
   return await getByObjectId(new ObjectId(id));
 };
 
-// Get Corporate By Email
-const getCorporateByEmail = async (email) => {
-  assertEmailString(email);
-  return await getByEmail(email);
+// Get Corporate By Corporate Domain
+const getCorporateByDomain = async (domain) => {
+  assertDomainString(domain);
+  return await getByDomain(domain);
+};
+
+// Get Corporate Domain
+const getCorporateDomainEmail = async (domain) => {
+  assertDomainString(domain);
+  const collection = await getCorporatesCollection();
+  const corporate = await collection.findOne({ emailDomain: domain });
+  if (!corporate)
+    throw new QueryError(
+      `Cannot find corporate data with Domain: ${domain}`,
+      404
+    );
+  return parseMongoData(corporate);
 };
 
 // Create New Corporate
@@ -78,8 +91,8 @@ const createCorporate = async (data) => {
   } = data;
 
   assertIsValuedString(name, "Corporate name");
-  assertIsValuedString(emailDomain, "Email");
-  assertEmailString(emailDomain, "Email");
+  assertIsValuedString(emailDomain, "Email Domain");
+  assertDomainString(emailDomain, "Email Domain");
   assertIsValuedString(contactNo, "Contact Number");
   assertContactString(contactNo, "Contact Number");
   assertIsValuedString(address, "Address");
@@ -128,8 +141,8 @@ const updateCorporate = async (id, updates) => {
   } = updates;
 
   assertIsValuedString(name, "Corporate name");
-  assertIsValuedString(emailDomain, "Email");
-  assertEmailString(emailDomain, "Email");
+  assertIsValuedString(emailDomain, "Email Domain");
+  assertDomainString(emailDomain, "Email Domain");
   assertIsValuedString(contactNo, "Contact Number");
   assertContactString(contactNo, "Contact Number");
   assertIsValuedString(address, "Address");
@@ -198,5 +211,6 @@ module.exports = {
   getAllCorporates,
   updateCorporate,
   deleteCorporate,
-  getCorporateByEmail,
+  getCorporateByDomain,
+  getCorporateDomainEmail,
 };
