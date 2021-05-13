@@ -17,6 +17,7 @@ var contactError = false;
 
 // Create Corporate Button Click
 create.on("click", function (event) {
+  create.hide();
   event.preventDefault();
   corporateList.hide();
   $(createAdd).append(`<form id='myform'>
@@ -25,30 +26,30 @@ create.on("click", function (event) {
     <hr>
     <div id='input'>
     <label for="name" >Corporate Name
-      <input type="text" id="name" placeholder="Enter Name" required>
+      <input type="text" id="name" placeholder="Enter Name" pattern="^[a-zA-Z ']{2,50}$" required>
       <span id="name-error" hidden>Please Enter Valid Name</apan>
     </label>
     </div>
     <div>
     <label for="email">Corporate Domain Email
-      <input type="text" id="email"  placeholder="Enter Domain" required>
+      <input type="text" id="email"  placeholder="Enter Domain" pattern"^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$" required>
       <span id="email-error" hidden>Please Enter Valid Domain Email</span>
     </label>
     </div>
     <div>
     <label for="contact">Corporate Contact_No
-      <input type="text" id="contact"  placeholder="Enter Contact" required>
+      <input type="text" id="contact"  placeholder="Enter Contact" pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
       <span id="contact-error" hidden>Please Enter Valid Contact</span>
     </label>
     </div>
     <div>
     <label for="address">Corporate Address
-      <input type="text" id="address" placeholder="Enter Address" required>
+      <input type="text" id="address" placeholder="Enter Address" pattern="^[a-zA-Z ']{2,50}$" required>
       <span id="address-error" hidden>Please Enter Valid Address</span>
     </label>
     </div>
     <input type="submit" value="Submit" class="submit-create"/>
-    <a href="/corporate" class='nav' id="previous">Back</a>
+    <a href="/corporates" class='nav' id="previous">Back</a>
   </form>`);
 
   var submit_create = $(".submit-create");
@@ -130,25 +131,25 @@ edit.on("click", function (event) {
     <hr>
     <div>
     <label for="name" >Corporate Name
-      <input type="text" id="name" placeholder="Enter Name" required>
+      <input type="text" id="name" placeholder="Enter Name" pattern="^[a-zA-Z ']{2,50}$" required>
       <span id="name-error" hidden>Please Enter Valid Name</apan>
     </label>
     </div>
     <div>
     <label for="email">Corporate Domain Email
-      <input type="text" id="email"  placeholder="Enter Domain">
+      <input type="text" id="email"  placeholder="Enter Domain" pattern="^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$" required>
       <span id="email-error" hidden>Please Enter Valid Domain Email</span>
     </label>
     </div>
     <div>
     <label for="contact">Corporate Contact_No
-      <input type="text" id="contact"  placeholder="Enter Contact">
+      <input type="text" id="contact"  placeholder="Enter Contact" pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
       <span id="contact-error" hidden>Please Enter Valid Contact</span>
     </label>
     </div>
     <div>
     <label for="address">Corporate Address
-      <input type="text" id="address" placeholder="Enter Address">
+      <input type="text" id="address" placeholder="Enter Address" pattern="^[a-zA-Z ']{2,50}$" required>
       <span id="address-error" hidden>Please Enter Valid Address</span>
     </label>
     </div>
