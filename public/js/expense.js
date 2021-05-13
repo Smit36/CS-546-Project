@@ -1,3 +1,7 @@
+window.onload = function () {
+  showExpense();
+};
+
 function addNewExpense() {
   var newExpense = $('#new-expense');
   var showForm = $('#show-form');
@@ -28,8 +32,8 @@ function addNewExpense() {
         }
       }
       data = {
-        userId: '60832c0f8b6948b77e6dc3c5',
-        tripId: '60832c49d9bafeae5372234c',
+        userId: $('#user-id').text(),
+        tripId: $('#expense-trip :selected').val(),
         name: document.getElementById('name').value,
         description: document.getElementById('description').value,
         currency: $('#currency :selected').val(),
@@ -37,14 +41,12 @@ function addNewExpense() {
         method,
         date: dateFormat,
       };
-      console.log(data);
       $.ajax({
         url: 'http://localhost:3000/expense',
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
         success() {
-          console.log('hi');
           var successMessage = $('#success-expense');
           successMessage.show();
           $('#expense-form')[0].reset();
@@ -75,17 +77,9 @@ function showExpense() {
   let totalExpense = 0;
   total.empty();
   expenseList.empty();
-  let tripId = '60832c49d9bafeae5372234c';
   let rates = [];
 
-  $.ajax(`https://api.ratesapi.io/api/latest`, {
-    dataType: 'json',
-    success: function (data) {
-      rates = data;
-    },
-  });
-
-  $.ajax(`http://localhost:3000/expense/trip/${tripId}`, {
+  $.ajax(`http://localhost:3000/expense/all`, {
     dataType: 'json',
     success: function (data, status, xhr) {
       if (data.length > 0) {
@@ -106,7 +100,7 @@ function showExpense() {
                   <div class="col-25">${data[i].name}</div>
                   <div class="col-25">${data[i].payment.date}</div>
                   <div class="col-25">${data[i].payment.currency} ${data[i].payment.amount}</div>                
-                  <div class="col-25">${data[i].userId}</div>
+                  <div class="col-25">${data[i].trip.name}</div>
                 </div>
               </button>
             </div>           
@@ -120,7 +114,7 @@ function showExpense() {
               <div class="detail">
                 <h1>${data[i].name}</h1>
                 <h2>${data[i].description}</h2>
-                <p>Trip: ${data[i].tripId}</p>
+                <p>Trip: ${data[i].trip.name}</p>
                 <p>Created By: ${data[i].createdBy}</p>
                 <p>Payment Amount:${data[i].payment.currency} ${data[i].payment.amount}</p>
                 <p>Payment Mode: ${data[i].payment.method}</p>
@@ -345,7 +339,7 @@ function showExpense() {
       console.log(errorMessage);
       $(expenseList).html(`<p>Expense not found</p>`);
       expenseList.show();
-      $(getExpense).show(); 
+      $(getExpense).show();
     },
   });
 }

@@ -2,9 +2,9 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>{{ title }} | Corporate Traveling Expense Management</title>
-    <link rel="stylesheet" href="/css/main.css">
+  <meta charset="utf-8">
+  <title>{{ title }} | Corporate Traveling Expense Management</title>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
@@ -20,33 +20,33 @@
     <nav>
       <ul>
         {{#if isCorporateAdmin}}
-          <li>
-            <a href="/user">
-              Employees
-            </a>
-          </li>
-          <li>
-            <a href="/rank">
-              Ranks
-            </a>
-          </li>
+        <li>
+          <a href="/user">
+            Employees
+          </a>
+        </li>
+        <li>
+          <a href="/rank">
+            Ranks
+          </a>
+        </li>
         {{else if isPortalAdmin}}
-          <li>
-            <a href="/corporates">
-              Corporates
-            </a>
-          </li>
+        <li>
+          <a href="/corporates">
+            Corporates
+          </a>
+        </li>
         {{else}}
-          <li>
-            <a href="/expenses">
-              Expenses
-            </a>
-          </li>
-          <li>
-            <a href="/trip">
-              Trips
-            </a>
-          </li>
+        <li>
+          <a href="/expenses">
+            Expenses
+          </a>
+        </li>
+        <li>
+          <a href="/trip">
+            Trips
+          </a>
+        </li>
         {{/if}}
       </ul>
     </nav>
@@ -54,27 +54,27 @@
 
     <aside>
       {{#if user}}
-        {{#if corporate}}
-          <div>
-            Corporate:
-            {{corporate.name}}
-          </div>
-        {{/if}}
-        {{#if user}}
-          <div>
-            User:
-            {{user.name}}
-          </div>
-          <div>
-            <a href="/user/logout">
-              Logout
-            </a>
-          </div>
-        {{/if}}
-      {{else}}
-        <a href="/user/login">
-          Login
+      {{#if corporate}}
+      <div>
+        Corporate:
+        {{corporate.name}}
+      </div>
+      {{/if}}
+      {{#if user}}
+      <div>
+        User:
+        {{user.name}}
+      </div>
+      <div>
+        <a href="/user/logout">
+          Logout
         </a>
+      </div>
+      {{/if}}
+      {{else}}
+      <a href="/user/login">
+        Login
+      </a>
       {{/if}}
     </aside>
 
@@ -83,9 +83,8 @@
   <main>
     {{{body}}}
   </main>
+  <footer>
 
-
- <footer>
     <dl>
       <dt>
         Spring 2021 CS-546
@@ -115,15 +114,13 @@
     </dl>
   </footer>
 
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
     integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
-    crossorigin="anonymous"
-  ></script>
-  <script src="/js/index.js"></script>
-  <script src="/js/corporate.js"></script>
-  <script src="/js/trip.js"></script>
-  <script src="/js/approval.js"></script>
+    crossorigin="anonymous"></script>
+  <script src="js/index.js"></script>
+  <script src="js/corporate.js"></script>
+  <script src="js/trip.js"></script>
+  <script src="js/approval.js"></script>
 </body>
 
 </html>
