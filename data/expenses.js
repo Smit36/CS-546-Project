@@ -59,7 +59,7 @@ const getAllExpensesByUser = async (userId) => {
   const collection = await getExpensesCollection();
   const allExpenses = await collection.find({ userId: new ObjectId(userId) }).toArray();
   if (allExpenses.length == 0) {
-    throw new QueryError(`Expenses not found`);
+    return parseMongoData(allExpenses);
   }
   for (let i = 0; i < allExpenses.length; i++) {
     allExpenses[i].payment = await getExpensePayment(allExpenses[i].paymentId.toHexString());
