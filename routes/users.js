@@ -3,6 +3,7 @@ const router = Router();
 const bcrypt = require('bcrypt');
 const usersData = require('../data/users');
 const corporateData = require('../data/corporate');
+
 const {
   assertObjectIdString,
   assertIsValuedString,
@@ -13,13 +14,15 @@ const {
   assertContactString,
   assertPasswordString,
   assertHashedPasswordString,
-  assertCorporateDomainString
+  assertCorporateDomainString,
+  assertNonEmptyArray
 } = require("../utils/assertion");
 const {
   USER_ROLE
 } = require('../utils/constants')
-const { QueryError, ValidationError } = require("../utils/errors");
+const { QueryError, ValidationError, HttpError } = require("../utils/errors");
 const { getTemplateData } = require('../utils/routes');
+const { getAllRanks } = require('../data/rank');
 const USER_PAGE_PATH = 'users/index';
 const USER_PAGE_TITLE = 'Employee';
 
@@ -222,6 +225,87 @@ const LOGIN_PAGE_PATH = "user/login";
 const LOGIN_PAGE_TITLE = "User Login";
 router.get('/login', async (req, res) => {
     res.render(LOGIN_PAGE_PATH, getTemplateData(req, { noUser: false, title: LOGIN_PAGE_TITLE }));
+});
+
+const EMPLOYEE_UPLOAD_PAGE = 'users/employee-upload';
+const EMPLOYEE_UPLOAD_TITLE = 'Employee Bulk Creation';
+const renderEmployeeUpload = (req, res, errors) => {
+  const { user } = req.session;
+  if (user.role !== USER_ROLE.ADMIN && user.role !== USER_ROLE.CORPORATE) {
+    throw new HttpError('Unauthorized to upload employees.', 401);
+  }
+  return res.render(EMPLOYEE_UPLOAD_PAGE, {
+    errors,
+    ...getTemplateData(req, { title: EMPLOYEE_UPLOAD_TITLE }),
+  });
+};
+
+router.get('/bulk-upload', async (req, res, next) => {
+  try {
+    renderEmployeeUpload(req, res);
+  } catch (error) {
+    next(error)
+  }
+});
+
+router.post('/bulk-upload', async (req, res, next) => {
+  try {
+    const { user } = req.session;
+    const employeeDataList = req.body;
+    assertNonEmptyArray(employeeDataList);    
+
+    const ranks = await getAllRanks(user);
+    const rankMap = ranks.reduce((result, rank) => {
+      const { name, level } = rank;
+      result[level] = result[level] || {};
+      result[level][name] = rank;
+      return result;
+    }, {})
+
+    const userDataList = [];
+    const errors = [];
+    const creationTime = new Date().getTime();
+    for (let i = 0; i < employeeDataList.length; i++) {
+      const employeeData = employeeDataList[i];
+      try {
+        const { name, password, email, contact, designation, rank} = employeeData;
+        assertPasswordString(password, "Password");
+        let hashPassword = await bcrypt.hash(password, 8);
+        assertIsValuedString(name, "User name");
+        assertHashedPasswordString(hashPassword, "Password");
+        assertEmailString(email, "Email");
+        assertContactString(contact, "Contact Number");
+        assertIsValuedString(designation, "Designation");
+        assertRequiredNumber(Number(rank), 'Rank level');
+        const employeeRank = rankMap[rank][designation];
+        if (!employeeRank) {
+          throw new ValidationError('Invalid coporate employee rank');
+        }
+        userDataList.push({
+          ...employeeData,
+          password: hashPassword,
+          role: USER_ROLE.EMPLOYEE,
+          rankId: employeeRank._id,
+          designation: employeeRank.name,
+          rank: employeeRank.level,
+          corporateId: user.corporateId,
+          createdBy: user._id,
+          createdAt: creationTime,
+        })
+      } catch (employeeError) {
+        errors.push(`Row ${i + 1}: ` + employeeError.message);
+      }
+    }
+
+    if (errors.length > 0) {
+      throw new HttpError(errors.join(';\n'), 400);
+    } else {
+      const users = await Promise.all(userDataList.map(userData => usersData.createUser(userData)));
+      res.send(users);
+    }
+  } catch (error) {
+    next(error);
+  }
 });
 
 //get user by Id
