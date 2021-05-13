@@ -1,15 +1,15 @@
 <div class="row">
   <div class="col-25">
-    <div id="new-expense" hidden>
+    <div id="new-expense">
       <button onClick="addNewExpense()">New Expense</button>
     </div>
-    <div id="show-expense">
+    <div id="show-expense" hidden>
       <button onClick="showExpense()">Show Expense</button>
     </div>
   </div>
 </div>
 
-<div id="show-form">
+<div id="show-form" hidden>
   <form id="expense-form">
     <p id="user-id" hidden>{{userId}}</p>
     <input type="text" value={{userId}} id="user-id" hidden />
@@ -115,7 +115,7 @@
   </form>
 </div>
 
-<div id='get-expenses' hidden>
+<div id='get-expenses' >
   <div class="total-amount"></div>
   <div class="row" id="header">
     <div class="col-25">Name</div>

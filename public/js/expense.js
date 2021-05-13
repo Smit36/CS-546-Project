@@ -1,5 +1,5 @@
 window.onload = function () {
-  addNewExpense();
+  showExpense();
 };
 
 function addNewExpense() {
