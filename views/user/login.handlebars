@@ -9,7 +9,7 @@
       <div class="col-75">
         <input id="login-form-email" name="email" type="email" placeholder="abc@apple.com"/>
       </div>
-      <div id="login-form-user-error" hidden></div>
+      <div id="login-form-email-error" hidden></div>
     </div>
     <div class="row">
       <div class="col-25">
@@ -22,6 +22,14 @@
       </div>
       <div id="login-form-password-error" hidden></div>
     </div>
-    <button class="submit" id="login-form-submit" type="submit">Login</button>
+    <input class="submit" id="login-form-submit" type="submit" value="Login" />
+    <div id="login-errors">
+      <ul>
+        {{#each errors}}
+          <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
   </form>
 </div>
+<script defer src="/js/login.js"></script>
