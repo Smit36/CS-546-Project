@@ -1,5 +1,5 @@
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
@@ -10,7 +10,7 @@ body {
   margin: 0;
   padding: 0;
   background: #dedede;
-  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
 }
 
 header {
@@ -108,12 +108,12 @@ button {
   background-color: #4caf50;
 }
 
-button a{
-  color:white;
+button a {
+  color: white;
   text-decoration: none;
 }
 
-button:hover{
+button:hover {
   background-color: #1279ee;
 }
 
@@ -130,7 +130,8 @@ button:hover{
 }
 
 .submit:hover,
-.update:hover {
+.update:hover,
+.confirm:hover {
   background-color: #45a049;
 }
 
@@ -166,8 +167,8 @@ button:hover{
   margin-left: 30%;
 }
 
-#trip-card{
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+#trip-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   background-color: rgb(235, 241, 247);
   transition: 0.3s;
   margin: 5px 5px 5px 50px;
@@ -175,9 +176,9 @@ button:hover{
   width: 20%;
 }
 
-#trip-card:hover{  
+#trip-card:hover {
   cursor: pointer;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 .col-25 {
@@ -208,7 +209,8 @@ button:hover{
   margin-top: 6px;
 }
 
-#expense-list button {
+#expense-list button,
+#user-list button {
   background-color: #f2f2f2;
   color: rgb(66, 66, 66);
   padding: 18px;
@@ -221,7 +223,8 @@ button:hover{
   border-bottom: 1px solid rgb(66, 66, 66);
 }
 
-#expense-list button:hover {
+#expense-list button:hover,
+#user-list button:hover {
   cursor: pointer;
   background-color: #ebebeb;
   color: rgb(66, 66, 66);
@@ -314,24 +317,6 @@ button:hover{
   padding-left: 35%;
 }
 
-#rank-list, #user-list button {
-  background-color: #f2f2f2;
-  color: rgb(66, 66, 66);
-  padding: 18px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 15px;
-  border-bottom: 1px solid rgb(66, 66, 66);
-}
-
-#rank-list, #user-list button:hover {
-  cursor: pointer;
-  background-color: #ebebeb;
-  color: rgb(66, 66, 66);
-}
-
 #header {
   background-color: #777;
   color: white;
@@ -361,20 +346,6 @@ button:hover{
   color: white;
 }
 
-#modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: #474e5d;
-  opacity: 0.95;
-  padding-top: 50px;
-}
-
 .detail {
   background-color: #fefefe;
   opacity: 1;
@@ -382,19 +353,6 @@ button:hover{
   padding: 20px 15px 20px 15px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
-}
-
-.close {
-  position: absolute;
-  right: 35px;
-  top: 15px;
-  font-size: 40px;
-  font-weight: bold;
-  color: #f1f1f1;
-}
-
-.close:hover {
-  cursor: pointer;
 }
 
 /* Clear floats after the columns */

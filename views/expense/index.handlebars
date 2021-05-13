@@ -18,7 +18,7 @@
         <label for="expense-trip-name">Trip Name</label>
       </div>
       <div class="col-75">
-        <select id="expense-trip" name="expense-trip">
+        <select id="expense-trip" name="expense-trip" required>
           {{#if trips}}
           {{#each trips}}
           <option default>Trip</option>
@@ -111,7 +111,6 @@
     </div>
     <span id="success-expense" hidden>Successfully expense added!</span>
     <button type="button" class="submit" id="submit-expense" value={{userId}}>Submit</button>
-    <script src="js/expense.js"></script>
   </form>
 </div>
 
@@ -128,3 +127,4 @@
   <div id="modal">
   </div>
 </div>
+<script src="js/expense.js"></script>
