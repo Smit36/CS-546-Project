@@ -1,0 +1,105 @@
+<div id="trip-expense__id" hidden>
+  {{expense._id}}
+</div>
+<div id="trip-expense__trip-id" hidden>
+  {{expense.tripId}}
+</div>
+<div id="trip-expense__user-id" hidden>
+  {{expense.userId}}
+</div>
+<div class="detail">
+  <form id="trip-expense__form">
+    {{!-- name --}}
+    <div class="row" id="trip-expense__name">
+      <div class="col-25">
+        <label for="trip-expense__name">Expense Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="trip-expense__name__input" name="name" value="{{expense.name}}">
+      </div>
+      <span id="trip-expense__name__error" hidden></span>
+    </div>
+    {{!-- description --}}
+    <div class="row" id="trip-expense__description">
+      <div class="col-25">
+        <label for="trip-expense__description__input">Expense Description</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="trip-expense__description__input" name="description" value="{{expense.description}}">
+      </div>
+      <span id="trip-expense__description__error" hidden></span>
+    </div>
+    {{!-- payment method --}}
+    <div class="row" id="trip-expense__payment">
+      <div class="col-25">
+        <label for="trip-expense__payment">Payment Method</label>
+      </div>
+      <div class="col-25">
+        <div class="row">
+          <input type="radio" id="trip-expense__payment__radio--card" name="paymentMethod" value="card"
+          {{#if expense.paymentMethodChecked.card}}
+          checked
+          {{/if}}>
+          <label for="trip-expense__payment__radio--card">Card</label><br>
+          <input type="radio" id="trip-expense__payment__radio--cash" name="paymentMethod" value="cash"
+          {{#if expense.paymentMethodChecked.cash}}
+          checked
+          {{/if}}>
+          <label for="trip-expense__payment__radio--cash">Cash</label>
+        </div>
+        <span id="trip-expense__payment__error" hidden></span>
+      </div>
+      <div class="col-25">
+        <div>
+          <input type="radio" id="trip-expense__payment__radio--gpay" name="paymentMethod" value="gpay"
+          {{#if expense.paymentMethodChecked.gpay}}
+          checked
+          {{/if}}>
+          <label for="trip-expense__payment__radio--gpay">G Pay</label><br>
+          <input type="radio" id="trip-expense__payment__radio--apple" name="paymentMethod" value="apple"
+          {{#if expense.paymentMethodChecked.apple}}
+          checked
+          {{/if}}>
+          <label for="trip-expense__payment__radio--apple">Apple Pay</label>
+        </div>
+      </div>
+    </div>
+    {{!-- payment currency --}}
+    <div class="row" id="trip-expense__currency">
+      <div class="col-25">
+        <label for="trip-expense__currency__select">Payment Currency</label>
+      </div>
+      <div class="col-75">
+        <select id="trip-expense__currency__select" name="currency" value="{{expense.payment.currency}}">
+          <option id="trip-expense__currency__option--usd" value="$">$-USD</option>
+          <option id="trip-expense__currency__option--cny" value="¥">¥-CNY</option>
+          <option id="trip-expense__currency__option--inr" value="₹">₹-INR</option>
+          <option id="trip-expense__currency__option--eur" value="€">€-EUR</option>
+        </select>
+      </div>
+      <span id="trip-expense__currency__error" hidden></span>
+    </div>
+    {{!-- payment amount --}}
+    <div class="row" id="trip-expense__amount">
+      <div class="col-25">
+        <label for="trip-expense__amount__input">Payment Amount</label>
+      </div>
+      <div class="col-75">
+        <input type="number" id="trip-expense__amount__input" name="amount" value="{{expense.payment.amount}}">
+      </div>
+      <span id="trip-expense__amount__error" hidden></span>
+    </div>
+    {{!-- payment date --}}
+    <div class="row" id="trip-expense__date">
+      <div class="col-25">
+        <label for="trip-expense__date__input">Payment Date</label>
+      </div>
+      <div class="col-75">
+        <input type="date" id="trip-expense__date__input" name="date" value="{{expense.paymentDateValue}}">
+      </div>
+      <span id="trip-expense__date__error" hidden></span>
+    </div>
+    {{!-- submit --}}
+    <input type="submit" class="confirm" id="trip-expense__submit" value="Save" />
+  </form>
+</div>

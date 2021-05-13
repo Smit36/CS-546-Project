@@ -1,3 +1,8 @@
+const $queryObjectList = (qs) =>
+  $(qs)
+    .map((i, e) => $(e))
+    .get();
+
 /**
  * New trip page
  */
@@ -10,9 +15,9 @@ const $tripManager = $("#trip-manager");
 const $tripEmployees = $("#trip-employees");
 
 const $tripEmployeeSelection = $("#trip-employee-selection");
-const $tripEmployeeOptions = $("#trip-employee-selection>option")
-  .map((i, e) => $(e))
-  .get();
+const $tripEmployeeOptions = $queryObjectList(
+  "#trip-employee-selection>option"
+);
 const $tripEmployeeOptionsById = $tripEmployeeOptions.reduce(
   (result, $option) => {
     const employeeId = $option.val();
@@ -62,6 +67,7 @@ function handleTripSubmit(e) {
       employeeIdList: inputEmployees,
     },
     success: function (response) {
+      redirect(`/trip/${response._id}`);
       console.log(response);
     },
   });
@@ -134,18 +140,19 @@ $tripEmployeeAddButton.click(handleAddEmployee);
  * Trip detail page
  */
 
-const $tripExpenseRemovals = $("li button[id^=trip-remove-]")
-  .map((i, e) => $(e))
-  .get();
+const redirect = (url) => window.location.replace(url);
+const $tripExpenseRemovals = $queryObjectList("li button[id^=trip-delete-]");
+const $tripExpenseEdits = $queryObjectList("li button[id^=trip-edit-]");
 
-const $tripId = $("#trip-id");
+const getTripId = () => $("#trip-id").html().trim();
 
 function removeExpense(expenseId) {
   $.ajax({
-    url: `/trip/${$tripId.html()}/expense/${expenseId}`,
+    url: `/expense/${expenseId}`,
     type: "DELETE",
-    success: function (response) {
+    success(response) {
       console.log(response);
+      redirect(`/trip/${getTripId()}`);
     },
   });
 }
@@ -157,3 +164,72 @@ for (const $expenseRemoval of $tripExpenseRemovals) {
     removeExpense(expenseId);
   });
 }
+
+for (const $expenseEdit of $tripExpenseEdits) {
+  const expenseId = $expenseEdit.attr("id").slice(10);
+  $expenseEdit.click((e) => {
+    e.preventDefault();
+    redirect(`/trip/${getTripId()}/expense/${expenseId}/edit`);
+  });
+}
+
+/**
+ * Trip expense form
+ */
+
+const getTripExpenseId = () => $("#trip-expense__id").html().trim();
+const getTripExpenseTripId = () => $("#trip-expense__trip-id").html().trim();
+const getTripExpenseUserId = () => $("#trip-expense__user-id").html().trim();
+const $teForm = $("#trip-expense__form");
+const $teSubmit = $("#trip-expense__submit");
+const $teNameInput = $("#trip-expense__name__input");
+const $teDescriptionInput = $("#trip-expense__description__input");
+const $tePaymentRadios = $queryObjectList(
+  "input[id^=trip-expense__payment__radio--]"
+);
+const $teCurrencySelect = $("#trip-expense__currency__select");
+const $teAmountInput = $("#trip-expense__amount__input");
+const $teDateInput = $("#trip-expense__date__input");
+
+function handleTripExpenseSubmit(e) {
+  e.preventDefault();
+
+  const inputName = $teNameInput.val();
+  const inputDescription = $teDescriptionInput.val();
+  const inputAmount = $teAmountInput.val();
+  const inputDate = $teDateInput.val();
+  const inputCurrency = $teCurrencySelect.val();
+  let inputPaymentMethod = "";
+  for (const $paymentRadio of $tePaymentRadios) {
+    if (!!$paymentRadio.prop("checked")) {
+      inputPaymentMethod = $paymentRadio.val();
+      break;
+    }
+  }
+
+  // TODO: error handling
+
+  const tripId = getTripExpenseTripId();
+  const expenseId = getTripExpenseId();
+  const userId = getTripExpenseUserId();
+  $.ajax({
+    url: !!expenseId ? `/expense/${expenseId}` : '/expense',
+    method: !!expenseId ? "PUT" : "POST",
+    data: JSON.stringify({
+      userId: userId,
+      tripId: tripId,
+      name: inputName,
+      description: inputDescription,
+      currency: inputCurrency,
+      amount: Number(inputAmount),
+      date: new Date(inputDate).toLocaleDateString(),
+      method: inputPaymentMethod,
+    }),
+    contentType: "application/json; charset=utf-8",
+    success(res) {
+      redirect(`/trip/${tripId}`);
+    },
+  });
+}
+
+$teForm.submit(handleTripExpenseSubmit);
