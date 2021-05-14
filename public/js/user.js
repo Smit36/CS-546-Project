@@ -366,7 +366,7 @@ function validateUser() {
   } else {
     $('#new-user-email-error').hide();
   }
-  if (!$('#password').val() || !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test($('#password').val())) {
+  if (!$('#password').val() || !/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test($('#password').val())) {
     $('#new-user-password-error').show();
     error++;
   } else {

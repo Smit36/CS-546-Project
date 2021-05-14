@@ -171,6 +171,9 @@ router.put("/:userId", async (req, res) => {
       assertRequiredNumber(rank, "Rank");
     }
 
+    const corporate = await corporateData.getCorporate(corporateId);
+    assertCorporateDomainString(corporate.emailDomain, email);
+
     const user = await usersData.updateUser(userId, updatedBy, userReq);
     res.status(200).json(user);
   } catch (e) {
