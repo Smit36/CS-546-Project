@@ -24,11 +24,15 @@
     {{/each}}
   </ul>
 </div>
-<div hidden id="approval-id">{{approval._id}}</div>
-<div hidden id="approval-last-id">{{lastUpdateId}}</div>
+<div hidden id="approval-id">
+  {{approval._id}}
+</div>
+<div hidden id="approval-last-id">
+  {{lastUpdateId}}
+</div>
 <form id="approval-update-form" class="new-status-form">
   <div>
-    <input type="radio" id="approval-same" name="status" value="" checked/>
+    <input type="radio" id="approval-same" name="status" value="" checked />
     <label for="approval-pending">
       No new status
     </label>
@@ -57,4 +61,13 @@
   ></textarea>
   <input type="submit" value="Send New Update" />
 </form>
-<a href="/trip">back to Trips</a> 
+<p>
+  <a href="/trip/{{approval.tripId}}">
+    To Trip Detail
+  </a>
+</p>
+<p>
+  <a href="/trip">
+    Back To Trips
+  </a>
+</p>
