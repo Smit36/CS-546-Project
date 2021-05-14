@@ -35,17 +35,10 @@
         <span id="user-id" hidden>{{user._id}}</span>
       </div>
       <div class="col-25">
-        <a href="/user/logout"><button>Logout</button>
-
-        </a>
+        <a href="/user/logout"><button>Logout</button></a>
       </div>
       {{/if}}
       {{/if}}
-      <aside>
-        {{#if isEmployee}}
-        <div id="trip-notifications"></div>
-        {{/if}}
-      </aside>
     </div>
     {{#if user}}
     <nav>
@@ -90,6 +83,9 @@
   </header>
 
   <main>
+    {{#if isEmployee}}
+    <div id="trip-notifications"></div>
+    {{/if}}
     {{{body}}}
   </main>
   <footer>

@@ -1,101 +1,101 @@
 <div class="new-post">
   <form id="trip-form" class="new-post-form">
-    <div>
-      <label>
-        Trip name
-      </label>
-      <input
-        id="trip-name"
-        type="text"
-        name="name"
-        placeholder="name"
-        value="{{trip.name}}"
-        class="full-width-input"
-      />
+    <div class="row">
+      <div class="col-25">
+        <label>
+          Trip name
+        </label>
+      </div>
+      <div class="col-75">
+        <input id="trip-name" type="text" name="name" placeholder="Name" value="{{trip.name}}"
+          class="full-width-input" />
+      </div>
     </div>
-    <div>
-      <label>
-        Description of the trip
-      </label>
-      <input
-        id="trip-description"
-        type="text"
-        name="description"
-        placeholder="description"
-        value="{{trip.description}}"
-        class="full-width-input"
-      />
+    <div class="row">
+      <div class="col-25">
+        <label>
+          Description of the trip
+        </label>
+      </div>
+      <div class="col-75">
+        <input id="trip-description" type="text" name="Description" placeholder="description"
+          value="{{trip.description}}" class="full-width-input" />
+      </div>
     </div>
-    <div>
-      <label>
-        Start time
-      </label>
-      <input
-        id="trip-start-time"
-        type="date"
-        name="start-time"
-        placeholder="start time"
-        class="full-width-input"
-        value="{{trip.startTime}}"
-      />
+    <div class="row">
+      <div class="col-25">
+        <label>
+          Start time
+        </label>
+      </div>
+      <div class="col-75">
+        <input id="trip-start-time" type="date" name="start-time" placeholder="start time" class="full-width-input"
+          value="{{trip.startTime}}" />
+      </div>
     </div>
-    <div>
-      <label>
-        End time
-      </label>
-      <input
-        id="trip-end-time"
-        type="date"
-        name="end-time"
-        placeholder="end time"
-        class="full-width-input"
-        value="{{trip.endTime}}"
-      />
+    <div class="row">
+      <div class="col-25">
+        <label>
+          End time
+        </label>
+      </div>
+      <div class="col-75">
+        <input id="trip-end-time" type="date" name="end-time" placeholder="end time" class="full-width-input"
+          value="{{trip.endTime}}" />
+      </div>
     </div>
-    <div>
-      <label for="manager">
-        Manager
-      </label>
-      <select id="trip-manager" class="full-width-input" name="managerId">
-        <option value="">
-          Select manager...
-        </option>
-        {{#each users}}
+    <div class="row">
+      <div class="col-25">
+        <label for="manager">
+          Manager
+        </label>
+      </div>
+      <div class="col-75">
+        <select id="trip-manager" class="full-width-input" name="managerId">
+          <option value="">
+            Select manager...
+          </option>
+          {{#each users}}
           <option value="{{_id}}">
             {{name}}
             (
             {{email}}
             )
           </option>
-        {{/each}}
-      </select>
+          {{/each}}
+        </select>
+      </div>
     </div>
-    <div>
+    <div class="row">
       <input hidden id="trip-employees" name="trip-employees" value="" />
-      <label for="trip-employee-selection">
-        employees
-      </label>
-      <select id="trip-employee-selection">
-        <option value="">
-          Select employee...
-        </option>
-        {{#each users}}
+      <div class="col-25">
+        <label for="trip-employee-selection">
+          Employees
+        </label>
+      </div>
+      <div class="col-75">
+        <select id="trip-employee-selection">
+          <option value="">
+            Select employee...
+          </option>
+          {{#each users}}
           <option value="{{_id}}">
             {{name}}
             (
             {{email}}
             )
           </option>
-        {{/each}}
-      </select>
-      <button disabled id="trip-employee-add">
-        Add employee
-      </button>
+          {{/each}}
+        </select>
+      </div>
     </div>
+    <button class="submit" disabled id="trip-employee-add">
+      Add employee
+    </button>
     <div>
-      <p>
+      <h4>
         Employees in Trip
-      </p>
+      </h4>
       <ul id="trip-employee-selection-preview"></ul>
     </div>
     <div>
@@ -106,12 +106,12 @@
     </div>
   </form>
   {{#if hasErrors}}
-    <ul class="error-list">
-      {{#each errors}}
-        <li>
-          {{this}}
-        </li>
-      {{/each}}
-    </ul>
+  <ul class="error-list">
+    {{#each errors}}
+    <li>
+      {{this}}
+    </li>
+    {{/each}}
+  </ul>
   {{/if}}
 </div>
