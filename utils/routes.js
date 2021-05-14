@@ -11,6 +11,7 @@ const getTemplateData = (req, options = {}) => {
     user,
     corporate,
     isLogin: !!options.isLogin,
+    isEmployee: !!user && user.role === USER_ROLE.EMPLOYEE,
     isPortalAdmin: !!user && user.role === USER_ROLE.ADMIN,
     isCorporateAdmin: !!user && user.role === USER_ROLE.CORPORATE,
   };

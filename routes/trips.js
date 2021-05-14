@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getApproval, deleteApproval } = require("../data/approvals");
+const { getApproval, deleteApproval, APPROVAL_STATUS } = require("../data/approvals");
 const {
   createTrip,
   assertTripData,
@@ -21,6 +21,7 @@ const {
 } = require("../utils/assertion");
 const { HttpError } = require("../utils/errors");
 const { getTemplateData } = require("../utils/routes");
+const { USER_ROLE } = require("../utils/constants");
 
 const assertTripID = (id) => assertObjectIdString(id, "Trip ID");
 const assertExpenseID = (id) => assertObjectIdString(id, "Expense ID");
@@ -137,6 +138,34 @@ router.post("/", async (req, res, next) => {
     tripExist("", trip);
 
     res.status(200).json(trip);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/notifications', async (req, res, next) => {
+  try {
+    const { user } = req.session;
+    if (user.role !== USER_ROLE.EMPLOYEE) {
+      return res.send({ trips: [] });
+    }
+
+    const trips = await getUserTrips(user._id);
+  
+    const notifyTrips = await Promise.all(trips.map(async (trip) => {
+      const { approvalId, managerId } = trip;
+      const approval = await getApproval(approvalId);
+      const { status } = approval;
+      return {
+        ...trip,
+        approval,
+        shouldNotify:user._id === managerId
+          ? status === APPROVAL_STATUS.PENDING
+          : status === APPROVAL_STATUS.APPROVED || status === APPROVAL_STATUS.REJECTED,
+      };
+    }));
+
+    res.send({ trips: notifyTrips.filter(trip => trip.shouldNotify)});
   } catch (error) {
     next(error);
   }
@@ -429,5 +458,7 @@ router.get("/:id/expense/new", async (req, res, next) => {
     next(error);
   }
 });
+
+
 
 module.exports = router;
