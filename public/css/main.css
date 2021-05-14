@@ -1,5 +1,5 @@
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
@@ -9,8 +9,6 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: #dedede;
-  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 header {
@@ -104,23 +102,15 @@ button {
 }
 
 .submit,
-.update {
+.update,
+input[type='submit'] {
   background-color: #4caf50;
-}
-
-button a{
-  color:white;
-  text-decoration: none;
-}
-
-button:hover{
-  background-color: #1279ee;
 }
 
 .submit,
 .update,
 .confirm,
-.cancel {
+input[type='submit'] {
   background-color: #4caf50;
 }
 
@@ -130,7 +120,8 @@ button:hover{
 }
 
 .submit:hover,
-.update:hover {
+.update:hover,
+input[type='submit']:hover {
   background-color: #45a049;
 }
 
@@ -161,13 +152,13 @@ button:hover{
   width: 75%;
 }
 #login-form {
-  width: 35%;
+  width: 45%;
   padding: 50px;
   margin-left: 30%;
 }
 
-#trip-card{
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+#trip-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   background-color: rgb(235, 241, 247);
   transition: 0.3s;
   margin: 5px 5px 5px 50px;
@@ -175,9 +166,9 @@ button:hover{
   width: 20%;
 }
 
-#trip-card:hover{  
+#trip-card:hover {
   cursor: pointer;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 .col-25 {
@@ -208,7 +199,8 @@ button:hover{
   margin-top: 6px;
 }
 
-#expense-list button {
+#expense-list button,
+#user-list button {
   background-color: #f2f2f2;
   color: rgb(66, 66, 66);
   padding: 18px;
@@ -221,7 +213,8 @@ button:hover{
   border-bottom: 1px solid rgb(66, 66, 66);
 }
 
-#expense-list button:hover {
+#expense-list button:hover,
+#user-list button:hover {
   cursor: pointer;
   background-color: #ebebeb;
   color: rgb(66, 66, 66);
@@ -302,7 +295,11 @@ button:hover{
 #update-method-error,
 #update-currency-error,
 #update-amount-error,
-#update-date-error {
+#update-date-error,
+#new-user-email-error,
+#new-user-password-error,
+#new-user-error,
+#new-user-contact-error {
   font-size: small;
   color: red;
 }
@@ -312,24 +309,6 @@ button:hover{
   font-size: large;
   color: green;
   padding-left: 35%;
-}
-
-#rank-list, #user-list button {
-  background-color: #f2f2f2;
-  color: rgb(66, 66, 66);
-  padding: 18px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 15px;
-  border-bottom: 1px solid rgb(66, 66, 66);
-}
-
-#rank-list, #user-list button:hover {
-  cursor: pointer;
-  background-color: #ebebeb;
-  color: rgb(66, 66, 66);
 }
 
 #header {
@@ -490,35 +469,6 @@ button:hover{
   padding: 16px;
 }
 
-input[type="text"] {
-  width: 100%;
-  padding: 15px;
-  margin: 5px 0 22px 0;
-  display: inline-block;
-  border: none;
-  background: #f1f1f1;
-}
-
-input[type="submit"] {
-  background-color: #97daff;
-  border: none;
-  font-size: 15px;
-  color: black;
-  padding: 16px 38px;
-  text-decoration: none;
-  margin: 4px 2px;
-  cursor: pointer;
-}
-
-input[type="submit"]:hover {
-  background-color: #2f54f7;
-}
-
-input[type="text"]:focus {
-  background-color: rgb(192, 186, 186);
-  outline: none;
-}
-
 hr {
   border: 1px solid #f1f1f1;
   margin-bottom: 25px;
@@ -538,7 +488,7 @@ hr {
 
 .nav:hover,
 .nav:active {
-  background-color: #2f54f7;  
+  background-color: #2f54f7;
 }
 
 nav a:hover {

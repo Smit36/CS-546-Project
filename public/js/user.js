@@ -1,55 +1,60 @@
+window.onload = function () {
+  showUsers();
+};
+
 var rankData = {};
 
 function addNewUser() {
-    document.getElementById('new-user').style.display = 'none';
-    document.getElementById('show-form').style.display = 'block';
-    document.getElementById('show-user').style.display = 'block';
-  
-    var getUser = $('#get-users');
-    getUser.hide();
+  document.getElementById('new-user').style.display = 'none';
+  document.getElementById('show-form').style.display = 'block';
+  document.getElementById('show-user').style.display = 'block';
 
-    let requestConfig = {
-      method: 'GET',
-      url: '/rank/all',
-    };
+  var getUser = $('#get-users');
+  getUser.hide();
 
-    $.ajax(requestConfig).then(function(responseMessage) {
-        rankData = responseMessage;
-        console.log(rankData);
-        var rank = $('#rank');
-        rank.empty();
-        rank.append(`<option default>Select Rank</option>`);
-        for (let i = 0; i < rankData.length; i++) {
-        rank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}">${rankData[i].name}</option>`)
+  let requestConfig = {
+    method: 'GET',
+    url: '/rank/all',
+  };
+
+  $.ajax(requestConfig).then(function (responseMessage) {
+    rankData = responseMessage;
+    console.log(rankData);
+    var rank = $('#rank');
+    rank.empty();
+    rank.append(`<option default>Select Rank</option>`);
+    for (let i = 0; i < rankData.length; i++) {
+      rank.append(
+        `<option id="${rankData[i].name}" value="${rankData[i].name}">${rankData[i].name}</option>`,
+      );
     }
-    });    
+  });
 
-    var userForm = $('#user-form');
-    var submitUser = $('.submit');
-    userForm.submit(function(event) {
-      event.preventDefault();
+  var userForm = $('#user-form');
+  userForm.submit(function (event) {
+    event.preventDefault();
 
-      const validate = validateUser();
-      if (validate) {
-        let data = {};
+    const validate = validateUser();
+    console.log(validate);
+    if (validate) {
+      let data = {};
 
-        let role = document.getElementsByName('role');
-        for (let i = 0; i < role.length; i++) {
-          if (role[i].checked) {
-              role = role[i].value;
-              break;
-          }
+      let role = document.getElementsByName('role');
+      for (let i = 0; i < role.length; i++) {
+        if (role[i].checked) {
+          role = role[i].value;
+          break;
         }
+      }
 
-        let selectedRank = $('#rank :selected').val();
-        let rankId = null;
-        let level = 0;
+      let selectedRank = $('#rank :selected').val();
+      let rankId = null;
+      let level = 0;
 
-        for (let r of rankData) {
-          if (r.name === selectedRank.trim()) {
-              rankId = r._id.toString();
-              level = r.level;
-          }
+      for (let r of rankData) {
+        if (r.name === selectedRank.trim()) {
+          rankId = r._id.toString();
+          level = r.level;
         }
         
         data = {
@@ -77,8 +82,6 @@ function addNewUser() {
           error() {},
         });
       }
-    });
-  }
 
   function getRankData() {
     let requestConfig = {
@@ -118,12 +121,12 @@ function addNewUser() {
                 </button>
               </div>           
               `,
-            );
-            $(`#${data[i]._id}`).on('click', function (event) {
-              event.preventDefault();
-              let modal = $('#modal');
-              modal.empty();
-              modal.append(`
+          );
+          $(`#${data[i]._id}`).on('click', function (event) {
+            event.preventDefault();
+            let modal = $('#modal');
+            modal.empty();
+            modal.append(`
               <span onclick="document.getElementById('modal').style.display='none'" class="close" title="Close Modal">×</span>
                 <div class="detail">
                   <h1>${data[i].name}</h1>
@@ -133,36 +136,36 @@ function addNewUser() {
                   <p>Role: ${data[i].role}</p>
                   <p>Designation: ${data[i].designation}</p>
                   <input id="userId" value=${data[i]._id} hidden></input>               
-                  <button class="delete-button">Delete</button>
-                  <button class="update-button">Update</button>              
+                  <button id="user-delete" class="delete">Delete</button>
+                  <button id="user-update" class="update">Update</button>              
                 </div>
               `);
-              window.onclick = function (event) {
-                if (event.target == modal) {
-                  modal.style.display = 'none';
-                }
-              };
-              $('#modal').show();
-              $('.update-button').on('click', function (event) {
-                event.preventDefault();
-                let modal = $('#modal');
-                modal.empty();
-                modal.append(`<span onclick="document.getElementById('modal').style.display='none'" class="close" title="Close Modal">×</span>
+            window.onclick = function (event) {
+              if (event.target == modal) {
+                modal.style.display = 'none';
+              }
+            };
+            $('#modal').show();
+            $('#user-update').on('click', function (event) {
+              event.preventDefault();
+              let modal = $('#modal');
+              modal.empty();
+              modal.append(`<span onclick="document.getElementById('modal').style.display='none'" class="close" title="Close Modal">×</span>
                 `);
 
-                let admin = false,
-                  corporate = false,
-                  employee = false;
-                
-                if (data[i].role == 'ADMIN') {
-                  admin = true;
-                } else if (data[i].role == 'CORPORATE') {
-                  corporate = true;
-                } else if (data[i].role == 'EMPLOYEE') {
-                  employee = true;
-                } 
+              let admin = false,
+                corporate = false,
+                employee = false;
 
-                modal.append(`
+              if (data[i].role == 'ADMIN') {
+                admin = true;
+              } else if (data[i].role == 'CORPORATE') {
+                corporate = true;
+              } else if (data[i].role == 'EMPLOYEE') {
+                employee = true;
+              }
+
+              modal.append(`
                   <div class="detail">
                   <form id="update-user-form">
                     <div class="row">
@@ -170,7 +173,9 @@ function addNewUser() {
                       <label for="update-name">Name</label>
                     </div>
                     <div class="col-75">
-                      <input type="text" id="update-name" name="name" pattern="^[a-zA-Z ']{2,30}$" value=${data[i].name} required>
+                      <input type="text" id="update-name" name="name" pattern="^[a-zA-Z ']{2,30}$" value=${
+                        data[i].name
+                      } required>
                     </div>
                   </div>
                   <div class="row">
@@ -178,7 +183,9 @@ function addNewUser() {
                       <label for="update-email">Email</label>
                     </div>
                     <div class="col-75">
-                      <input type="email" id="update-email" name="update-email" value=${data[i].email} pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" required>
+                      <input type="email" id="update-email" name="update-email" value=${
+                        data[i].email
+                      } pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" required>
                     </div>
                   </div>
                   <div class="row">
@@ -186,7 +193,9 @@ function addNewUser() {
                       <label for="update-contact">Contact</label>
                     </div>
                     <div class="col-75">
-                      <input type="tel" id="update-contact" name="update-contact" value=${data[i].contact} pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
+                      <input type="tel" id="update-contact" name="update-contact" value=${
+                        data[i].contact
+                      } pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
                     </div>
                   </div>  
                   <div class="row">
@@ -194,11 +203,17 @@ function addNewUser() {
                       <label for="update-role">Role</label>
                     </div>
                     <div class="col-25">
-                      <input type="radio" id="admin" name="update-role" value="ADMIN" ${admin  ? checked="checked" : '' } required>
+                      <input type="radio" id="admin" name="update-role" value="ADMIN" ${
+                        admin ? (checked = 'checked') : ''
+                      } required>
                       <label for="admin">Portal Admin</label><br>
-                      <input type="radio" id="corporate" name="update-role" value="CORPORATE" ${corporate  ? checked="checked" : ''}>
+                      <input type="radio" id="corporate" name="update-role" value="CORPORATE" ${
+                        corporate ? (checked = 'checked') : ''
+                      }>
                       <label for="corporate">Corporate Admin</label><br>
-                      <input type="radio" id="employee" name="update-role" value="EMPLOYEE" ${employee  ? checked="checked" : ''}>
+                      <input type="radio" id="employee" name="update-role" value="EMPLOYEE" ${
+                        employee ? (checked = 'checked') : ''
+                      }>
                       <label for="employee">Employee</label>
                     </div>
                   </div>
@@ -208,45 +223,47 @@ function addNewUser() {
                     </div>
                     <div class="col-15">
                       <select id="update-rank" name="rank">
-
+                        
                       </select>
                     </div>
                   </div>
-                  <input type="submit" class="update">
-                  
+                  <button type="button" class="confirm" id="user-update-confirm">Save Changes</button>                  
                   </form>
                   </div>
                 `);
-                let updateRank = $('#update-rank');
-                let designation = data[i].designation;
-                for (let i = 0; i < rankData.length; i++) {
-                  updateRank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}"
-                  ${ designation == rankData[i].name ? 'selected' : '' }>${rankData[i].name}</option>`);
+              let updateRank = $('#update-rank');
+              let designation = data[i].designation;
+              for (let i = 0; i < rankData.length; i++) {
+                updateRank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}"
+                  ${designation == rankData[i].name ? 'selected' : ''}>${
+                  rankData[i].name
+                }</option>`);
+              }
+
+              var updateUserForm = $('#update-user-form');
+              updateUserForm.submit(function (event) {
+                event.preventDefault();
+                console.log('hi');
+                let update = {};
+
+                let role = document.getElementsByName('update-role');
+                for (let i = 0; i < role.length; i++) {
+                  if (role[i].checked) {
+                    role = role[i].value;
+                    break;
+                  }
                 }
-  
-                var updateUserForm = $('#update-user-form');
-                updateUserForm.submit(function(event) {
-                  event.preventDefault();
-                  let update = {};
-                  
-                  let role = document.getElementsByName('update-role');
-                  for (let i = 0; i < role.length; i++) {
-                    if (role[i].checked) {
-                        role = role[i].value;
-                      break;
-                    }
-                  }
 
-                  let selectedRank = $('#update-rank :selected').val();
-                  let rankId = null;
-                  let level = 0;
+                let selectedRank = $('#update-rank :selected').val();
+                let rankId = null;
+                let level = 0;
 
-                  for (let r of rankData) {
-                    if (r.name === selectedRank.trim()) {
-                        rankId = r._id.toString();
-                        level = r.level;
-                    }
+                for (let r of rankData) {
+                  if (r.name === selectedRank.trim()) {
+                    rankId = r._id.toString();
+                    level = r.level;
                   }
+                }
 
                   update = {
                     name: document.getElementById('update-name').value,
@@ -272,12 +289,13 @@ function addNewUser() {
                   });
                 });
               });
-  
-              $('.delete-button').on('click', function (event) {
-                event.preventDefault();
-                let modal = $('#modal');
-                modal.empty();
-                modal.append(`                
+            });
+
+            $('#user-delete').on('click', function (event) {
+              event.preventDefault();
+              let modal = $('#modal');
+              modal.empty();
+              modal.append(`                
                     <div class="detail">
                       <h1>Delete User</h1>
                       <p>Are you sure you want to delete your user?</p>
@@ -299,39 +317,72 @@ function addNewUser() {
                 });
               });
             });
-          }
-          userList.show();
+          });
         }
-        $(getUser).show();
-      },
-      error: function (jqXhr, textStatus, errorMessage) {
-        // error callback
-        console.log(errorMessage);
-      },
-    });
+        userList.show();
+      }
+      $(getUser).show();
+    },
+    error: function (jqXhr, textStatus, errorMessage) {
+      // error callback
+      console.log(errorMessage);
+    },
+  });
+}
+
+function validateUser() {
+  let error = 0;
+  console.log(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test($('#new-user-email').val()));
+  if (!$('#new-user-name').val() || !/^[a-zA-Z ']{2,50}$/.test($('#new-user-name').val())) {
+    $('#new-user-error').show();
+    error++;
+  } else {
+    $('#new-user-error').hide();
+  }
+  if (
+    !$('#new-user-email').val() ||
+    !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test($('#new-user-email').val())
+  ) {
+    $('#new-user-email-error').show();
+    error++;
+  } else {
+    $('#new-user-email-error').hide();
+  }
+  if (
+    !$('#password').val() ||
+    !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=S+$).{8,}$/.test($('#password').val())
+  ) {
+    $('#new-user-password-error').show();
+    error++;
+  } else {
+    $('#new-user-password-error').hide();
   }
 
-  function validateUser() {
-    let error = 0;
-    if (!$('input[name="role"]:checked').val()) {
-      $('#role-error').show();
-      error++;
-    } else {
-      $('#role-error').hide();
-    }
-
-    if (
-      !$('#rank').find(':selected').text() ||
-      $('#rank').find(':selected').text() == 'Select Rank'
-    ) {
-      $('#rank-error').show();
-      error++;
-    } else {
-      $('#rank-error').hide();
-    }
-
-    if (error == 0) 
-      return true;
-
-    return false;
+  if (!$('#contact').val()) {
+    $('#new-user-contact-error').show();
+    error++;
+  } else {
+    $('#new-user-contact-error').hide();
   }
+
+  if (!$('input[name="role"]:checked').val()) {
+    $('#role-error').show();
+    error++;
+  } else {
+    $('#role-error').hide();
+  }
+
+  if (
+    !$('#rank').find(':selected').text() ||
+    $('#rank').find(':selected').text() == 'Select Rank'
+  ) {
+    $('#rank-error').show();
+    error++;
+  } else {
+    $('#rank-error').hide();
+  }
+
+  if (error == 0) return true;
+
+  return false;
+}

@@ -1,3 +1,6 @@
+window.onload = function () {
+  showRanks();
+};
 function addNewRank() {
     document.getElementById('new-rank').style.display = 'none';
     document.getElementById('show-form').style.display = 'block';
