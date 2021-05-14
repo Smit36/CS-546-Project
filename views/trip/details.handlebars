@@ -1,68 +1,89 @@
-<div>
-  {{trip.name}}
-</div>
-<div hidden id="trip-id">
-  {{trip._id}}
-</div>
-<div>
-  <a href="/approval/{{trip.approvalId}}">
-    Approval:
-    {{approvalInfo.status}}
-  </a>
-</div>
-<div>
-  <p>
-    Corporate:
-    {{corporate.name}}
-  </p>
-  <p>
-    Manager:
-    {{manager.name}}
-  </p>
-  <p>
-    Employees:
-  </p>
-  <ul>
-    {{#each employees}}
+<div id="trip-detail-card">
+  <div class="container">
+    <div class="row">
+      <div class="col-75">
+        <h2>
+          {{trip.name}}
+        </h2>
+      </div>
+      <div class="col-25">
+        <div>
+          <a href="/approval/{{trip.approvalId}}">
+            <button id={{approvalInfo.status}}>
+              {{approvalInfo.status}}
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <span hidden id="trip-id">
+      {{trip._id}}
+    </span>
+    <div class="row">
+      <div class="col-25">
+        <h3>
+          Corporate: {{corporate.name}}
+        </h3>
+      </div>
+      <div class="col-25">
+        <h3>
+          Manager:
+          {{manager.name}}
+        </h3>
+      </div>
+    </div>
+    <p>
+      Employees:
+    </p>
+    <ul>
+      {{#each employees}}
       <li>
         {{name}}
       </li>
-    {{/each}}
-  </ul>
-  <p>
-    Start time:
-    {{startTime}}
-  </p>
-  <p>
-    End time:
-    {{endTime}}
-  </p>
-  <p>
-    Trip expense items:
-  </p>
-  <ol>
-    {{#each expenses}}
+      {{/each}}
+    </ul>
+    <div class="row">
+      <div class="col-25">
+        <p>
+          Start time:
+          {{startTime}}
+        </p>
+      </div>
+      <div class="col-25">
+        <p>
+          End time:
+          {{endTime}}
+        </p>
+      </div>
+    </div>
+    <p>
+      Trip expense items:
+    </p>
+    <ol>
+      {{#each expenses}}
       <li>
         {{user.name}}
         :
         {{name}}
         {{#if isMine}}
-          <button id="trip-edit-{{_id}}">
-            edit
-          </button>
-          <button id="trip-delete-{{_id}}">
-            delete
-          </button>
+        <button class="update" id="trip-edit-{{_id}}">
+          edit
+        </button>
+        <button class="delete" id="trip-delete-{{_id}}">
+          delete
+        </button>
         {{/if}}
       </li>
-    {{/each}}
-  </ol>
-  <p>
-    Total Trip Expense:
-    {{total}}
-  </p>
-  <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new">
-    Add New Expense to Trip
-  </a>
-  <p><a href="/trip">back to Trips</a></p>
-</div>
+      {{/each}}
+    </ol>
+    <p>
+      Total Trip Expense:
+      {{total}}
+    </p>
+    <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new">
+      <button> Add New Expense to Trip</button>
+    </a>
+  </div>
+
+
+
