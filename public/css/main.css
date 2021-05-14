@@ -44,21 +44,25 @@ li {
   float: left;
 }
 
-li a {
+li a,
+button a {
   display: block;
-  color: rgb(43, 42, 42);
+  color: white;
   text-align: center;
-  padding: 18px 16px;
   text-decoration: none;
 }
 
-li a:hover:not(.active) {
+li a {
+  color:#474e5d;
+  padding: 18px 16px;
+}
+
+li a:hover {
   background-color: rgb(150, 150, 150);
 }
 
-.active {
+li a:active {
   background-color: #358aeb;
-  color: white;
 }
 
 input[type='text'],
@@ -87,11 +91,7 @@ label {
 .submit,
 .update,
 input[type='submit'],
-#new-rank button,
-#show-rank button,
-#new-user button,
-#show-user button,
-button {
+button{
   background-color: #358aeb;
   color: white;
   padding: 12px 20px;
@@ -200,7 +200,8 @@ input[type='submit']:hover {
 }
 
 #expense-list button,
-#user-list button {
+#user-list button,
+#rank-list button {
   background-color: #f2f2f2;
   color: rgb(66, 66, 66);
   padding: 18px;
@@ -427,10 +428,9 @@ input[type='submit']:hover {
   padding: 2px 16px;
 }
 
-#formate{
+#formate {
   font-weight: 300;
   font-size: small;
-  
 }
 
 #list {
@@ -450,20 +450,6 @@ input[type='submit']:hover {
   color: black;
 }
 
-#nav-a {
-  display: block;
-  text-align: right;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  background-color: #41494e;
-  color: white;
-  padding: 14px 25px;
-  margin-left: 1350px;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 20px;
-}
-
 .container,
 .container-edit {
   padding: 16px;
@@ -472,27 +458,6 @@ input[type='submit']:hover {
 hr {
   border: 1px solid #f1f1f1;
   margin-bottom: 25px;
-}
-
-.nav:link,
-.nav:visited {
-  background-color: #97daff;
-  color: black;
-  padding: 15px 38px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 30px;
-  font-size: 16.5px;
-}
-
-.nav:hover,
-.nav:active {
-  background-color: #2f54f7;
-}
-
-nav a:hover {
-  background-color: #010201;
 }
 
 label {

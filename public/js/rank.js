@@ -46,7 +46,6 @@ function showRanks() {
     $.ajax(`/rank/all`, {
         dataType: 'json',
         success: function (data, status, xhr) {
-        console.log(status);
         if (data.length > 0) {
             for (let i = 0; i < data.length; i++) {
             $(rankList).append(
