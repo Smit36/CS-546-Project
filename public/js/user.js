@@ -10,7 +10,7 @@ function addNewUser() {
 
     let requestConfig = {
       method: 'GET',
-      url: 'http://localhost:3000/rank/all',
+      url: '/rank/all',
     };
 
     $.ajax(requestConfig).then(function(responseMessage) {
@@ -66,7 +66,7 @@ function addNewUser() {
         console.log(data);
 
         $.ajax({
-          url: 'http://localhost:3000/user',
+          url: '/user',
           type: 'POST',
           data: JSON.stringify(data),
           contentType: 'application/json; charset=utf-8',
@@ -83,7 +83,7 @@ function addNewUser() {
   function getRankData() {
     let requestConfig = {
       method: 'GET',
-      url: 'http://localhost:3000/rank/all',
+      url: '/rank/all',
     };
 
     $.ajax(requestConfig).then(function(responseMessage) {
@@ -101,7 +101,7 @@ function addNewUser() {
     var userList = $('#user-list');
     userList.empty();
 
-    $.ajax(`http://localhost:3000/user/all`, {
+    $.ajax(`/user/all`, {
       dataType: 'json',
       success: function (data, status, xhr) {
         if (data.length > 0) {
@@ -259,7 +259,7 @@ function addNewUser() {
                   };
                   console.log(update);
                   $.ajax({
-                    url: `http://localhost:3000/user/${data[i]._id}`,
+                    url: `/user/${data[i]._id}`,
                     type: 'PUT',
                     data: JSON.stringify(update),
                     contentType: 'application/json; charset=utf-8',
@@ -287,7 +287,7 @@ function addNewUser() {
                 `);
                 $('.delete-user').on('click', function () {
                   $.ajax({
-                    url: `http://localhost:3000/user/${data[i]._id}`,
+                    url: `/user/${data[i]._id}`,
                     type: 'DELETE',
                     dataType: 'json',
                     success(data) {

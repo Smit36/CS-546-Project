@@ -17,7 +17,7 @@ function addNewRank() {
       };
       
       $.ajax({
-        url: 'http://localhost:3000/rank',
+        url: '/rank',
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
@@ -40,7 +40,7 @@ function showRanks() {
     var rankList = $('#rank-list');
     rankList.empty();
 
-    $.ajax(`http://localhost:3000/rank/all`, {
+    $.ajax(`/rank/all`, {
         dataType: 'json',
         success: function (data, status, xhr) {
         console.log(status);
