@@ -39,7 +39,6 @@ const getAllExpensesByTrip = async (tripId) => {
 
   const collection = await getExpensesCollection();
   const allExpenses = await collection.find({ tripId: new ObjectId(tripId) }).toArray();
-  
   for (let i = 0; i < allExpenses.length; i++) {
     allExpenses[i].payment = await getExpensePayment(allExpenses[i].paymentId.toHexString());
   }
