@@ -3,6 +3,7 @@ const {
   getApproval,
   updateApproval,
   assertApprovalUpdates,
+  APPROVAL_STATUS,
 } = require("../data/approvals");
 const { getTrip } = require("../data/trips");
 const { getUser } = require("../data/users");
@@ -88,7 +89,11 @@ router.put("/:id", async (req, res, next) => {
     const { trip, approval } = await getAuthorizedData(user, id);
 
     const isManager = user._id === trip.managerId;
-    if (!isManager && !!updateData.status) {
+    if (
+      !isManager &&
+      (updateData.status === APPROVAL_STATUS.APPROVED ||
+        updateData.status === APPROVAL_STATUS.REJECTED)
+    ) {
       throw new HttpError("Unauthorized update: not the trip manager", 401);
     }
 
