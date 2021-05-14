@@ -20,7 +20,8 @@ const {
   assertEmailString,
   assertContactString,
   assertPasswordString,
-  assertHashedPasswordString
+  assertHashedPasswordString,
+  assertCorporateDomainString
 } = require("../utils/assertion");
 const {
   USER_ROLE
@@ -92,8 +93,10 @@ const createUser = async (data) => {
     assertIsValuedString(createdBy, "Created By");
     assertRequiredNumber(createdAt, "User created time");
 
-    const corporate = await corporateData.getCorporate(corporateId);
-    assertCorporateDomainString(corporate.emailDomain, email);
+    if (corporateId) {
+      const corporate = await corporateData.getCorporate(corporateId);
+      assertCorporateDomainString(corporate.emailDomain, email);
+    }
   
     const userData = {
       _id: new ObjectId(),
@@ -151,8 +154,10 @@ const updateUser = async (id, updatedBy, updates) => {
       assertRequiredNumber(rank, "Rank");
     }
 
-    const corporate = await corporateData.getCorporate(corporateId);
-    assertCorporateDomainString(corporate.emailDomain, email);
+    if (corporateId) {
+      const corporate = await corporateData.getCorporate(corporateId);
+      assertCorporateDomainString(corporate.emailDomain, email);
+    }
   
     const user = await getUser(id);
 
