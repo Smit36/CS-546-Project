@@ -31,11 +31,11 @@ function addNewUser() {
   });
 
   var userForm = $('#user-form');
-  var submitUser = $('.submit');
   userForm.submit(function (event) {
     event.preventDefault();
 
     const validate = validateUser();
+    console.log(validate);
     if (validate) {
       let data = {};
 
@@ -246,6 +246,7 @@ function showUsers() {
               var updateUserForm = $('#update-user-form');
               updateUserForm.submit(function (event) {
                 event.preventDefault();
+                console.log('hi');
                 let update = {};
 
                 let role = document.getElementsByName('update-role');
@@ -332,6 +333,39 @@ function showUsers() {
 
 function validateUser() {
   let error = 0;
+  console.log(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test($('#new-user-email').val()));
+  if (!$('#new-user-name').val() || !/^[a-zA-Z ']{2,50}$/.test($('#new-user-name').val())) {
+    $('#new-user-error').show();
+    error++;
+  } else {
+    $('#new-user-error').hide();
+  }
+  if (
+    !$('#new-user-email').val() ||
+    !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test($('#new-user-email').val())
+  ) {
+    $('#new-user-email-error').show();
+    error++;
+  } else {
+    $('#new-user-email-error').hide();
+  }
+  if (
+    !$('#password').val() ||
+    !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=S+$).{8,}$/.test($('#password').val())
+  ) {
+    $('#new-user-password-error').show();
+    error++;
+  } else {
+    $('#new-user-password-error').hide();
+  }
+
+  if (!$('#contact').val()) {
+    $('#new-user-contact-error').show();
+    error++;
+  } else {
+    $('#new-user-contact-error').hide();
+  }
+
   if (!$('input[name="role"]:checked').val()) {
     $('#role-error').show();
     error++;
