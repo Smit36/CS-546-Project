@@ -20,6 +20,7 @@ const {
   assertContactString,
 } = require("../utils/assertion");
 
+const { getTemplateData } = require('../utils/routes');
 const { HttpError } = require("../utils/errors");
 
 const isDataExist = (id, data, desc = "data") => {
@@ -82,7 +83,7 @@ router.get("/", async (req, res, next) => {
       .render("corporates/corporates", {
         corporates: allCorporate,
         user: allCorporate.user,
-        title: "Corporate List",
+        ...getTemplateData(req, { title: "Corporate Lists" })
       });
   } catch (error) {
     next(error);
@@ -96,12 +97,11 @@ router.get("/:corporateId", async (req, res, next) => {
     assertObjectIdString(corporateId);
     const corporate = await getCorporate(corporateId);
     corporateExist(corporate._id, corporate);
-    
     res
       .status(200)
       .render("corporates/corporate", {
-        corporate: corporate,
-        title: `Corporate Information for ${corporate.name}`,
+        ...getTemplateData(req, {title: `Corporate Information for ${corporate.name}`}),
+        corporate: corporate
       });
   } catch (error) {
     next(error);
@@ -131,7 +131,6 @@ router.put("/:corporateId", async (req, res, next) => {
     assertRequiredObject(userId);
 
     let corporateData = req.body;
-    assertDomainString(corporateData.emailDomain, "Corporate Domain");
     assertContactString(corporateData.contactNo, "Contact Number");
 
     corporateData.updatedBy = userId;
