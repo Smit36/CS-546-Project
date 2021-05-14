@@ -59,9 +59,7 @@ router.post("/", async (req, res) => {
       rank
     ) {
       throw new ValidationError(`Super Admin has invalid data`);
-    } else if (role == USER_ROLE.CORPORATE && rankId && designation && rank) {
-      throw new ValidationError(`Corporate Admin has invalid data`);
-    }
+    } 
 
     if (role !== USER_ROLE.ADMIN) {
       assertObjectIdString(corporateId, "Corporate ID");
@@ -155,9 +153,7 @@ router.put("/:userId", async (req, res) => {
       rank
     ) {
       throw new ValidationError(`Super Admin has invalid data`);
-    } else if (role == USER_ROLE.CORPORATE && rankId && designation && rank) {
-      throw new ValidationError(`Corporate Admin has invalid data`);
-    }
+    } 
 
     if (role !== USER_ROLE.ADMIN) {
       assertObjectIdString(corporateId, "Corporate ID");

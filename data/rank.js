@@ -29,7 +29,7 @@ const getRankByName = async (rankReq) => {
   assertRequiredObject(rankReq);
 
   const collection = await getRankCollection();
-  const rank = await collection.findOne({ name : rankReq.name });
+  const rank = await collection.findOne({ name : rankReq.name.trim() });
   return parseMongoData(rank);
 };
   
