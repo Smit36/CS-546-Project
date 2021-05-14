@@ -68,6 +68,17 @@
     </div>
 
     <input type="submit" value="Send New Update" />
+    <div id="approval-update-error" hidden></div>
   </form>
-  <a href="/trip">back to Trips</a>
+  <p>
+    <a href="/trip/{{approval.tripId}}">
+      To Trip Detail
+    </a>
+  </p>
+  <p>
+    <a href="/trip">
+      Back To Trips
+    </a>
+  </p>
 </div>
+<script defer src="/js/approval.js"></script>

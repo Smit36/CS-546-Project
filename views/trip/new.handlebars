@@ -7,8 +7,15 @@
         </label>
       </div>
       <div class="col-75">
-        <input id="trip-name" type="text" name="name" placeholder="Name" value="{{trip.name}}"
-          class="full-width-input" />
+        <input
+          id="trip-name"
+          type="text"
+          name="name"
+          placeholder="Name"
+          value="{{trip.name}}"
+          class="full-width-input"
+        />
+        <div id="trip-name-error" hidden></div>
       </div>
     </div>
     <div class="row">
@@ -18,8 +25,15 @@
         </label>
       </div>
       <div class="col-75">
-        <input id="trip-description" type="text" name="Description" placeholder="description"
-          value="{{trip.description}}" class="full-width-input" />
+        <input
+          id="trip-description"
+          type="text"
+          name="Description"
+          placeholder="description"
+          value="{{trip.description}}"
+          class="full-width-input"
+        />
+        <div id="trip-description-error" hidden></div>
       </div>
     </div>
     <div class="row">
@@ -29,8 +43,15 @@
         </label>
       </div>
       <div class="col-75">
-        <input id="trip-start-time" type="date" name="start-time" placeholder="start time" class="full-width-input"
-          value="{{trip.startTime}}" />
+        <input
+          id="trip-start-time"
+          type="date"
+          name="start-time"
+          placeholder="start time"
+          class="full-width-input"
+          value="{{trip.startTime}}"
+        />
+        <div id="trip-start-time-error" hidden></div>
       </div>
     </div>
     <div class="row">
@@ -40,8 +61,15 @@
         </label>
       </div>
       <div class="col-75">
-        <input id="trip-end-time" type="date" name="end-time" placeholder="end time" class="full-width-input"
-          value="{{trip.endTime}}" />
+        <input
+          id="trip-end-time"
+          type="date"
+          name="end-time"
+          placeholder="end time"
+          class="full-width-input"
+          value="{{trip.endTime}}"
+        />
+        <div id="trip-end-time-error" hidden></div>
       </div>
     </div>
     <div class="row">
@@ -56,14 +84,15 @@
             Select manager...
           </option>
           {{#each users}}
-          <option value="{{_id}}">
-            {{name}}
-            (
-            {{email}}
-            )
-          </option>
+            <option value="{{_id}}">
+              {{name}}
+              (
+              {{email}}
+              )
+            </option>
           {{/each}}
         </select>
+        <div id="trip-manager-error" hidden></div>
       </div>
     </div>
     <div class="row">
@@ -79,12 +108,12 @@
             Select employee...
           </option>
           {{#each users}}
-          <option value="{{_id}}">
-            {{name}}
-            (
-            {{email}}
-            )
-          </option>
+            <option value="{{_id}}">
+              {{name}}
+              (
+              {{email}}
+              )
+            </option>
           {{/each}}
         </select>
       </div>
@@ -97,6 +126,7 @@
         Employees in Trip
       </h4>
       <ul id="trip-employee-selection-preview"></ul>
+      <div id="trip-employees-error" hidden></div>
     </div>
     <div>
       <input type="submit" value="Create New Trip" />
@@ -104,15 +134,10 @@
     <div>
       <input type="reset" value="Clear" />
     </div>
+    <div id="trip-submit-error" hidden></div>
   </form>
-  <a href="/trip">back to Trips</a>
-  {{#if hasErrors}}
-  <ul class="error-list">
-    {{#each errors}}
-    <li>
-      {{this}}
-    </li>
-    {{/each}}
-  </ul>
-  {{/if}}
+  <a href="/trip">
+    back to Trips
+  </a>
 </div>
+<script defer src="/js/trip-new.js"></script>

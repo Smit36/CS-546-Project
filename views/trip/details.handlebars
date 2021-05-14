@@ -74,16 +74,24 @@
         </button>
         {{/if}}
       </li>
-      {{/each}}
-    </ol>
-    <p>
-      Total Trip Expense:
-      {{total}}
-    </p>
-    <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new">
-      <button> Add New Expense to Trip</button>
+    {{/each}}
+  </ol>
+  <p>
+    Total Trip Expense:
+    {{total}}
+  </p>
+  <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new">
+    Add New Expense to Trip
+  </a>
+  <p>
+    <a href="/trip">
+      Back to Trips
     </a>
-  </div>
-
-
-
+  </p>
+  <p>
+    <a href="/approval/{{trip.approvalId}}">
+      To Approval Thread
+    </a>
+  </p>
+</div>
+<script defer src="/js/trip-details.js"></script>
