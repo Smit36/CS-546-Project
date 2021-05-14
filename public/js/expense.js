@@ -42,7 +42,7 @@ function addNewExpense() {
         date: dateFormat,
       };
       $.ajax({
-        url: 'http://localhost:3000/expense',
+        url: '/expense',
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
@@ -79,7 +79,7 @@ function showExpense() {
   expenseList.empty();
   let rates = [];
 
-  $.ajax(`http://localhost:3000/expense/all`, {
+  $.ajax(`/expense/all`, {
     dataType: 'json',
     success: function (data, status, xhr) {
       if (data.length > 0) {
@@ -281,7 +281,7 @@ function showExpense() {
                     date: dateFormat,
                   };
                   $.ajax({
-                    url: `http://localhost:3000/expense/${data[i]._id}`,
+                    url: `/expense/${data[i]._id}`,
                     type: 'PUT',
                     data: JSON.stringify(update),
                     contentType: 'application/json; charset=utf-8',
@@ -312,7 +312,7 @@ function showExpense() {
               `);
               $('#delete-expense-confirm').on('click', function () {
                 $.ajax({
-                  url: `http://localhost:3000/expense/${data[i]._id}`,
+                  url: `/expense/${data[i]._id}`,
                   type: 'DELETE',
                   dataType: 'json',
                   success() {
