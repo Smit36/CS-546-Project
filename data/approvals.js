@@ -84,6 +84,10 @@ const assertApprovalUpdates = (id, updates) => {
   assertObjectIdString(userId, "Approval updated-by-user ID");
   optionalValuedString(status, "Approval status");
   optionalValuedString(message, "Approval message");
+  
+  if (!status && !message) {
+    throw new ValidationError("Approval updates requires at leaset a message or a new status.");
+  }
 
   if (!isApprovalStatus(status)) {
     throw new ValidationError("Approval status is invalid");
