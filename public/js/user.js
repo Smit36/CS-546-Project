@@ -31,7 +31,6 @@ function addNewUser() {
   });
 
   var userForm = $('#user-form');
-  var submitUser = $('.submit');
   userForm.submit(function (event) {
     event.preventDefault();
 
@@ -81,7 +80,9 @@ function addNewUser() {
           $('#user-form')[0].reset();
           alert('Successfully added');
         },
-        error() {},
+        error() {
+          alert('Error occured while adding user.');
+        },
       });
     }
   });
@@ -133,7 +134,6 @@ function showUsers() {
               <span onclick="document.getElementById('modal').style.display='none'" class="close" title="Close Modal">×</span>
                 <div class="detail">
                   <h1>${data[i].name}</h1>
-                  <h2>Corporate: ${data[i].corporateId}</h2>
                   <p>Email: ${data[i].email}</p>
                   <p>Contact: ${data[i].contact}</p>
                   <p>Role: ${data[i].role}</p>
@@ -176,7 +176,7 @@ function showUsers() {
                       <label for="update-name">Name</label>
                     </div>
                     <div class="col-75">
-                      <input type="text" id="update-name" name="name" pattern="^[a-zA-Z ']{2,30}$" value=${
+                      <input type="text" id="update-name" name="name" pattern="^[a-zA-Z ']{2,100}$" value=${
                         data[i].name
                       } required>
                     </div>
@@ -188,7 +188,7 @@ function showUsers() {
                     <div class="col-75">
                       <input type="email" id="update-email" name="update-email" value=${
                         data[i].email
-                      } pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" required>
+                      } pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" title="Enter valid email ID" required>
                     </div>
                   </div>
                   <div class="row">
@@ -198,7 +198,7 @@ function showUsers() {
                     <div class="col-75">
                       <input type="tel" id="update-contact" name="update-contact" value=${
                         data[i].contact
-                      } pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
+                      } pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" title="Enter valid contact number" required>
                     </div>
                   </div>  
                   <div class="row">
@@ -206,10 +206,6 @@ function showUsers() {
                       <label for="update-role">Role</label>
                     </div>
                     <div class="col-25">
-                      <input type="radio" id="admin" name="update-role" value="ADMIN" ${
-                        admin ? (checked = 'checked') : ''
-                      } required>
-                      <label for="admin">Portal Admin</label><br>
                       <input type="radio" id="corporate" name="update-role" value="CORPORATE" ${
                         corporate ? (checked = 'checked') : ''
                       }>
@@ -230,18 +226,35 @@ function showUsers() {
                       </select>
                     </div>
                   </div>
-                  <button type="button" class="confirm" id="user-update-confirm">Save Changes</button>                  
+                  <input type="submit" class="confirm">                  
                   </form>
                   </div>
                 `);
-              let updateRank = $('#update-rank');
-              let designation = data[i].designation;
-              for (let i = 0; i < rankData.length; i++) {
-                updateRank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}"
-                  ${designation == rankData[i].name ? 'selected' : ''}>${
-                  rankData[i].name
-                }</option>`);
-              }
+
+                let requestConfig = {
+                  method: 'GET',
+                  url: '/rank/all',
+                };
+              
+                $.ajax(requestConfig).then(function (responseMessage) {
+                  rankData = responseMessage;
+                  let updateRank = $('#update-rank');
+
+                  if (rankData) {
+                    updateRank.show();
+                    let designation = data[i].designation;
+                    for (let i = 0; i < rankData.length; i++) {
+                      updateRank.append(`<option id="${rankData[i].name}" value="${rankData[i].name}"
+                        ${designation == rankData[i].name ? 'selected' : ''}>${
+                        rankData[i].name
+                      }</option>`);
+                    }
+                  }
+                  else 
+                    updateRank.hide();
+                });
+
+                
 
               var updateUserForm = $('#update-user-form');
               updateUserForm.submit(function (event) {
@@ -287,7 +300,9 @@ function showUsers() {
                     alert('Successfully updated');
                     modal.hide();
                   },
-                  error() {},
+                  error() {
+                    alert('Error occured while updating user.');
+                  },
                 });
               });
             });
@@ -314,7 +329,14 @@ function showUsers() {
                     modal.hide();
                     showUsers();
                   },
+                  error() {
+                    alert('Error occured while deleting user.');
+                  },
                 });
+              });
+              $('.cancel').on('click', function () {
+                modal.hide();
+                showUsers();          
               });
             });
           });
@@ -332,29 +354,26 @@ function showUsers() {
 
 function validateUser() {
   let error = 0;
-  if (!$('#new-user-name').val() || !/^[a-zA-Z ']{2,50}$/.test($('#new-user-name').val())) {
+  if (!$('#name').val() || !/^[a-zA-Z ']{2,50}$/.test($('#name').val())) {
     $('#new-user-error').show();
     error++;
   } else {
     $('#new-user-error').hide();
   }
-  if (!$('#new-user-email').val() || !/^[a-zA-Z ']{2,50}$/.test($('#new-user-name').val())) {
+  if (!$('#email').val() || !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test($('#email').val())) {
     $('#new-user-email-error').show();
     error++;
   } else {
     $('#new-user-email-error').hide();
   }
-  if (
-    !$('#password').val() ||
-    !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=S+$).{8,}$/.test($('#password').val())
-  ) {
+  if (!$('#password').val() || !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test($('#password').val())) {
     $('#new-user-password-error').show();
     error++;
   } else {
     $('#new-user-password-error').hide();
   }
 
-  if (!$('#contact').val()) {
+  if (!$('#contact').val() || !/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test($('#contact').val())) {
     $('#new-user-contact-error').show();
     error++;
   } else {

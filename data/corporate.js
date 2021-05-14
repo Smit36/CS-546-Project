@@ -137,6 +137,7 @@ const updateCorporate = async (id, updates) => {
     updatedBy,
     updatedAt = new Date().getTime(),
   } = updates;
+  console.log(updates)
 
   assertIsValuedString(name, "Corporate name");
   assertIsValuedString(contactNo, "Contact Number");

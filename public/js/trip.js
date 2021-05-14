@@ -54,6 +54,37 @@ function handleTripSubmit(e) {
   const inputEmployees = getEmployeeIdList();
 
   // TODO: error handling
+  if (inputName==""){
+    alert("You should type in the name of your trip");
+    return false;
+  }
+  if (inputManager==""){
+    alert("You should select a Manager");
+    return false;
+  }
+  if (inputEmployees==""){
+    alert("You should select you Employees");
+    return false;
+  }
+  if (inputDescription==""){
+    alert("You should give some description of your trip");
+    return false;
+  }
+  if (inputStartTime==""){
+    alert("You should choose the time to start your trip");
+    return false;
+  }
+  if (inputEndTime==""){
+    alert("You should choose the time when the trip ends");
+    return false;
+  }
+  const StartTime = new Date(inputStartTime).getTime()
+  const EndTime = new Date(inputEndTime).getTime()
+  if ( StartTime>EndTime){
+    alert("Your trip should start earlier than it ends");
+    return false;
+  }
+
 
   $.ajax({
     url: `/trip`,
@@ -208,6 +239,7 @@ function handleTripExpenseSubmit(e) {
   }
 
   // TODO: error handling
+
 
   const tripId = getTripExpenseTripId();
   const expenseId = getTripExpenseId();
