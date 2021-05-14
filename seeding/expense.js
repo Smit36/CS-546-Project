@@ -67,11 +67,11 @@ const seedExpense = async ({
     method: 'Cash',
     date: '02/03/2021',
   };
-  const expense1 = addExpense(expenseData1);
-  const expense2 = addExpense(expenseData2);
-  const expense3 = addExpense(expenseData3);
-  const expense4 = addExpense(expenseData4);
-  const expense5 = addExpense(expenseData5);
+  const expense1 = await addExpense(expenseData1);
+  const expense2 = await addExpense(expenseData2);
+  const expense3 = await addExpense(expenseData3);
+  const expense4 = await addExpense(expenseData4);
+  const expense5 = await addExpense(expenseData5);
 
   return {
     expense1,
