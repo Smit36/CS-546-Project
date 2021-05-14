@@ -73,7 +73,11 @@ function addNewUser() {
       console.log(data);
 
       $.ajax({
+<<<<<<< HEAD
         url: 'http://localhost:3000/user',
+=======
+        url: '/user',
+>>>>>>> 69d35b7 (fixed user)
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
@@ -90,7 +94,11 @@ function addNewUser() {
 function getRankData() {
   let requestConfig = {
     method: 'GET',
+<<<<<<< HEAD
     url: 'http://localhost:3000/rank/all',
+=======
+    url: '/rank/all',
+>>>>>>> 69d35b7 (fixed user)
   };
 
   $.ajax(requestConfig).then(function (responseMessage) {
@@ -108,7 +116,11 @@ function showUsers() {
   var userList = $('#user-list');
   userList.empty();
 
+<<<<<<< HEAD
   $.ajax(`http://localhost:3000/user/all`, {
+=======
+  $.ajax(`/user/all`, {
+>>>>>>> 69d35b7 (fixed user)
     dataType: 'json',
     success: function (data, status, xhr) {
       if (data.length > 0) {
@@ -279,7 +291,11 @@ function showUsers() {
                 };
                 console.log(update);
                 $.ajax({
+<<<<<<< HEAD
                   url: `http://localhost:3000/user/${data[i]._id}`,
+=======
+                  url: `/user/${data[i]._id}`,
+>>>>>>> 69d35b7 (fixed user)
                   type: 'PUT',
                   data: JSON.stringify(update),
                   contentType: 'application/json; charset=utf-8',
@@ -307,7 +323,11 @@ function showUsers() {
                 `);
               $('.delete-user').on('click', function () {
                 $.ajax({
+<<<<<<< HEAD
                   url: `http://localhost:3000/user/${data[i]._id}`,
+=======
+                  url: `/user/${data[i]._id}`,
+>>>>>>> 69d35b7 (fixed user)
                   type: 'DELETE',
                   dataType: 'json',
                   success(data) {
