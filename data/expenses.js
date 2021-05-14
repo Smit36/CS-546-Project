@@ -39,13 +39,6 @@ const getAllExpensesByTrip = async (tripId) => {
 
   const collection = await getExpensesCollection();
   const allExpenses = await collection.find({ tripId: new ObjectId(tripId) }).toArray();
-<<<<<<< HEAD
-  // if (allExpenses.length == 0) {
-  //   throw new QueryError(`Expenses not found`);
-  // }
-=======
-
->>>>>>> 273accbe9fc5c5bcb921cd4d52dadfe5871f463a
   for (let i = 0; i < allExpenses.length; i++) {
     allExpenses[i].payment = await getExpensePayment(allExpenses[i].paymentId.toHexString());
   }
