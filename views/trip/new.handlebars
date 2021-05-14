@@ -12,6 +12,7 @@
         value="{{trip.name}}"
         class="full-width-input"
       />
+      <div id="trip-name-error" hidden></div>
     </div>
     <div>
       <label>
@@ -25,6 +26,7 @@
         value="{{trip.description}}"
         class="full-width-input"
       />
+      <div id="trip-description-error" hidden></div>
     </div>
     <div>
       <label>
@@ -38,6 +40,7 @@
         class="full-width-input"
         value="{{trip.startTime}}"
       />
+      <div id="trip-start-time-error" hidden></div>
     </div>
     <div>
       <label>
@@ -51,6 +54,7 @@
         class="full-width-input"
         value="{{trip.endTime}}"
       />
+      <div id="trip-end-time-error" hidden></div>
     </div>
     <div>
       <label for="manager">
@@ -69,6 +73,7 @@
           </option>
         {{/each}}
       </select>
+      <div id="trip-manager-error" hidden></div>
     </div>
     <div>
       <input hidden id="trip-employees" name="trip-employees" value="" />
@@ -77,7 +82,7 @@
       </label>
       <select id="trip-employee-selection">
         <option value="">
-          Select employee...
+          Select employees to add...
         </option>
         {{#each users}}
           <option value="{{_id}}">
@@ -97,6 +102,7 @@
         Employees in Trip
       </p>
       <ul id="trip-employee-selection-preview"></ul>
+      <div id="trip-employees-error" hidden></div>
     </div>
     <div>
       <input type="submit" value="Create New Trip" />
@@ -104,15 +110,8 @@
     <div>
       <input type="reset" value="Clear" />
     </div>
+    <div id="trip-submit-error" hidden></div>
   </form>
   <a href="/trip">back to Trips</a>
-  {{#if hasErrors}}
-    <ul class="error-list">
-      {{#each errors}}
-        <li>
-          {{this}}
-        </li>
-      {{/each}}
-    </ul>
-  {{/if}}
 </div>
+<script defer src="/js/trip-new.js"></script>
