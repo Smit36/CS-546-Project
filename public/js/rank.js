@@ -29,7 +29,9 @@ function addNewRank() {
           $('#rank-form')[0].reset();
           alert('Successfully added');
         },
-        error() {},
+        error() {
+          alert('Error occured while adding rank');
+        },
       });
     });
 }
@@ -54,7 +56,6 @@ function showRanks() {
                     <div class="row" >
                     <div class="col-25">${data[i].name}</div>
                     <div class="col-25">${data[i].level}</div>
-                    <div class="col-25">${data[i].corporateId}</div>
                     </div>
                 </button>
                 </div>`,

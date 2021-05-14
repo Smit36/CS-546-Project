@@ -13,10 +13,10 @@
   <form id="user-form">
     <div class="row">
       <div class="col-25">
-        <label for="user-name">Employee Name</label>
+        <label for="name">Employee Name</label>
       </div>
       <div class="col-75">
-        <input type="text" id="new-user-name" name="name" placeholder="Name">
+        <input type="text" id="name" name="name" placeholder="Name">
       </div>
       <span id="new-user-error" hidden>Name must be enter properly</span>
     </div>
@@ -28,7 +28,7 @@
       <div class="col-75">
         <input type="email" id="email" name="email" placeholder="Corporate Email ID">
       </div>
-      <span id="new-user-email-error" hidden>Email Id should consist</span>
+      <span id="new-user-email-error" hidden>Provide valid Email Id</span>
     </div>
 
     <div class="row">
@@ -38,8 +38,8 @@
       <div class="col-75">
         <input type="password" id="password" name="password" placeholder="Password">
       </div>
-      <span id="new-user-password-error" hidden>Password should consist of Capital letter, small letter, digits and
-        special symbol and be atleast 8 characters</span>
+      <span id="new-user-password-error" hidden>Password should consist of Capital letter, small letter, digit and
+        be atleast 8 characters</span>
     </div>
 
     <div class="row">
@@ -47,8 +47,7 @@
         <label for="contact">Contact Number</label>
       </div>
       <div class="col-75">
-        <input type="tel" id="contact" name="contact" placeholder="Contact Number"
-          pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$">
+        <input type="tel" id="contact" name="contact" placeholder="Contact Number">
       </div>
       <span id="new-user-contact-error" hidden>Contact should be in XXX-XXX-XXXX format</span>
     </div>
@@ -59,8 +58,10 @@
       </div>
       <div class="col-25">
         <div class="row">
-          <input type="radio" id="admin" name="role" value="ADMIN">
-          <label for="admin">Portal Admin</label><br>
+          {{#if isPortalAdmin}}          
+            <input type="radio" id="admin" name="role" value="ADMIN">
+            <label for="admin">Portal Admin</label><br>
+          {{/if}}  
           <input type="radio" id="corporate" name="role" value="CORPORATE">
           <label for="corporate">Corporate Admin</label><br>
           <input type="radio" id="employee" name="role" value="EMPLOYEE">
