@@ -31,6 +31,7 @@ function addNewUser() {
   });
 
   var userForm = $('#user-form');
+  var submitUser = $('.submit');
   userForm.submit(function (event) {
     event.preventDefault();
 
@@ -106,7 +107,6 @@ function showUsers() {
   var getUser = $('#get-users');
   var userList = $('#user-list');
   userList.empty();
-
   $.ajax(`/user/all`, {
     dataType: 'json',
     success: function (data, status, xhr) {
@@ -332,17 +332,13 @@ function showUsers() {
 
 function validateUser() {
   let error = 0;
-  console.log(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test($('#new-user-email').val()));
   if (!$('#new-user-name').val() || !/^[a-zA-Z ']{2,50}$/.test($('#new-user-name').val())) {
     $('#new-user-error').show();
     error++;
   } else {
     $('#new-user-error').hide();
   }
-  if (
-    !$('#new-user-email').val() ||
-    !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test($('#new-user-email').val())
-  ) {
+  if (!$('#new-user-email').val() || !/^[a-zA-Z ']{2,50}$/.test($('#new-user-name').val())) {
     $('#new-user-email-error').show();
     error++;
   } else {
