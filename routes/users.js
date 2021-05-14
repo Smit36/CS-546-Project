@@ -160,6 +160,14 @@ router.delete('/:userId', async (req, res) => {
   }
 });
 
+const LOGIN_PAGE_PATH = "user/login";
+const LOGIN_PAGE_TITLE = "User Login";
+const renderLoginPage = (req, res, errors) =>
+  res.render(LOGIN_PAGE_PATH, {
+    errors,
+    ...getTemplateData(req, { isLogin: true, title: LOGIN_PAGE_TITLE }),
+  });
+
 router.post('/login', async (req, res) => {
   const reqBody = req.body;
   let errors = [];
@@ -176,7 +184,7 @@ router.post('/login', async (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.status(401).json({ errors : errors });
+    renderLoginPage(req, res.status(400), errors);
     return;
   }
 
@@ -184,7 +192,7 @@ router.post('/login', async (req, res) => {
 
   if (!user) {
     errors.push(`No user with ${email} found.`); 
-    res.status(401).json({ errors : errors });
+    renderLoginPage(req, res.status(404), errors);
     return;
   }
 
@@ -203,7 +211,7 @@ router.post('/login', async (req, res) => {
   }
   else {
     errors.push('Invalid username or password.');
-    res.status(401).json({ errors : errors });
+    renderLoginPage(req, res.status(401), errors);
     return;
   }    
 });
@@ -217,11 +225,8 @@ router.get('/logout', async (req, res) => {
   }
 });
 
-
-const LOGIN_PAGE_PATH = "user/login";
-const LOGIN_PAGE_TITLE = "User Login";
 router.get('/login', async (req, res) => {
-    res.render(LOGIN_PAGE_PATH, getTemplateData(req, { noUser: false, title: LOGIN_PAGE_TITLE }));
+   renderLoginPage(req, res);
 });
 
 //get user by Id
