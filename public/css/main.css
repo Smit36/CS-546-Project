@@ -72,7 +72,7 @@ input[type='email'],
 input[type='tel'],
 input[type='password'],
 select {
-  width: 90%;
+  width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -465,7 +465,7 @@ label {
   font-size: large;
 }
 
-#name-error,
+#names-error,
 #email-error,
 #contact-error,
 #address-error {
