@@ -130,10 +130,8 @@ const createCorporate = async (data) => {
 const updateCorporate = async (id, updates) => {
   assertObjectIdString(id);
   assertRequiredObject(updates, "Corporate updates data");
-
   const {
     name,
-    emailDomain,
     contactNo,
     address,
     updatedBy,
@@ -141,8 +139,6 @@ const updateCorporate = async (id, updates) => {
   } = updates;
 
   assertIsValuedString(name, "Corporate name");
-  assertIsValuedString(emailDomain, "Email Domain");
-  assertDomainString(emailDomain, "Email Domain");
   assertIsValuedString(contactNo, "Contact Number");
   assertContactString(contactNo, "Contact Number");
   assertIsValuedString(address, "Address");
@@ -160,7 +156,6 @@ const updateCorporate = async (id, updates) => {
 
   const newUpdate = {
     name: name,
-    emailDomain: emailDomain,
     contactNo: contactNo,
     address: address,
     updatedBy: updatedBy,
