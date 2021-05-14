@@ -1,8 +1,8 @@
-const { Router } = require('express');
+const { Router } = require("express");
 const router = Router();
-const bcrypt = require('bcrypt');
-const usersData = require('../data/users');
-const corporateData = require('../data/corporate');
+const bcrypt = require("bcrypt");
+const usersData = require("../data/users");
+const corporateData = require("../data/corporate");
 
 const {
   assertObjectIdString,
@@ -15,19 +15,17 @@ const {
   assertPasswordString,
   assertHashedPasswordString,
   assertCorporateDomainString,
-  assertNonEmptyArray
+  assertNonEmptyArray,
 } = require("../utils/assertion");
-const {
-  USER_ROLE
-} = require('../utils/constants')
+const { USER_ROLE } = require("../utils/constants");
 const { QueryError, ValidationError, HttpError } = require("../utils/errors");
-const { getTemplateData } = require('../utils/routes');
-const { getAllRanks } = require('../data/rank');
-const USER_PAGE_PATH = 'users/index';
-const USER_PAGE_TITLE = 'Employee';
+const { getTemplateData } = require("../utils/routes");
+const { getAllRanks } = require("../data/rank");
+const USER_PAGE_PATH = "users/index";
+const USER_PAGE_TITLE = "Employee";
 
 //add user
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const reqBody = req.body;
     assertRequiredObject(reqBody);
@@ -35,25 +33,42 @@ router.post('/', async (req, res) => {
     reqBody.corporateId = sessionUser.corporateId;
     reqBody.createdBy = sessionUser._id.toString();
 
-    const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = reqBody;
-  
+    const {
+      corporateId,
+      rankId,
+      name,
+      password,
+      email,
+      contact,
+      designation,
+      rank,
+      role,
+      createdBy,
+      createdAt = new Date().getTime(),
+    } = reqBody;
+
     assertUserRole(role, "User Role");
     assertPasswordString(password, "Password");
     let hashPassword = await bcrypt.hash(password, 8);
 
-    if (role == USER_ROLE.ADMIN && corporateId && rankId && designation && rank) {
+    if (
+      role == USER_ROLE.ADMIN &&
+      corporateId &&
+      rankId &&
+      designation &&
+      rank
+    ) {
       throw new ValidationError(`Super Admin has invalid data`);
-    }
-    else if (role == USER_ROLE.CORPORATE && rankId && designation && rank) {
+    } else if (role == USER_ROLE.CORPORATE && rankId && designation && rank) {
       throw new ValidationError(`Corporate Admin has invalid data`);
     }
-      
+
     if (role !== USER_ROLE.ADMIN) {
       assertObjectIdString(corporateId, "Corporate ID");
     }
     if (role === USER_ROLE.EMPLOYEE) {
-      assertObjectIdString(rankId, "Rank ID"); 
-    }   
+      assertObjectIdString(rankId, "Rank ID");
+    }
     assertIsValuedString(name, "User name");
     assertHashedPasswordString(hashPassword, "Password");
     assertEmailString(email, "Email");
@@ -84,19 +99,22 @@ router.post('/', async (req, res) => {
     res.status(400).json({ error: e });
   }
 });
-  
+
 //Get all users
-router.get('/', async (req, res) => {
-  try {  
-    res.render(USER_PAGE_PATH, getTemplateData(req, { title: USER_PAGE_TITLE }));
+router.get("/", async (req, res) => {
+  try {
+    res.render(
+      USER_PAGE_PATH,
+      getTemplateData(req, { title: USER_PAGE_TITLE })
+    );
   } catch (e) {
     res.status(400).json({ error: e });
   }
 });
 
 //Get all users
-router.get('/all', async (req, res) => {
-  try {  
+router.get("/all", async (req, res) => {
+  try {
     const user = req.session.user;
     const allUsers = await usersData.getAllUsers(user);
     return res.status(200).json(allUsers);
@@ -106,7 +124,7 @@ router.get('/all', async (req, res) => {
 });
 
 //Update user
-router.put('/:userId', async (req, res) => {
+router.put("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     let userReq = req.body;
@@ -116,23 +134,37 @@ router.put('/:userId', async (req, res) => {
     userReq.corporateId = sessionUser.corporateId;
     let updatedBy = sessionUser._id.toString();
 
-    const { corporateId, rankId, name, email, contact, designation, rank, role } = userReq;
-  
+    const {
+      corporateId,
+      rankId,
+      name,
+      email,
+      contact,
+      designation,
+      rank,
+      role,
+    } = userReq;
+
     assertUserRole(role, "User Role");
 
-    if (role == USER_ROLE.ADMIN && corporateId && rankId && designation && rank) {
+    if (
+      role == USER_ROLE.ADMIN &&
+      corporateId &&
+      rankId &&
+      designation &&
+      rank
+    ) {
       throw new ValidationError(`Super Admin has invalid data`);
-    }
-    else if (role == USER_ROLE.CORPORATE && rankId && designation && rank) {
+    } else if (role == USER_ROLE.CORPORATE && rankId && designation && rank) {
       throw new ValidationError(`Corporate Admin has invalid data`);
     }
-      
+
     if (role !== USER_ROLE.ADMIN) {
       assertObjectIdString(corporateId, "Corporate ID");
     }
     if (role === USER_ROLE.EMPLOYEE) {
-      assertObjectIdString(rankId, "Rank ID"); 
-    }   
+      assertObjectIdString(rankId, "Rank ID");
+    }
     assertIsValuedString(name, "User name");
     assertEmailString(email, "Email");
     assertContactString(contact, "Contact Number");
@@ -151,7 +183,7 @@ router.put('/:userId', async (req, res) => {
 });
 
 //Delete single user by userId
-router.delete('/:userId', async (req, res) => {
+router.delete("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     assertObjectIdString(userId, "User ID");
@@ -163,31 +195,35 @@ router.delete('/:userId', async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const reqBody = req.body;
   let errors = [];
   let hasErrors = false;
 
   const { email, password } = reqBody;
 
-  if (!email || typeof email !== 'string' || email.trim().length === 0) {
-    errors.push('Email is empty or not of required format.');
+  if (!email || typeof email !== "string" || email.trim().length === 0) {
+    errors.push("Email is empty or not of required format.");
   }
 
-  if (!password || typeof password !== 'string' || password.trim().length === 0) {
-    errors.push('Password is empty or not of required format.');
+  if (
+    !password ||
+    typeof password !== "string" ||
+    password.trim().length === 0
+  ) {
+    errors.push("Password is empty or not of required format.");
   }
 
   if (errors.length > 0) {
-    res.status(401).json({ errors : errors });
+    res.status(401).json({ errors: errors });
     return;
   }
 
   const user = await usersData.getUserByEmail(email);
 
   if (!user) {
-    errors.push(`No user with ${email} found.`); 
-    res.status(401).json({ errors : errors });
+    errors.push(`No user with ${email} found.`);
+    res.status(401).json({ errors: errors });
     return;
   }
 
@@ -202,37 +238,38 @@ router.post('/login', async (req, res) => {
     }
 
     req.session.user = user;
-    res.redirect('/');
-  }
-  else {
-    errors.push('Invalid username or password.');
-    res.status(401).json({ errors : errors });
+    res.redirect("/");
+  } else {
+    errors.push("Invalid username or password.");
+    res.status(401).json({ errors: errors });
     return;
-  }    
+  }
 });
 
-router.get('/logout', async (req, res) => {
-  try {  
+router.get("/logout", async (req, res) => {
+  try {
     req.session.destroy();
-    res.redirect('/user/login');
+    res.redirect("/user/login");
   } catch (e) {
     res.status(400).json({ error: e });
   }
 });
 
-
 const LOGIN_PAGE_PATH = "user/login";
 const LOGIN_PAGE_TITLE = "User Login";
-router.get('/login', async (req, res) => {
-    res.render(LOGIN_PAGE_PATH, getTemplateData(req, { noUser: false, title: LOGIN_PAGE_TITLE }));
+router.get("/login", async (req, res) => {
+  res.render(
+    LOGIN_PAGE_PATH,
+    getTemplateData(req, { noUser: false, title: LOGIN_PAGE_TITLE })
+  );
 });
 
-const EMPLOYEE_UPLOAD_PAGE = 'users/employee-upload';
-const EMPLOYEE_UPLOAD_TITLE = 'Employee Bulk Creation';
+const EMPLOYEE_UPLOAD_PAGE = "users/employee-upload";
+const EMPLOYEE_UPLOAD_TITLE = "Employee Bulk Creation";
 const renderEmployeeUpload = (req, res, errors) => {
   const { user } = req.session;
   if (user.role !== USER_ROLE.ADMIN && user.role !== USER_ROLE.CORPORATE) {
-    throw new HttpError('Unauthorized to upload employees.', 401);
+    throw new HttpError("Unauthorized to upload employees.", 401);
   }
   return res.render(EMPLOYEE_UPLOAD_PAGE, {
     errors,
@@ -240,19 +277,19 @@ const renderEmployeeUpload = (req, res, errors) => {
   });
 };
 
-router.get('/bulk-upload', async (req, res, next) => {
+router.get("/bulk-upload", async (req, res, next) => {
   try {
     renderEmployeeUpload(req, res);
   } catch (error) {
-    next(error)
+    next(error);
   }
 });
 
-router.post('/bulk-upload', async (req, res, next) => {
+router.post("/bulk-upload", async (req, res, next) => {
   try {
     const { user } = req.session;
     const employeeDataList = req.body;
-    assertNonEmptyArray(employeeDataList);    
+    assertNonEmptyArray(employeeDataList);
 
     const ranks = await getAllRanks(user);
     const rankMap = ranks.reduce((result, rank) => {
@@ -260,7 +297,7 @@ router.post('/bulk-upload', async (req, res, next) => {
       result[level] = result[level] || {};
       result[level][name] = rank;
       return result;
-    }, {})
+    }, {});
 
     const userDataList = [];
     const errors = [];
@@ -268,7 +305,8 @@ router.post('/bulk-upload', async (req, res, next) => {
     for (let i = 0; i < employeeDataList.length; i++) {
       const employeeData = employeeDataList[i];
       try {
-        const { name, password, email, contact, designation, rank} = employeeData;
+        const { name, password, email, contact, designation, rank } =
+          employeeData;
         assertPasswordString(password, "Password");
         let hashPassword = await bcrypt.hash(password, 8);
         assertIsValuedString(name, "User name");
@@ -276,11 +314,18 @@ router.post('/bulk-upload', async (req, res, next) => {
         assertEmailString(email, "Email");
         assertContactString(contact, "Contact Number");
         assertIsValuedString(designation, "Designation");
-        assertRequiredNumber(Number(rank), 'Rank level');
+        assertRequiredNumber(Number(rank), "Rank level");
+
         const employeeRank = rankMap[rank][designation];
         if (!employeeRank) {
-          throw new ValidationError('Invalid coporate employee rank');
+          throw new ValidationError("Invalid coporate employee rank");
         }
+
+        const userPresent = await usersData.getUserByEmail(email);
+        if (!!userPresent) {
+          throw new ValidationError(`User ${email} already exists.`);
+        }
+
         userDataList.push({
           ...employeeData,
           password: hashPassword,
@@ -291,16 +336,18 @@ router.post('/bulk-upload', async (req, res, next) => {
           corporateId: user.corporateId,
           createdBy: user._id,
           createdAt: creationTime,
-        })
+        });
       } catch (employeeError) {
         errors.push(`Row ${i + 1}: ` + employeeError.message);
       }
     }
 
     if (errors.length > 0) {
-      throw new HttpError(errors.join(';\n'), 400);
+      throw new HttpError(errors.join(";\n"), 400);
     } else {
-      const users = await Promise.all(userDataList.map(userData => usersData.createUser(userData)));
+      const users = await Promise.all(
+        userDataList.map((userData) => usersData.createUser(userData))
+      );
       res.send(users);
     }
   } catch (error) {
@@ -309,7 +356,7 @@ router.post('/bulk-upload', async (req, res, next) => {
 });
 
 //get user by Id
-router.get('/:userId', async (req, res) => {
+router.get("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await usersData.getUser(userId);
@@ -318,6 +365,5 @@ router.get('/:userId', async (req, res) => {
     res.status(400).json({ error: e });
   }
 });
-
 
 module.exports = router;
