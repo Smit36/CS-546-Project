@@ -93,7 +93,9 @@ label {
 .update,
 input[type='submit'],
 button,
-#PENDING {
+#PENDING,
+#APPROVED,
+#REJECTED {
   background-color: #358aeb;
   color: white;
   padding: 12px 20px;
@@ -102,9 +104,19 @@ button,
   cursor: pointer;
 }
 
-#PENDING {
+#REJECTED {
   color: black;
   background-color: rgb(240, 134, 92);
+}
+
+#APPROVED{
+  color: white;
+  background-color: rgb(40, 177, 51);
+}
+
+#PENDING{
+  color: black;
+  background-color: rgb(241, 243, 111);
 }
 
 #PENDING:hover {
