@@ -1,35 +1,34 @@
-<p>
-  Upload CSV file to bulk create Employees
-</p>
-<p>
-  CSV Columns: name,email,password,contact,designation,rank
-</p>
-<p>
-  Delimitor: ',' | First line should be headers
-</p>
-<form
-  id="employee-upload-form"
-  method="POST"
-  action="user/bulk-upload"
-  enctype="application/json; charset=utf-8"
->
-  <div>
-    <input id="employee-upload-input" type="file" name="employeeFile" />
-    {{#if errors}}
-      <div id="employee-upload-error">
-        {{#each errors}}
+<div class="card">
+  <div id="employee-upload">
+    <h3>
+      Upload CSV file to bulk create Employees
+    </h3>
+    <p>
+      CSV Columns: name,email,password,contact,designation,rank
+    </p>
+    <p>
+      Delimitor: ',' | First line should be headers
+    </p>
+    <form id="employee-upload-form" method="POST" action="user/bulk-upload" enctype="application/json; charset=utf-8">
+      <div>
+        <input id="employee-upload-input" type="file" name="employeeFile" />
+        {{#if errors}}
+        <div id="employee-upload-error">
+          {{#each errors}}
           {{this}}<br />
-        {{/each}}
+          {{/each}}
+        </div>
+        {{else}}
+        <div hidden id="employee-upload-error"></div>
+        {{/if}}
       </div>
-    {{else}}
-      <div hidden id="employee-upload-error"></div>
-    {{/if}}
+      <div>
+        <input type="submit" value="Upload" />
+      </div>
+    </form>
+    <div hidden id="corporate-id">
+      {{corporate._id}}
+    </div>
+    <script defer src="/js/upload.js"></script>
   </div>
-  <div>
-    <input type="submit" value="Upload" />
-  </div>
-</form>
-<div hidden id="corporate-id">
-  {{corporate._id}}
 </div>
-<script defer src="/js/upload.js"></script>

@@ -35,17 +35,10 @@
         <span id="user-id" hidden>{{user._id}}</span>
       </div>
       <div class="col-25">
-        <a href="/user/logout"><button>Logout</button>
-
-        </a>
+        <a href="/user/logout"><button>Logout</button></a>
       </div>
       {{/if}}
       {{/if}}
-      <aside>
-        {{#if isEmployee}}
-        <div id="trip-notifications"></div>
-        {{/if}}
-      </aside>
     </div>
     {{#if user}}
     <nav>
@@ -90,6 +83,9 @@
   </header>
 
   <main>
+    {{#if isEmployee}}
+    <div id="trip-notifications"></div>
+    {{/if}}
     {{{body}}}
   </main>
   <footer>
@@ -113,12 +109,6 @@
       <dd>
         Parthik Davra | Vivian Dbritto | Smit Gor | Ming-Wei Hu | Junhong Wu
       </dd>
-      <dt>
-        GitHub
-      </dt>
-      <a href="https://github.com/Smit36/CS-546-Project">
-        https://github.com/Smit36/CS-546-Project
-      </a>
       <dd></dd>
     </dl>
   </footer>
@@ -132,8 +122,6 @@
   <script src="/js/index.js"></script>
   <script src="/js/notifications.js"></script>
   <script src="/js/corporate.js"></script>
-  <script src="/js/trip.js"></script>
-  <script src="/js/approval.js"></script>
 </body>
 
 </html>

@@ -1,60 +1,84 @@
-<div>
-  Trip name:
-  {{trip.name}}
-</div>
-<div>
+<div id="trip-detail-card">
+  <div class="row">
+    <h2>
+      {{trip.name}}
+    </h2>
+  </div>
+  <div class="row">
+    <div class="col-15">
+      <h2>Current Status</h2>
+    </div>
+    <div class="col-15">
+      <button id={{approval.status}}>
+        {{approval.status}}
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <ul>
+      {{#each updates}}
+      <div class="row">
+        <li>
+          [
+          {{status}}
+          ] (
+          {{user.name}}
+          @
+          {{time}}
+          )
+          {{message}}
+        </li>
+      </div>
+
+      {{/each}}
+    </ul>
+  </div>
+  <div hidden id="approval-id">{{approval._id}}</div>
+  <div hidden id="approval-last-id">{{lastUpdateId}}</div>
+  <form id="approval-update-form" class="new-status-form">
+    <div>
+      <input type="radio" id="approval-same" name="status" value="" checked />
+      <label for="approval-pending">
+        No new status
+      </label>
+      <input type="radio" id="approval-pending" name="status" value="PENDING" />
+      <label for="approval-pending">
+        Pending
+      </label>
+      <input type="radio" id="approval-approve" name="status" value="APPROVED" />
+      <label for="approval-approve">
+        Approved
+      </label>
+      <input type="radio" id="approval-reject" name="status" value="REJECTED" />
+      <label for="approval-reject">
+        Rejected
+      </label>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="appoval-update-message">
+          Message
+        </label>
+      </div>
+      <div class="col-75">
+        <textarea id="appoval-update-message" name="message" rows="2" placeholder="Message"
+          class="full-width-input"></textarea>
+      </div>
+    </div>
+
+    <input type="submit" value="Send New Update" />
+    <div id="approval-update-error" hidden></div>
+  </form>
   <p>
-    Current Status:
-    {{approval.status}}
+    <a href="/trip/{{approval.tripId}}">
+      To Trip Detail
+    </a>
+  </p>
+  <p>
+    <a href="/trip">
+      Back To Trips
+    </a>
   </p>
 </div>
-<div>
-  <ul>
-    {{#each updates}}
-      <li>
-        [
-        {{status}}
-        ] (
-        {{user.name}}
-        @
-        {{time}}
-        )
-        {{message}}
-      </li>
-    {{/each}}
-  </ul>
-</div>
-<div hidden id="approval-id">{{approval._id}}</div>
-<div hidden id="approval-last-id">{{lastUpdateId}}</div>
-<form id="approval-update-form" class="new-status-form">
-  <div>
-    <input type="radio" id="approval-same" name="status" value="" checked/>
-    <label for="approval-pending">
-      No new status
-    </label>
-    <input type="radio" id="approval-pending" name="status" value="PENDING" />
-    <label for="approval-pending">
-      Pending
-    </label>
-    <input type="radio" id="approval-approve" name="status" value="APPROVED" />
-    <label for="approval-approve">
-      Approved
-    </label>
-    <input type="radio" id="approval-reject" name="status" value="REJECTED" />
-    <label for="approval-reject">
-      Rejected
-    </label>
-  </div>
-  <label for="appoval-update-message">
-    Message
-  </label>
-  <textarea
-    id="appoval-update-message"
-    name="message"
-    rows="2"
-    placeholder="Message"
-    class="full-width-input"
-  ></textarea>
-  <input type="submit" value="Send New Update" />
-</form>
-<a href="/trip">back to Trips</a> 
+<script defer src="/js/approval.js"></script>
