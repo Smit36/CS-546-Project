@@ -36,7 +36,7 @@
             Corporates
           </a>
         </li>
-        {{else}}
+        {{else if isEmployee}}
         <li>
           <a href="/expense">
             Expenses
@@ -64,6 +64,7 @@
       <div>
         User:
         {{user.name}}
+        <div id="user-id" hidden>{{user._id}}</div>
       </div>
       <div>
         <a href="/user/logout">
@@ -72,9 +73,14 @@
       </div>
       {{/if}}
       {{else}}
+      <div>
       <a href="/user/login">
         Login
       </a>
+      </div>
+      {{/if}}
+      {{#if isEmployee}}
+      <div id="trip-notifications"></div>
       {{/if}}
     </aside>
 
@@ -118,6 +124,7 @@
     integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
     crossorigin="anonymous"></script>
   <script src="/js/index.js"></script>
+  <script src="/js/notifications.js"></script>
   <script src="/js/corporate.js"></script>
   <script src="/js/trip.js"></script>
   <script src="/js/approval.js"></script>
