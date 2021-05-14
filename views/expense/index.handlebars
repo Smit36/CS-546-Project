@@ -1,16 +1,34 @@
 <div class="row">
   <div class="col-25">
-    <div id="new-expense" hidden>
+    <div id="new-expense">
       <button onClick="addNewExpense()">New Expense</button>
     </div>
-    <div id="show-expense">
+    <div id="show-expense" hidden>
       <button onClick="showExpense()">Show Expense</button>
     </div>
   </div>
 </div>
 
-<div id="show-form">
+<div id="show-form" hidden>
   <form id="expense-form">
+    <p id="user-id" hidden>{{userId}}</p>
+    <input type="text" value={{userId}} id="user-id" hidden />
+    <div class="row">
+      <div class="col-25">
+        <label for="expense-trip-name">Trip Name</label>
+      </div>
+      <div class="col-75">
+        <select id="expense-trip" name="expense-trip">
+          {{#if trips}}
+          {{#each trips}}
+          <option default>Trip</option>
+          <option id={{_id}} value={{_id}}>{{name}}</option>
+          {{/each}}
+          {{/if}}
+        </select>
+      </div>
+      <span id="expense-trip-error" hidden>Select trip.</span>
+    </div>
     <div class="row">
       <div class="col-25">
         <label for="expense-name">Expense Name</label>
@@ -92,18 +110,18 @@
       </div>
     </div>
     <span id="success-expense" hidden>Successfully expense added!</span>
-    <button type="button" class="submit" id="submit-expense">Submit</button>
-    <script src="/js/expense.js"></script>
+    <button type="button" class="submit" id="submit-expense" value={{userId}}>Submit</button>
+    <script src="js/expense.js"></script>
   </form>
 </div>
 
-<div id='get-expenses' hidden>
+<div id='get-expenses' >
   <div class="total-amount"></div>
   <div class="row" id="header">
     <div class="col-25">Name</div>
     <div class="col-25">Date</div>
     <div class="col-25">Amount</div>
-    <div class="col-25">User</div>
+    <div class="col-25">Trip</div>
   </div>
   <div id="expense-list">
   </div>
