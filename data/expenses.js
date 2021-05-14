@@ -1,8 +1,8 @@
-const { ObjectId, ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const { expenses: getExpensesCollection } = require('../config/mongoCollections');
 
-const { QueryError, ValidationError } = require('../utils/errors');
-const { idQuery, parseMongoData, stringifyObjectId } = require('../utils/mongodb');
+const { QueryError } = require('../utils/errors');
+const { idQuery, parseMongoData } = require('../utils/mongodb');
 const {
   assertObjectIdString,
   assertIsValuedString,
@@ -37,13 +37,15 @@ const getExpense = async (expenseId) => {
 const getAllExpensesByTrip = async (tripId) => {
   assertObjectIdString(tripId, 'Trip id');
 
-  //const trip = await getTrip(tripId);
-
   const collection = await getExpensesCollection();
   const allExpenses = await collection.find({ tripId: new ObjectId(tripId) }).toArray();
+<<<<<<< HEAD
   // if (allExpenses.length == 0) {
   //   throw new QueryError(`Expenses not found`);
   // }
+=======
+
+>>>>>>> 273accbe9fc5c5bcb921cd4d52dadfe5871f463a
   for (let i = 0; i < allExpenses.length; i++) {
     allExpenses[i].payment = await getExpensePayment(allExpenses[i].paymentId.toHexString());
   }
@@ -54,17 +56,11 @@ const getAllExpensesByTrip = async (tripId) => {
 const getAllExpensesByUser = async (userId) => {
   assertObjectIdString(userId, 'User id');
 
-  //const trip = await getTrip(tripId);
-
   const collection = await getExpensesCollection();
   const allExpenses = await collection.find({ userId: new ObjectId(userId) }).toArray();
-  if (allExpenses.length == 0) {
-    return parseMongoData(allExpenses);
-  }
+
   for (let i = 0; i < allExpenses.length; i++) {
     allExpenses[i].payment = await getExpensePayment(allExpenses[i].paymentId.toHexString());
-  }
-  for (let i = 0; i < allExpenses.length; i++) {
     allExpenses[i].trip = await getTrip(allExpenses[i].tripId.toHexString());
   }
 

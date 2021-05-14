@@ -14,7 +14,7 @@ function addNewUser() {
 
   let requestConfig = {
     method: 'GET',
-    url: 'http://localhost:3000/rank/all',
+    url: '/rank/all',
   };
 
   $.ajax(requestConfig).then(function (responseMessage) {
@@ -56,64 +56,61 @@ function addNewUser() {
           rankId = r._id.toString();
           level = r.level;
         }
+        
+        data = {
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value,
+          contact: document.getElementById('contact').value,
+          designation: selectedRank,
+          rankId: rankId,
+          rank: level,
+          role: role,
+        };
+
+        console.log(data);
+
+        $.ajax({
+          url: '/user',
+          type: 'POST',
+          data: JSON.stringify(data),
+          contentType: 'application/json; charset=utf-8',
+          success() {
+            $('#user-form')[0].reset();
+            alert('Successfully added');
+          },
+          error() {},
+        });
       }
 
-      data = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-        contact: document.getElementById('contact').value,
-        designation: selectedRank,
-        rankId: rankId,
-        rank: level,
-        role: role,
-      };
+  function getRankData() {
+    let requestConfig = {
+      method: 'GET',
+      url: '/rank/all',
+    };
 
-      console.log(data);
+    $.ajax(requestConfig).then(function(responseMessage) {
+        let ranksData = responseMessage;
+        return ranksData;
+    });
+  }
+  
+  function showUsers() {
+    document.getElementById('show-user').style.display = 'none';
+    document.getElementById('show-form').style.display = 'none';
+    document.getElementById('new-user').style.display = 'block';
+    document.getElementById('modal').style.display = 'none';
+    var getUser = $('#get-users');
+    var userList = $('#user-list');
+    userList.empty();
 
-      $.ajax({
-        url: 'http://localhost:3000/user',
-        type: 'POST',
-        data: JSON.stringify(data),
-        contentType: 'application/json; charset=utf-8',
-        success() {
-          $('#user-form')[0].reset();
-          alert('Successfully added');
-        },
-        error() {},
-      });
-    }
-  });
-}
-
-function getRankData() {
-  let requestConfig = {
-    method: 'GET',
-    url: 'http://localhost:3000/rank/all',
-  };
-
-  $.ajax(requestConfig).then(function (responseMessage) {
-    let ranksData = responseMessage;
-    return ranksData;
-  });
-}
-
-function showUsers() {
-  document.getElementById('show-user').style.display = 'none';
-  document.getElementById('show-form').style.display = 'none';
-  document.getElementById('new-user').style.display = 'block';
-  document.getElementById('modal').style.display = 'none';
-  var getUser = $('#get-users');
-  var userList = $('#user-list');
-  userList.empty();
-
-  $.ajax(`http://localhost:3000/user/all`, {
-    dataType: 'json',
-    success: function (data, status, xhr) {
-      if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
-          $(userList).append(
-            `<div class="row">
+    $.ajax(`/user/all`, {
+      dataType: 'json',
+      success: function (data, status, xhr) {
+        if (data.length > 0) {
+          for (let i = 0; i < data.length; i++) {
+            $(userList).append(
+              `<div class="row">
                 <button class="user" id=${data[i]._id}>
                   <div class="row" >
                     <div class="col-25">${data[i].name}</div>
@@ -268,27 +265,28 @@ function showUsers() {
                   }
                 }
 
-                update = {
-                  name: document.getElementById('update-name').value,
-                  email: document.getElementById('update-email').value,
-                  contact: document.getElementById('update-contact').value,
-                  designation: selectedRank,
-                  rank: level,
-                  rankId: rankId,
-                  role: role,
-                };
-                console.log(update);
-                $.ajax({
-                  url: `http://localhost:3000/user/${data[i]._id}`,
-                  type: 'PUT',
-                  data: JSON.stringify(update),
-                  contentType: 'application/json; charset=utf-8',
-                  success() {
-                    //$('#update-expense-form')[0].reset();
-                    alert('Successfully updated');
-                    modal.hide();
-                  },
-                  error() {},
+                  update = {
+                    name: document.getElementById('update-name').value,
+                    email: document.getElementById('update-email').value,
+                    contact: document.getElementById('update-contact').value,
+                    designation: selectedRank,
+                    rank: level,
+                    rankId: rankId,
+                    role: role,
+                  };
+                  console.log(update);
+                  $.ajax({
+                    url: `/user/${data[i]._id}`,
+                    type: 'PUT',
+                    data: JSON.stringify(update),
+                    contentType: 'application/json; charset=utf-8',
+                    success() {
+                      //$('#update-expense-form')[0].reset();
+                      alert('Successfully updated');
+                      modal.hide();
+                    },
+                    error() {},
+                  });
                 });
               });
             });
@@ -305,16 +303,17 @@ function showUsers() {
                       <button class="cancel">No</button>
                     </div>                
                 `);
-              $('.delete-user').on('click', function () {
-                $.ajax({
-                  url: `http://localhost:3000/user/${data[i]._id}`,
-                  type: 'DELETE',
-                  dataType: 'json',
-                  success(data) {
-                    let modal = $('#modal');
-                    modal.hide();
-                    showUsers();
-                  },
+                $('.delete-user').on('click', function () {
+                  $.ajax({
+                    url: `/user/${data[i]._id}`,
+                    type: 'DELETE',
+                    dataType: 'json',
+                    success(data) {
+                      let modal = $('#modal');
+                      modal.hide();
+                      showUsers();
+                    },
+                  });
                 });
               });
             });

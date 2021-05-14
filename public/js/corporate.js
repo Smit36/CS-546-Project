@@ -123,6 +123,7 @@ edit.on("click", function (event) {
   event.preventDefault();
   del.hide();
   edit.hide();
+  let co_email = $(this).attr("name");
 
   $(container).append(
     `<form>
@@ -130,15 +131,11 @@ edit.on("click", function (event) {
     <p>Please Fill all the Information to Edit Corporate Data.</p>
     <hr>
     <div>
+      <h2>Corporate Domain: ${co_email}</h2>
+    <div>
     <label for="name" >Corporate Name
       <input type="text" id="name" placeholder="Enter Name" pattern="^[a-zA-Z ']{2,50}$" required>
       <span id="name-error" hidden>Please Enter Valid Name</apan>
-    </label>
-    </div>
-    <div>
-    <label for="email">Corporate Domain Email
-      <input type="text" id="email"  placeholder="Enter Domain" pattern="^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$" required>
-      <span id="email-error" hidden>Please Enter Valid Domain Email</span>
     </label>
     </div>
     <div>
@@ -163,7 +160,6 @@ edit.on("click", function (event) {
   submit_edit.on("click", function (event) {
     
     var corporate_name = $("#name").val();
-    var corporate_email = $("#email").val();
     var corporate_contact = $("#contact").val();
     var corporate_address = $("#address").val();
 
@@ -171,7 +167,6 @@ edit.on("click", function (event) {
 
     var data = {
       name: corporate_name,
-      emailDomain: corporate_email,
       contactNo: corporate_contact,
       address: corporate_address,
     };
@@ -200,12 +195,6 @@ function corporateEmptyValidation() {
   } else {
     $("#name-error").hide();
   }
-  if (!$("#email").val() || !($("#email").val().match(/^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$/i))) {
-    $("#email-error").show();
-    error += 1;
-  } else {
-    $("#email-error").hide();
-  }
   if (!$("#contact").val() || !($("#contact").val().match(/^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$/))) {
     $("#contact-error").show();
     error += 1;
@@ -230,11 +219,6 @@ function corporateEmptyValidation() {
 
 // Error Checking
 function showError(){
-    if(emailError){
-    $('#email-error').show();
-  }else{
-    $('#email-error').hide();
-  }
   if (contactError) {
       $("#contact-error").show();
     } else {

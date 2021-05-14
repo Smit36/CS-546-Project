@@ -80,7 +80,7 @@ const assertRequiredNumber = (data, description) =>
 const assertRequiredObject = (data, description) =>
   assertRequiredType(data, {}, description);
 
-const assertNonEmptyArray = (data, description) => {
+const assertNonEmptyArray = (data, description = 'Array') => {
   assertRequired(data, description);
   checkFieldTypes([], data, description);
   if (data.length === 0) {
