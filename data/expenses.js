@@ -112,7 +112,7 @@ const updateExpense = async (expenseId, data) => {
   }
 
   const newUpdate = {
-    userId: new ObjectId(userId),
+    userId:new ObjectId(userId),
     paymentId: new ObjectId(lastExpense.paymentId),
     tripId: new ObjectId(tripId),
     name,

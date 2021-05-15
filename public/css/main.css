@@ -109,18 +109,18 @@ button,
   background-color: rgb(240, 134, 92);
 }
 
-#APPROVED{
+#APPROVED {
   color: white;
   background-color: rgb(40, 177, 51);
 }
 
-#PENDING{
+#PENDING {
   color: black;
   background-color: rgb(241, 243, 111);
 }
 
-#PENDING:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+#PENDING:hover,#APPROVED:hover,#REJECTED:hover {
+  cursor:auto;
 }
 
 .submit,
@@ -240,7 +240,8 @@ input[type='submit']:hover {
 #expense-list button,
 #user-list button,
 #rank-list button,
-#corporate-list button {
+#corporate-list button,
+#trip-list button {
   background-color: #f2f2f2;
   color: rgb(66, 66, 66);
   padding: 18px;
@@ -259,6 +260,10 @@ input[type='submit']:hover {
   cursor: pointer;
   background-color: #ebebeb;
   color: rgb(66, 66, 66);
+}
+
+#trip-list button:hover{
+  cursor:auto;
 }
 
 #header {

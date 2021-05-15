@@ -56,42 +56,48 @@
         </p>
       </div>
     </div>
-    <p>
+    <h4>
       Trip expense items:
-    </p>
+    </h4>
     <ol>
       {{#each expenses}}
-      <li>
-        {{user.name}}
-        :
-        {{name}}
-        {{#if isMine}}
-        <button class="update" id="trip-edit-{{_id}}">
-          edit
-        </button>
-        <button class="delete" id="trip-delete-{{_id}}">
-          delete
-        </button>
-        {{/if}}
-      </li>
-    {{/each}}
-  </ol>
-  <p>
+      <div class="row">
+        <li>
+          {{user.name}}
+          :
+          {{name}}
+          {{#if isMine}}
+          <button class="update" id="trip-edit-{{_id}}">
+            Edit
+          </button>
+          <button class="delete" id="trip-delete-{{_id}}">
+            Delete
+          </button>
+          {{/if}}
+        </li>
+      </div>
+
+      {{/each}}
+    </ol>
+
     Total Trip Expense:
     {{total}}
-  </p>
-  <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new">
-    Add New Expense to Trip
-  </a>
-  <p>
+
+    <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new">
+      <button>Add New Expense to Trip</button>
+    </a>
+
     <a href="/trip">
-      Back to Trips
+      <button>
+        Back to Trips
+      </button>
     </a>
-  </p>
-  <p>
+
     <a href="/approval/{{trip.approvalId}}">
-      To Approval Thread
+      <button>
+        To Approval Thread
+      </button>
     </a>
-  </p>
-</div>
-<script defer src="/js/trip-details.js"></script>
+
+  </div>
+  <script defer src="/js/trip-details.js"></script>
