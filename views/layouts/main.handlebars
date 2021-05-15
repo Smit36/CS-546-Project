@@ -19,25 +19,27 @@
           {{title}}
         </h2>
       </div>
+      {{#if corporate}}
       <div class="col-25">
-        {{#if user}}
-        {{#if corporate}}
         <h2>
           Corporate:
           {{corporate.name}}
         </h2>
-        {{/if}}
       </div>
+      {{/if}}
       {{#if user}}
       <div class="col-25">
-        <h2>User:
-          {{user.name}}</h2>
-        <span id="user-id" hidden>{{user._id}}</span>
+        <h2>
+          User:
+          {{user.name}}
+        </h2>
+        <span id="user-id" hidden>
+          {{user._id}}
+        </span>
       </div>
       <div class="col-25">
         <a href="/user/logout"><div class="button">Logout</div></a>
       </div>
-      {{/if}}
       {{/if}}
     </div>
     {{#if user}}

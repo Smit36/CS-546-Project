@@ -113,7 +113,7 @@ button:hover,
 #APPROVED:hover,
 #REJECTED:hover,
 .button:hover {
-  background-color: #0b76f1;
+  background-color: #0b76f1;  
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
