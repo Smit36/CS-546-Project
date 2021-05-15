@@ -1,6 +1,6 @@
 const { ValidationError } = require("./errors");
 const { isObjectIdString } = require("./mongodb");
-const { USER_ROLE } = require('./routes');
+const { USER_ROLE } = require('./constants');
 
 const stringifyData = (data) =>
   data === undefined

@@ -3,6 +3,7 @@ const USER_ROLE = {
   CORPORATE: "CORPORATE",
   EMPLOYEE: "EMPLOYEE",
 };
+
 const CUR_ALIAS = {
   "$": "USD",
   "¥": "CNY",

@@ -1,16 +1,10 @@
-const xss = require('xss');
+const xss = require("xss");
 const { assertRequiredObject } = require("./assertion");
-
-const USER_ROLE = {
-  ADMIN: 'ADMIN',
-  CORPORATE: 'CORPORATE',
-  EMPLOYEE: 'EMPLOYEE',
-};
 
 const getTemplateData = (req, options = {}) => {
   const { user, corporate } = req.session;
   return {
-    title: options.title || '',
+    title: options.title || "",
     user,
     corporate,
     isLogin: !!options.isLogin,
@@ -37,10 +31,9 @@ const guardXSS = (data, fields) => {
   }
 
   return guardedData;
-}
+};
 
 module.exports = {
   getTemplateData,
   guardXSS,
-  USER_ROLE
 };
