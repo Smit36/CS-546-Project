@@ -47,7 +47,6 @@
           id="trip-start-time"
           type="date"
           name="start-time"
-          placeholder="start time"
           class="full-width-input"
           value="{{trip.startTime}}"
         />
@@ -65,7 +64,6 @@
           id="trip-end-time"
           type="date"
           name="end-time"
-          placeholder="end time"
           class="full-width-input"
           value="{{trip.endTime}}"
         />
@@ -134,9 +132,9 @@
       <input type="submit" class="trip-green" value="Create New Trip" />
     </div>
     <div id="trip-submit-error" hidden></div>
+    <a href="/trip" class="blue-button">
+      back to Trips
+    </a>
   </form>
-  <a href="/trip">
-    back to Trips
-  </a>
 </div>
 <script defer src="/js/trip-new.js"></script>

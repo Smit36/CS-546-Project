@@ -16,6 +16,7 @@ const {
   deleteExpensePayment,
 } = require('./expensePayments');
 const { getTrip } = require('./trips');
+const { getUser } = require('./users');
 
 const getByObjectId = async (objectId) => {
   const collection = await getExpensesCollection();
@@ -55,6 +56,7 @@ const getAllExpensesByUser = async (userId) => {
   for (let i = 0; i < allExpenses.length; i++) {
     allExpenses[i].payment = await getExpensePayment(allExpenses[i].paymentId.toHexString());
     allExpenses[i].trip = await getTrip(allExpenses[i].tripId.toHexString());
+    allExpenses[i].user = await getUser(allExpenses[i].userId.toHexString());
   }
 
   return parseMongoData(allExpenses);
@@ -112,7 +114,7 @@ const updateExpense = async (expenseId, data) => {
   }
 
   const newUpdate = {
-    userId:new ObjectId(userId),
+    userId: new ObjectId(userId),
     paymentId: new ObjectId(lastExpense.paymentId),
     tripId: new ObjectId(tripId),
     name,

@@ -24,14 +24,10 @@
     <div id="trip-list">
       {{#each updates}}
       <div class="row">
-        <button>
-          <div class="row">
-            <div class="col-25">{{status}}</div>
-            <div class="col-25">{{user.name}}</div>
-            <div class="col-25">{{time}}</div>
-            <div class="col-25">{{message}}</div>
-          </div>
-        </button>
+        <div class="col-25">{{status}}</div>
+        <div class="col-25">{{user.name}}</div>
+        <div class="col-25">{{time}}</div>
+        <div class="col-25">{{message}}</div>
       </div>
       {{/each}}
     </div>
@@ -40,48 +36,64 @@
   <div hidden id="approval-id">{{approval._id}}</div>
   <div hidden id="approval-last-id">{{lastUpdateId}}</div>
   <form id="approval-update-form" class="new-status-form">
-    <div>
-      <input type="radio" id="approval-same" name="status" value="" checked />
-      <label for="approval-same">
-        No new status
-      </label>
-      <input type="radio" id="approval-pending" name="status" value="PENDING" />
-      <label for="approval-pending">
-        Pending
-      </label>
-      <input type="radio" id="approval-approve" name="status" value="APPROVED" />
-      <label for="approval-approve">
-        Approved
-      </label>
-      <input type="radio" id="approval-reject" name="status" value="REJECTED" />
-      <label for="approval-reject">
-        Rejected
-      </label>
-    </div>
-
-    <div class="row">
-      <div class="col-25">
-        <label for="appoval-update-message">
-          Message
-        </label>
-      </div>
+    <div class='row'>
       <div class="col-75">
-        <textarea id="appoval-update-message" name="message" rows="2" placeholder="Message"
-          class="full-width-input"></textarea>
+      {{!-- new status --}}
+      <div class="row">
+        <div class="col-25">
+          <label for="appoval-update-message">
+            New Status
+          </label>
+        </div>
+        <div class="col-75">
+          <input type="radio" id="approval-same" name="status" value="" checked />
+          <label for="approval-same">
+            No new status
+          </label>
+          <input type="radio" id="approval-pending" name="status" value="PENDING" />
+          <label for="approval-pending">
+            Pending
+          </label>
+          <input type="radio" id="approval-approve" name="status" value="APPROVED" />
+          <label for="approval-approve">
+            Approved
+          </label>
+          <input type="radio" id="approval-reject" name="status" value="REJECTED" />
+          <label for="approval-reject">
+            Rejected
+          </label>
+        </div>
+      </div>
+      {{!-- new message --}}
+      <div class="row">
+        <div class="col-25">
+          <label for="appoval-update-message">
+            Message
+          </label>
+        </div>
+        <div class="col-75">
+          <textarea id="appoval-update-message" name="message" rows="2" placeholder="Message"
+            class="full-width-input"></textarea>
+        </div>
+      </div>
+      </div>
+
+      <div class="col-25">
+        <input type="submit" value="Send New Update" />
       </div>
     </div>
 
-    <input type="submit" value="Send New Update" />
+
     <div id="approval-update-error" hidden></div>
   </form>
-
-  <a href="/trip/{{approval.tripId}}">
-    <button>To Trip Detail</button>
+  
+  <a href="/trip/{{approval.tripId}}" class="blue-button trip-button">
+    To Trip Detail
   </a>
 
 
-  <a href="/trip">
-    <button>Back To Trips</button>
+  <a href="/trip" class="blue-button trip-button">
+    Back To Trips
   </a>
 
 </div>

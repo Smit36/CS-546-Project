@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getTemplateData } = require('../utils/routes');
+const { getTemplateData, guardXSS } = require('../utils/routes');
 
 const router = Router();
 
@@ -45,7 +45,16 @@ router.get('/', async (req, res, next) => {
 //Add Expense of trip
 router.post('/', async (req, res, next) => {
   try {
-    const expense = req.body;
+    const expense = guardXSS(req.body, [
+      'name',
+      'description',
+      'method',
+      'currency',
+      'amount',
+      'date',
+      'tripId',
+    ]);
+
     const { _id: userId } = req.session.user;
     expense.userId = userId;
     assertExpenseData(expense);
@@ -108,7 +117,15 @@ router.put('/:expenseId', async (req, res, next) => {
   try {
     const { expenseId } = req.params;
     const { _id: userId } = req.session.user;
-    let expense = req.body;
+    let expense = guardXSS(req.body, [
+      'name',
+      'description',
+      'method',
+      'currency',
+      'amount',
+      'date',
+      'tripId',
+    ]);
     expense.userId = userId;
     assertObjectIdString(expenseId);
     assertExpenseData(expense);
@@ -117,7 +134,6 @@ router.put('/:expenseId', async (req, res, next) => {
       throw new HttpError(`Could not update expense for id:${expenseId}`, 404);
     }
     res.status(200).json(expense);
-    console.log(expense);
   } catch (error) {
     next(error);
   }

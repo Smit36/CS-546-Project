@@ -8,10 +8,8 @@
       </div>
       <div class="col-25">
         <div>
-          <a href="/approval/{{trip.approvalId}}">
-            <button id={{approvalInfo.status}}>
-              {{approvalInfo.status}}
-            </button>
+          <a id="{{approvalInfo.status}}" href="/approval/{{trip.approvalId}}" class="blue-button trip-button">
+            {{approvalInfo.status}}
           </a>
         </div>
       </div>
@@ -63,8 +61,7 @@
     </h4>
     <ol>
       {{#each expenses}}
-      <div class="row">
-        <li class="trip-li">
+        <li class="row trip-li">
           {{user.name}}
           :
           {{name}}
@@ -77,8 +74,6 @@
           </button>
           {{/if}}
         </li>
-      </div>
-
       {{/each}}
     </ol>
     {{else}}
@@ -92,20 +87,16 @@
       {{total}}
     </h4>
 
-    <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new">
-      <button>Add New Expense to Trip</button>
+    <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new" class="blue-button trip-button">
+      Add New Expense to Trip
     </a>
 
-    <a href="/trip">
-      <button>
-        Back to Trips
-      </button>
+    <a href="/trip" class="blue-button trip-button">
+      Back to Trips
     </a>
 
-    <a href="/approval/{{trip.approvalId}}">
-      <button>
-        To Approval Thread
-      </button>
+    <a href="/approval/{{trip.approvalId}}" class="blue-button trip-button">
+      To Approval Thread
     </a>
 
   </div>

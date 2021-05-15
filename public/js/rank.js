@@ -52,12 +52,12 @@ function showRanks() {
             for (let i = 0; i < data.length; i++) {
             $(rankList).append(
                 `<div class="row">
-                <button class="rank" id=${data[i]._id}>
+                <div class="rank-button" id=${data[i]._id}>
                     <div class="row" >
                     <div class="col-25">${data[i].name}</div>
                     <div class="col-25">${data[i].level}</div>
                     </div>
-                </button>
+                </div>
                 </div>`,
             );
             }
