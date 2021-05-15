@@ -32,13 +32,13 @@ create.on("click", function (event) {
     </div>
     <div>
     <label for="email">Corporate Domain Email
-      <input type="text" id="email"  placeholder="Enter Domain" pattern"^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$" required>
+      <input type="text" id="email"  placeholder="Enter Domain" pattern="^(?!:\/\/)([a-zA-Z0-9]+\.)?[a-zA-Z0-9][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}?$" required>
       <span id="email-error" hidden>Please Enter Valid Domain Email</span>
     </label>
     </div>
     <div>
     <label for="contact">Corporate Contact_No
-      <input type="text" id="contact"  placeholder="Enter Contact" pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
+      <input type="text" id="contact"  placeholder="Enter Contact" pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" required>
       <span id="contact-error" hidden>Please Enter Valid Contact</span>
     </label>
     </div>
@@ -49,7 +49,7 @@ create.on("click", function (event) {
     </label>
     </div>
     <input type="submit" value="Submit" class="submit-create"/>
-    <a href="/corporates" class='nav' id="previous">Back</a>
+    <a href="/corporates" class='nav' id="back">Back</a>
   </form>`);
 
   var submit_create = $(".submit-create");
@@ -108,7 +108,7 @@ del.on("click", function (event) {
       del.hide();
       edit.hide();
       back.hide();
-      info.append(`<a href="/corporates" class='nav'>Back</a>`);
+      info.append(`<a href="/corporates" class='nav' id="back">Back</a>`);
     },
   });
 });
@@ -140,7 +140,7 @@ edit.on("click", function (event) {
     </div>
     <div>
     <label for="contact">Corporate Contact_No
-      <input type="text" id="contact"  placeholder="Enter Contact" pattern="^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$" required>
+      <input type="text" id="contact"  placeholder="Enter Contact" pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" required>
       <span id="contact-error" hidden>Please Enter Valid Contact</span>
     </label>
     </div>
@@ -203,7 +203,7 @@ function corporateEmptyValidationCreate() {
     $("#email-error").hide();
   }
 
-  if (!$("#contact").val() || !($("#contact").val().match(/^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$/))) {
+  if (!$("#contact").val() || !($("#contact").val().match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/))) {
     $("#contact-error").show();
     error += 1;
   } else {
@@ -236,7 +236,7 @@ function corporateEmptyValidationEdit() {
     $("#names-error").hide();
   }
 
-  if (!$("#contact").val() || !($("#contact").val().match(/^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$/))) {
+  if (!$("#contact").val() || !($("#contact").val().match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/))) {
     $("#contact-error").show();
     error += 1;
   } else {

@@ -475,3 +475,20 @@ label {
 #myForm {
   margin: auto;
 }
+
+#back{
+  background-color: #4CAF50;
+  color: white;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  padding: 10px;
+  text-decoration: none;
+  padding-left: 25px;
+  padding-right: 25px;
+  font-size: medium;
+}
+
+#back:hover{
+  background-color: #2ca030;
+}
