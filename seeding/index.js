@@ -11,7 +11,7 @@ const seedTripsAndApprovals = require("./tripApprovals");
 const { seedCorporates } = require("./corporates");
 const seedExpense = require("./expense");
 
-const qwer = "$2b$08$HXw/sdQ4tgsgPf9wAHiSuuqOZefJNy9YuKrRviBwnLQmxhTlHCyE.";
+const DEMO_PASSWORD = "$2b$08$nM.pJBhhCTCafRoDlbjlxuh3CoYeJg1gh5TZm/HG7bYaEKFEyiPCO";
 
 const unseed = async (db) => {
   if (!!db) {
@@ -27,7 +27,7 @@ const seed = async () => {
     await unseed(db);
 
     const { admin1, admin2 } = await seedPortalAdminUsers({
-      password: qwer,
+      password: DEMO_PASSWORD,
     });
 
     const admin1Id = new ObjectId(admin1._id);
@@ -46,7 +46,7 @@ const seed = async () => {
       admin2Id,
       corporate1Id,
       corporate2Id,
-      password: qwer,
+      password: DEMO_PASSWORD,
     });
 
     const {
@@ -79,7 +79,7 @@ const seed = async () => {
       rank4: corporate2RankTechLead,
       rank5: corporate2RankSeniorDeveloper,
       rank6: corporate2RankDeveloper,
-      password: qwer,
+      password: DEMO_PASSWORD,
     });
 
     const { trip1: corporate1Trip, trip2: corporate2Trip } =

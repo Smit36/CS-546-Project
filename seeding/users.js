@@ -1,17 +1,16 @@
 const { ObjectId } = require("mongodb");
 const { stringifyObjectId } = require("../utils/mongodb");
 const { createUser } = require("../data/users");
-const bcrypt = require("bcrypt");
 
 const seedPortalAdminUsers = async ({
   timestamp1 = new Date().getTime(),
   timestamp2 = new Date().getTime(),
-  password = "$2b$08$4Y.tGYgbCwvYd.Ru4GJCHelLr4wHF4qLht9K2WOrsh3rxD34oYe.q",
+  password,
 } = {}) => {
   const adminData1 = {
-    name: "Admin1",
+    name: "Portal Admin1",
     password: password,
-    email: "admin1@gmail.com",
+    email: "admin1@ctem.com",
     contact: "213-456-7890",
     role: "ADMIN",
     createdBy: "System",
@@ -22,7 +21,7 @@ const seedPortalAdminUsers = async ({
   const adminData2 = {
     name: "Admin2",
     password: password,
-    email: "admin2@gmail.com",
+    email: "admin2@ctem.com",
     contact: "201-456-7000",
     role: "ADMIN",
     createdBy: "System",
@@ -90,11 +89,11 @@ const seedUsers = async ({
   rank4,
   rank5,
   rank6,
-  password = "$2b$08$4Y.tGYgbCwvYd.Ru4GJCHelLr4wHF4qLht9K2WOrsh3rxD34oYe.q",
+  password,
 } = {}) => {
   const userData1 = {
     corporateId: stringifyObjectId(corporate1Id),
-    name: "Man Man Giga",
+    name: "Gina the Manager",
     password: password,
     email: "user1@gigasoft.com",
     contact: "101-117-7890",
@@ -109,7 +108,7 @@ const seedUsers = async ({
 
   const userData2 = {
     corporateId: stringifyObjectId(corporate1Id),
-    name: "Accounting Giga",
+    name: "Ghibli the Accountant",
     password: password,
     email: "user2@gigasoft.com",
     contact: "201-227-7890",
@@ -124,7 +123,7 @@ const seedUsers = async ({
 
   const userData3 = {
     corporateId: stringifyObjectId(corporate1Id),
-    name: "Associating Giga",
+    name: "George the Associate",
     password: password,
     email: "user3@gigasoft.com",
     contact: "201-337-7890",
@@ -139,7 +138,7 @@ const seedUsers = async ({
 
   const userData4 = {
     corporateId: stringifyObjectId(corporate2Id),
-    name: "Deck Reed Mega",
+    name: "Mary the Tech Lead",
     password: password,
     email: "user1@microhard.com",
     contact: "201-447-7890",
@@ -154,7 +153,7 @@ const seedUsers = async ({
 
   const userData5 = {
     corporateId: stringifyObjectId(corporate2Id),
-    name: "Sen Dev Mega",
+    name: "Mike the Senior Dev",
     password: password,
     email: "user2@microhard.com",
     contact: "201-557-7890",
@@ -169,7 +168,7 @@ const seedUsers = async ({
 
   const userData6 = {
     corporateId: stringifyObjectId(corporate2Id),
-    name: "Tom Dev Mega",
+    name: "Milly the Junior Dev",
     password: password,
     email: "user3@microhard.com",
     contact: "201-667-7890",
