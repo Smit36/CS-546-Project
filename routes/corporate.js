@@ -105,7 +105,7 @@ router.get("/:corporateId", async (req, res, next) => {
     res
       .status(200)
       .render("corporates/corporate", {
-        ...getTemplateData(req, {title: `Corporate Information for ${corporate.name}`}),
+        ...getTemplateData(req, {title: `Corporate Information`}),
         corporate: corporate
       });
   } catch (error) {
