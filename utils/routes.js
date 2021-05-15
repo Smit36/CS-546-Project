@@ -24,13 +24,16 @@ const guardXSS = (data, fields) => {
   assertRequiredObject(data);
 
   const guardedData = { ...data };
-  const guardingFields = fields || Object.keys(data);
-  for (const field of guardingFields) {
-    guardedData[field] = xss(data[field], {
-      whiteList: {},
-      stripIgnoreTag: true,
-      stripIgnoreTagBody: ["script"],
-    });
+  const guardingSet = new Set([fields || Object.keys(data)]);
+  for (const [field, value] of Object.entries(data)) {
+    guardedData[field] =
+      guardingSet.has(field) && typeof value === "string"
+        ? xss(value, {
+            whiteList: {},
+            stripIgnoreTag: true,
+            stripIgnoreTagBody: ["script"],
+          })
+        : value;
   }
 
   return guardedData;
