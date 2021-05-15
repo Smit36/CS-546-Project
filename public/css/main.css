@@ -384,7 +384,7 @@ input[type='submit']:hover {
 #trip-employees-error,
 #trip-submit-error {
   font-size: small;
-  color: red;
+  color:#df0000;
 }
 
 #success-expense,
@@ -548,7 +548,7 @@ label {
 #email-error,
 #contact-error,
 #address-error {
-  color: red;
+  color: #df0000;
   background-color: rgb(245, 200, 200);
 }
 #myForm {
