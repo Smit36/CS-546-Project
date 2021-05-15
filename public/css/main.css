@@ -382,9 +382,21 @@ input[type='submit']:hover {
 #trip-end-time-error,
 #trip-manager-error,
 #trip-employees-error,
-#trip-submit-error {
+#trip-submit-error,
+#names-error,
+#email-error,
+#contact-error,
+#address-error,
+#trip-expense__name__error,
+#trip-expense__description__error,
+#trip-expense__payment__error,
+#trip-expense__currency__error,
+#trip-expense__amount__error,
+#trip-expense__date__error,
+#trip-expense__submit__error,
+#approval-update-error {
   font-size: small;
-  color: red;
+  color: #df0000;
 }
 
 #success-expense,
@@ -544,13 +556,6 @@ label {
   font-size: large;
 }
 
-#names-error,
-#email-error,
-#contact-error,
-#address-error {
-  color: red;
-  background-color: rgb(245, 200, 200);
-}
 #myForm {
   margin: auto;
 }

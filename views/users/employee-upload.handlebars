@@ -9,8 +9,9 @@
     <p>
       Delimitor: ',' | First line should be headers
     </p>
-    <form id="employee-upload-form" method="POST" action="user/bulk-upload" enctype="application/json; charset=utf-8">
+    <form id="employee-upload-form">
       <div>
+        <label for="employee-upload-input">Employee File:</label>
         <input id="employee-upload-input" type="file" name="employeeFile" />
         {{#if errors}}
         <div id="employee-upload-error">
@@ -22,7 +23,7 @@
         <div hidden id="employee-upload-error"></div>
         {{/if}}
       </div>
-      <div>
+      <div class="col-25">
         <input type="submit" value="Upload" />
       </div>
     </form>

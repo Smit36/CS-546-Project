@@ -22,6 +22,7 @@ const {
 
 const { getTemplateData } = require('../utils/routes');
 const { HttpError } = require("../utils/errors");
+const { guardXSS } = require("../utils/routes");
 
 const isDataExist = (id, data, desc = "data") => {
   if (!data)
@@ -58,7 +59,11 @@ router.post("/", async (req, res, next) => {
     const userId = ObjectId(user._id);
 
     assertRequiredObject(userId);
-    const corporateData = req.body;
+    const corporateData = guardXSS(req.body,
+      "name",
+      "emailDomain",
+      "contactNo",
+      "address");
     corporateData.createdBy = userId;
     corporateData.updatedBy = userId;
     assertCorporateData(corporateData);
@@ -130,7 +135,11 @@ router.put("/:corporateId", async (req, res, next) => {
     const userId = ObjectId(user._id);
     assertRequiredObject(userId);
 
-    let corporateData = req.body;
+    let corporateData = guardXSS(req.body, [
+      "name",
+      "contactNo",
+      "address"
+    ]);
     assertContactString(corporateData.contactNo, "Contact Number");
 
     corporateData.updatedBy = userId;

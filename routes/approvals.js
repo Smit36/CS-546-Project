@@ -70,6 +70,7 @@ router.get("/:id", async (req, res, next) => {
       trip,
       approval,
       updates,
+      isApprovalManager: trip.managerId === user._id,
       lastUpdateId,
       ...getTemplateData(req, { title: `Approval Thread (${trip.name})` }),
     });

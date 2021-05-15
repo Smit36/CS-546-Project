@@ -123,7 +123,10 @@ edit.on("click", function (event) {
   event.preventDefault();
   del.hide();
   edit.hide();
-  let co_email = $(this).attr("name");
+  let co_email = $(this).attr("email_domain");
+  let co_name = $(this).attr("name");
+  let co_contact = $(this).attr("contact");
+  let co_address = $(this).attr("address");
 
   $(container).append(
     `<form>
@@ -131,23 +134,23 @@ edit.on("click", function (event) {
     <p>Please Fill all the Information to Edit Corporate Data.</p>
     <hr>
     <div>
-      <h2>Corporate Domain: ${co_email}</h2>
+      <h2>Corporate Domain: "${co_email}"</h2>
     </div>
     <div>
     <label for="name" >Corporate Name
-      <input type="text" id="name" placeholder="Enter Name" pattern="^[a-zA-Z ']{2,50}$" required>
+      <input type="text" id="name" placeholder="Enter Name" pattern="^[a-zA-Z ']{2,50}$" value="${co_name}" required>
       <span id="names-error" hidden>Please Enter Valid Name</span>
     </label>
     </div>
     <div>
     <label for="contact">Corporate Contact_No
-      <input type="text" id="contact"  placeholder="Enter Contact" pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" required>
+      <input type="text" id="contact"  placeholder="Enter Contact" pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" value="${co_contact}" required>
       <span id="contact-error" hidden>Please Enter Valid Contact</span>
     </label>
     </div>
     <div>
     <label for="address">Corporate Address
-      <input type="text" id="address" placeholder="Enter Address" pattern="^[a-zA-Z ']{2,50}$" required>
+      <input type="text" id="address" placeholder="Enter Address" pattern="^[a-zA-Z ']{2,50}$" value="${co_address}" required>
       <span id="address-error" hidden>Please Enter Valid Address</span>
     </label>
     </div>
