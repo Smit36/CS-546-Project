@@ -1,0 +1,18 @@
+<h1 id="title-info"></h1>
+<div class="single-card">
+    <div class="container">
+        <h2 >Corporate Name: <span id="co-name">{{corporate.name}}</span></h2>
+        <h3 >Corporate Domain Email: <span id="co-email">{{corporate.emailDomain}}</span></h3>
+        <h3 >Corporate Contact Number: <span id="co-contact">{{corporate.contactNo}}</span></h3>
+        <h3 >Corporate Contact Address: <span id="co-address">{{corporate.address}}</span></h3>
+    </div>
+</div>
+<div>
+    <ul>
+        <li id="link-list"><a href="/corporates" class='nav' id="previous">Back</a>
+            <a href='/corporates/{{corporate._id}}' class='nav' id="delete" name="{{corporate._id}}">Delete</a>
+            <a href='/corporates/{{corporate._id}}' class='nav' id="edit" name="{{corporate._id}}" >Edit</a>
+        </li>
+    </ul>
+</div>
+<div class="container-edit"></div>

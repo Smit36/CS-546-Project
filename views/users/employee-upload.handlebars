@@ -1,0 +1,35 @@
+<div class="card">
+  <div id="employee-upload">
+    <h3>
+      Upload CSV file to bulk create Employees
+    </h3>
+    <p>
+      CSV Columns: name,email,password,contact,designation,rank
+    </p>
+    <p>
+      Delimitor: ',' | First line should be headers
+    </p>
+    <form id="employee-upload-form">
+      <div>
+        <label for="employee-upload-input">Employee File:</label>
+        <input id="employee-upload-input" type="file" name="employeeFile" />
+        {{#if errors}}
+        <div id="employee-upload-error">
+          {{#each errors}}
+          {{this}}<br />
+          {{/each}}
+        </div>
+        {{else}}
+        <div hidden id="employee-upload-error"></div>
+        {{/if}}
+      </div>
+      <div class="col-25">
+        <input type="submit" value="Upload" />
+      </div>
+    </form>
+    <div hidden id="corporate-id">
+      {{corporate._id}}
+    </div>
+    <script defer src="/js/upload.js"></script>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<div class="new-post">
+  <form id="trip-form" class="new-post-form">
+    <div class="row">
+      <div class="col-25">
+        <label for="trip-name">
+          Trip name
+        </label>
+      </div>
+      <div class="col-75">
+        <input
+          id="trip-name"
+          type="text"
+          name="name"
+          placeholder="Name"
+          value="{{trip.name}}"
+          class="full-width-input"
+        />
+        <div id="trip-name-error" hidden></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="trip-description">
+          Description of the trip
+        </label>
+      </div>
+      <div class="col-75">
+        <input
+          id="trip-description"
+          type="text"
+          name="Description"
+          placeholder="description"
+          value="{{trip.description}}"
+          class="full-width-input"
+        />
+        <div id="trip-description-error" hidden></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="trip-start-time">
+          Start time
+        </label>
+      </div>
+      <div class="col-75">
+        <input
+          id="trip-start-time"
+          type="date"
+          name="start-time"
+          class="full-width-input"
+          value="{{trip.startTime}}"
+        />
+        <div id="trip-start-time-error" hidden></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="trip-end-time">
+          End time
+        </label>
+      </div>
+      <div class="col-75">
+        <input
+          id="trip-end-time"
+          type="date"
+          name="end-time"
+          class="full-width-input"
+          value="{{trip.endTime}}"
+        />
+        <div id="trip-end-time-error" hidden></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="trip-manager">
+          Manager
+        </label>
+      </div>
+      <div class="col-75">
+        <select id="trip-manager" class="full-width-input" name="managerId">
+          <option value="">
+            Select manager...
+          </option>
+          {{#each users}}
+            <option value="{{_id}}">
+              {{name}}
+              (
+              {{email}}
+              )
+            </option>
+          {{/each}}
+        </select>
+        <div id="trip-manager-error" hidden></div>
+      </div>
+    </div>
+    <div class="row">
+      <input hidden id="trip-employees" name="trip-employees" value="" />
+      <div class="col-25">
+        <label for="trip-employee-selection">
+          Employees
+        </label>
+      </div>
+      <div class="col-35">
+        <select id="trip-employee-selection">
+          <option value="">
+            Select employee and add to trip...
+          </option>
+          {{#each users}}
+            <option value="{{_id}}">
+              {{name}}
+              (
+              {{email}}
+              )
+            </option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="col-35">
+        <button class="submit trip-green" disabled id="trip-employee-add">
+          Add employee
+        </button>
+      </div>
+    </div>
+    <div>
+      <h3>
+        Employees in Trip
+      </h3>
+      <ul id="trip-employee-selection-preview"></ul>
+      <div id="trip-employees-error" hidden></div>
+    </div>
+    <div id="trip-submit-error" hidden></div>
+    <div>
+      <input type="submit" class="trip-green" value="Create New Trip" />
+    </div>
+    <a href="/trip" class="blue-button">
+      back to Trips
+    </a>
+  </form>
+</div>
+<script defer src="/js/trip-new.js"></script>

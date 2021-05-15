@@ -1,0 +1,104 @@
+<div id="trip-detail-card">
+  <div class="container">
+    <div class="row">
+      <div class="col-75">
+        <h2>
+          {{trip.name}}
+        </h2>
+      </div>
+      <div class="col-25">
+        <div>
+          <a id="{{approvalInfo.status}}" href="/approval/{{trip.approvalId}}" class="blue-button trip-button">
+            {{approvalInfo.status}}
+          </a>
+        </div>
+      </div>
+    </div>
+    <span hidden id="trip-id">
+      {{trip._id}}
+    </span>
+    <div class="row">
+      <div class="col-25">
+        <h3>
+          Corporate: {{corporate.name}}
+        </h3>
+      </div>
+      <div class="col-25">
+        <h3>
+          Manager:
+          {{manager.name}}
+        </h3>
+      </div>
+    </div>
+    <p>
+      Employees:
+    </p>
+    <ul>
+      {{#each employees}}
+      <li>
+        {{name}}
+      </li>
+      {{/each}}
+    </ul>
+    <div class="row">
+      <div class="col-25">
+        <p>
+          Start time:
+          {{startTime}}
+        </p>
+      </div>
+      <div class="col-25">
+        <p>
+          End time:
+          {{endTime}}
+        </p>
+      </div>
+    </div>
+
+    {{#if expenses}}
+    <h4>
+      Trip expense items:
+    </h4>
+    <ol>
+      {{#each expenses}}
+        <li class="row trip-li">
+          {{user.name}}
+          :
+          {{name}}
+          {{#if isMine}}
+          <button class="update trip-green" id="trip-edit-{{_id}}">
+            Edit
+          </button>
+          <button class="delete" id="trip-delete-{{_id}}">
+            Delete
+          </button>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ol>
+    {{else}}
+    <h4>
+      Warning: Trip currently doesn't not have any expenses.
+    </h4>
+    {{/if}}
+
+    <h4>
+      Total Trip Expense:
+      {{total}}
+    </h4>
+
+    <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new" class="blue-button trip-button">
+      Add New Expense to Trip
+    </a>
+
+    <a href="/trip" class="blue-button trip-button">
+      Back to Trips
+    </a>
+
+    <a href="/approval/{{trip.approvalId}}" class="blue-button trip-button">
+      To Approval Thread
+    </a>
+
+  </div>
+</div>
+<script defer src="/js/trip-details.js"></script>

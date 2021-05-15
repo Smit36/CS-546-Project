@@ -1,0 +1,28 @@
+<p>
+  <a id="new-trip" href="/trip/new" class="blue-button">
+    Add a trip
+  </a>
+</p>
+{{#if trips}}
+<div class="row">
+  {{#each trips}}
+  <div class="col-35">
+    <div id="trip-card">
+      <div class="row">
+        <h2>
+          {{name}}
+        </h2>
+      </div>
+      <div class="row">
+        <a href="/trip/{{_id}}" class="blue-button trip-button">
+          Trip details
+        </a>
+        <a href="/approval/{{approvalId}}" class="blue-button trip-button ">
+          Approval tread
+        </a>
+      </div>
+    </div>
+  </div>
+{{/each}}
+</div>
+{{/if}}

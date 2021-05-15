@@ -1,0 +1,126 @@
+<div class="row">
+  <div id="new-expense">
+    <button onClick="addNewExpense()">New Expense</button>
+  </div>
+  <div id="show-expense" hidden>
+    <button onClick="showExpense()">Show Expense</button>
+  </div>
+</div>
+
+<div id="show-form" hidden>
+  <form id="expense-form">
+    <div class="row">
+      <div class="col-25">
+        <label>Trip Name</label>
+      </div>
+      <div class="col-75">
+        <select id="expense-trip" name="expense-trip">
+          {{#if trips}}
+          <option selected>Select a trip</option>
+          {{#each trips}}
+          <option id={{_id}} value={{_id}}>{{name}}</option>
+          {{/each}}
+          {{/if}}
+        </select>
+      </div>
+      <span id="expense-trip-error" hidden>Select trip.</span>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label>Expense Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="name" name="expense_name" placeholder="Your expense">
+      </div>
+      <span id="name-error" hidden>Enter expense name.</span>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label>Description</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="description" name="description" placeholder="Air India Airlines">
+      </div>
+      <span id="description-error" hidden>Enter expense description.</span>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label>Payment Method</label>
+      </div>
+      <div class="col-25">
+        <div class="row">
+          <input type="radio" id="card" name="method" value="card">
+          <label>Card</label><br>
+          <input type="radio" id="cash" name="method" value="cash">
+          <label>Cash</label>
+        </div>
+        <span id="method-error" hidden>Select expense method.</span>
+      </div>
+      <div class="col-25">
+        <input type="radio" id="gpay" name="method" value="gpay">
+        <label>GPay</label><br>
+        <input type="radio" id="apple" name="method" value="apple">
+        <label>Apple</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label>Amount</label>
+      </div>
+      <div class="col-20">
+        <div class="row">
+          <select id="currency" name="currency">
+            <option selected>Currency</option>
+            <option id="$" value="$">$-USD</option>
+            <option id="¥" value="¥">¥-CNY</option>
+            <option id="₹" value="₹">₹-INR</option>
+            <option id="€" value="€">€-EUR</option>
+          </select>
+        </div>
+        <span id="currency-error" hidden>Select expense currency.</span>
+      </div>
+      <div class="col-35">
+        <div class="row">
+          <input type="number" id="amount" name="amount" placeholder="100...">
+        </div>
+        <span id="amount-error" hidden>Enter expense amount.</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label>Date</label>
+      </div>
+      <div class="col-75">
+        <div class="row">
+          <input type="date" id="date" name="date">
+        </div>
+        <span id="date-error" hidden>Enter expense date.</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label>Notes*</label>
+      </div>
+      <div class="col-75">
+        <textarea></textarea>
+      </div>
+    </div>
+    <span id="success-expense" hidden>Successfully expense added!</span>
+    <button type="button" class="submit" id="submit-expense" value={{userId}}>Submit</button>
+    <script src="js/expense.js"></script>
+  </form>
+</div>
+
+<div id='get-expenses'>
+  <div class="total-amount"></div>
+  <div class="row" id="header">
+    <div class="col-25">Name</div>
+    <div class="col-25">Date</div>
+    <div class="col-25">Amount</div>
+    <div class="col-25">Trip</div>
+  </div>
+  <div id="expense-list">
+  </div>
+  <div id="modal">
+  </div>
+</div>

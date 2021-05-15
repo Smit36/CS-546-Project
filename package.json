@@ -1,0 +1,35 @@
+{
+  "name": "cs-546-project",
+  "version": "0.1.0",
+  "description": "Spring 2021 CS-546 Group 17 Final Project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "seed": "node seed.js",
+    "dev": "node seed.js && node index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smit36/CS-546-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Smit36/CS-546-Project/issues"
+  },
+  "homepage": "https://github.com/Smit36/CS-546-Project#readme",
+  "dependencies": {
+    "@khanacademy/tota11y": "^0.2.0",
+    "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.0",
+    "express-session": "^1.17.1",
+    "mongodb": "^3.6.3",
+    "xss": "^1.0.9"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
