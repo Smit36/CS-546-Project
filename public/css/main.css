@@ -197,7 +197,7 @@ input[type='submit']:hover {
   transition: 0.3s;
   margin: 5px 5px 5px 50px;
   padding: 10px 5px 25px 15px;
-  width: 30%;
+  width: 100%;
 }
 
 #trip-detail-card {

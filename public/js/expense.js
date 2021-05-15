@@ -138,9 +138,8 @@ function showExpense() {
               const year = dateFormat.slice(6, 10);
               const month = dateFormat.slice(3, 5);
               const day = dateFormat.slice(0, 2);
-              dateFormat = `${year}-${month}-${day}`;
-              modal.append(`<span onClick="showExpense()" class="close" title="Close Modal">×</span>
-              `);
+              dateFormat = `${year}-${day}-${month}`;
+              console.log(dateFormat);
               if (data[i].payment.method == 'card') {
                 card = true;
               } else if (data[i].payment.method == 'cash') {
@@ -151,6 +150,7 @@ function showExpense() {
                 apple = true;
               }
               modal.append(`
+              <span onClick="showExpense()" class="close" title="Close Modal">×</span>              
                 <div class="detail">
                   <div id="update-expense-form">
                     <div class="row">
@@ -243,7 +243,7 @@ function showExpense() {
                         <div class="row">
                           <input type="date" id="update-date" name="date" value=${dateFormat}>
                         </div>
-                        <span id="update-date-error" hidden>Select expense amount.</span> 
+                        <span id="update-date-error" hidden>Select date.</span> 
                       </div>
                     </div>  
                     <span id="expense-update-success" hidden>Expense updated successfully!</span>            
@@ -270,9 +270,10 @@ function showExpense() {
                       break;
                     }
                   }
+                  console.log(data[i].userId);
                   update = {
-                    userId: '60832c0f8b6948b77e6dc3c5',
-                    tripId: '60832c49d9bafeae5372234c',
+                    userId: data[i].userId,
+                    tripId: data[i].trip._id,
                     name: document.getElementById('update-name').value,
                     description: document.getElementById('update-description').value,
                     currency: document.getElementById('update-currency').value,
@@ -297,8 +298,8 @@ function showExpense() {
                 }
               });
             });
-
             $('#expense-delete').on('click', function (event) {
+              console.log('delete');
               event.preventDefault();
               modal.empty();
               modal.append(` 

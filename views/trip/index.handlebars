@@ -4,21 +4,25 @@
   </a>
 </div>
 {{#if trips}}
-{{#each trips}}
-<div id="trip-card">
-  <div class="row">
-    <h2>
-      {{name}}
-    </h2>
-  </div>
-  <div class="row">
-    <a href="/trip/{{_id}}">
-      <button>Trip details</button>
-    </a>
-    <a href="/approval/{{approvalId}}">
-      <button>Approval tread</button>
-    </a>
+<div class="row">
+  {{#each trips}}
+  <div class="col-35">
+    <div id="trip-card">
+      <div class="row">
+        <h2>
+          {{name}}
+        </h2>
+      </div>
+      <div class="row">
+        <a href="/trip/{{_id}}">
+          <button>Trip details</button>
+        </a>
+        <a href="/approval/{{approvalId}}">
+          <button>Approval tread</button>
+        </a>
+      </div>
+    </div>
   </div>
   {{/each}}
-  {{/if}}
 </div>
+{{/if}}

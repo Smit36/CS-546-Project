@@ -123,7 +123,7 @@ const updateExpense = async (expenseId, data) => {
 
   const collection = await getExpensesCollection();
   const { modifiedCount, matchedCount } = await collection.updateOne(
-    { _id: new ObjectId(expenseId) },
+    { _id: new ObjectId(expenseId), userId: new ObjectId(userId) },
     { $set: newUpdate },
   );
 
