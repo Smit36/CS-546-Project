@@ -72,19 +72,19 @@
       <div class="col-75">
         <select id="trip-expense__currency__select" name="currency">
           <option id="trip-expense__currency__option--usd" value="$"
-          {{#if expense.paymentCurrencyChecked.usd}}
+          {{#if expense.paymentCurrencyChecked.USD}}
           selected
           {{/if}}>$-USD</option>
           <option id="trip-expense__currency__option--cny" value="¥"
-          {{#if expense.paymentCurrencyChecked.cny}}
+          {{#if expense.paymentCurrencyChecked.CNY}}
           selected
           {{/if}}>¥-CNY</option>
           <option id="trip-expense__currency__option--inr" value="₹"
-          {{#if expense.paymentCurrencyChecked.inr}}
+          {{#if expense.paymentCurrencyChecked.INR}}
           selected
           {{/if}}>₹-INR</option>
           <option id="trip-expense__currency__option--eur" value="€"
-          {{#if expense.paymentCurrencyChecked.eur}}
+          {{#if expense.paymentCurrencyChecked.EUR}}
           selected
           {{/if}}>€-EUR</option>
         </select>
