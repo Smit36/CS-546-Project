@@ -266,10 +266,10 @@ input[type='submit']:hover {
   margin-top: 6px;
 }
 
-#expense-list button,
-#user-list button,
-#rank-list button,
-#corporate-list button,
+#expense-list .expense-button,
+#user-list .user-button,
+#rank-list .rank-button,
+#corporate-list .corporate-button,
 #trip-list > div.row {
   background-color: #f2f2f2;
   color: rgb(66, 66, 66);
@@ -283,9 +283,9 @@ input[type='submit']:hover {
   border-bottom: 1px solid rgb(66, 66, 66);
 }
 
-#expense-list button:hover,
-#user-list button:hover,
-#corporate-list button:hover {
+#expense-list .expense-button:hover,
+#user-list .user-button:hover,
+#corporate-list .corporate-button:hover {
   cursor: pointer;
   background-color: #ebebeb;
   color: rgb(66, 66, 66);
