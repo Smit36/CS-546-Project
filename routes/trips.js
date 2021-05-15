@@ -24,7 +24,7 @@ const {
   assertNonEmptyArray,
 } = require("../utils/assertion");
 const { HttpError } = require("../utils/errors");
-const { getTemplateData } = require("../utils/routes");
+const { getTemplateData, guardXSS } = require("../utils/routes");
 const { USER_ROLE, CUR_ALIAS, DEFAULT_RATES } = require("../utils/constants");
 const { get } = require("../utils/axios");
 
@@ -119,7 +119,14 @@ router.post("/", async (req, res, next) => {
     const { user } = req.session;
     const userId = user._id;
     const corporateId = user.corporateId;
-    const tripData = req.body;
+    const tripData = guardXSS(req.body, [
+      "name",
+      "description",
+      "startTime",
+      "endTime",
+      "managerId",
+      "employeeIdList",
+    ]);
     tripData.userId = userId;
     tripData.corporateId = corporateId;
     tripData.startTime = Number(tripData.startTime);
@@ -320,7 +327,7 @@ router.put("/:id/expense/:expenseId", async (req, res, next) => {
 router.put("/:id/expenses", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { expenseIdList } = req.body;
+    const { expenseIdList } = guardXSS(req.body, ["expenseIdList"]);
     assertTripID(id);
     assertNonEmptyArray(expenseIdList);
     expenseIdList.forEach((expenseId) => assertExpenseID(expneseId));
@@ -356,7 +363,14 @@ router.post("/:id/expense", async (req, res, next) => {
     const { id } = req.params;
     assertTripID(id);
 
-    const expenseData = req.body;
+    const expenseData = guardXSS(req.body, [
+      "userId",
+      "tripId",
+      "name",
+      "date",
+      "currency",
+      "method",
+    ]);
     assertExpenseData(expenseData);
 
     const { user } = req.session;
@@ -425,7 +439,7 @@ router.delete("/:id/expense/:expenseId", async (req, res, next) => {
 router.delete("/:id/expenses", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { expenseIdList } = req.body;
+    const { expenseIdList } = guardXSS(req.body, ["expenseIdList"]);
     assertTripID(id);
     assertNonEmptyArray(expenseIdList);
     expenseIdList.forEach((expenseId) => assertExpenseID(expenseId));
