@@ -115,14 +115,14 @@ function showUsers() {
         for (let i = 0; i < data.length; i++) {
           $(userList).append(
             `<div class="row">
-                <button class="user" id=${data[i]._id}>
+                <div class="user-button" id=${data[i]._id}>
                   <div class="row" >
                     <div class="col-25">${data[i].name}</div>
                     <div class="col-25">${data[i].email}</div>
                     <div class="col-25">${data[i].contact}</div>                
                     <div class="col-25">${data[i].role}</div>
                   </div>
-                </button>
+                </div>
               </div>           
               `,
           );
