@@ -91,11 +91,11 @@ function showExpense() {
       if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
           if (data[i].payment.currency == '¥') {
-            totalExpense += data[i].payment.amount / rates.rates.CNY / rates.rates.USD;
+            totalExpense += (data[i].payment.amount / rates.rates.CNY) * rates.rates.USD;
           } else if (data[i].payment.currency == '₹') {
-            totalExpense += data[i].payment.amount / rates.rates.INR / rates.rates.USD;
+            totalExpense += (data[i].payment.amount / rates.rates.INR) * rates.rates.USD;
           } else if (data[i].payment.currency == '€') {
-            totalExpense += data[i].payment.amount / rates.rates.USD;
+            totalExpense += data[i].payment.amount * rates.rates.USD;
           } else {
             totalExpense += data[i].payment.amount;
           }
