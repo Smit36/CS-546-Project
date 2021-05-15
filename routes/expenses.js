@@ -46,6 +46,8 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const expense = req.body;
+    const { _id: userId } = req.session.user;
+    expense.userId = userId;
     assertExpenseData(expense);
     const newExpense = await expenseData.addExpense(expense);
     if (!newExpense) {
