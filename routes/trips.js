@@ -212,7 +212,7 @@ router.get("/:id", async (req, res, next) => {
       manager: employeeById[trip.managerId],
       employees: employees.filter((employee) => employee._id !== trip.managerId),
       // TODO: corporate
-      ...getTemplateData(req),
+      ...getTemplateData(req, { title: 'Trip Detials'}),
     });
   } catch (error) {
     next(error);
