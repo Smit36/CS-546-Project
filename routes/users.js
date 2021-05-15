@@ -59,7 +59,7 @@ router.post("/", async (req, res) => {
       rank
     ) {
       throw new ValidationError(`Super Admin has invalid data`);
-    } 
+    }
 
     if (role !== USER_ROLE.ADMIN) {
       assertObjectIdString(corporateId, "Corporate ID");
@@ -154,7 +154,7 @@ router.put("/:userId", async (req, res) => {
       rank
     ) {
       throw new ValidationError(`Super Admin has invalid data`);
-    } 
+    }
 
     if (role !== USER_ROLE.ADMIN) {
       assertObjectIdString(corporateId, "Corporate ID");
@@ -205,6 +205,7 @@ const renderLoginPage = (req, res, errors) =>
   });
 
 router.post("/login", async (req, res) => {
+try {
   let reqBody = guardXSS(req.body, ['email', 'password']);
   let errors = [];
   let hasErrors = false;
@@ -232,7 +233,7 @@ router.post("/login", async (req, res) => {
   const user = await usersData.getUserByEmail(email);
 
   if (!user) {
-    errors.push(`No user with ${email} found.`); 
+    errors.push(`No user with ${email} found.`);
     renderLoginPage(req, res.status(404), errors);
     return;
   }
@@ -241,20 +242,24 @@ router.post("/login", async (req, res) => {
 
   if (user.email === email && match) {
     if (user.corporateId) {
-      const corporate = await corporateData.getCorporate(user.corporateId);
-      if (corporate) {
+      try {
+        const corporate = await corporateData.getCorporate(user.corporateId);
         req.session.corporate = corporate;
+      } catch (error) {
+        errors.push("Invalid username or password.");
+        return renderLoginPage(req, res.status(401), errors);
       }
     }
 
     req.session.user = user;
-    res.redirect('/');
+    res.redirect("/");
+  } else {
+    errors.push("Invalid username or password.");
+    return renderLoginPage(req, res.status(401), errors);
   }
-  else {
-    errors.push('Invalid username or password.');
-    renderLoginPage(req, res.status(401), errors);
-    return;
-  }
+} catch (error) {
+  next(error);
+}
 });
 
 router.get("/logout", async (req, res) => {
@@ -266,8 +271,8 @@ router.get("/logout", async (req, res) => {
   }
 });
 
-router.get('/login', async (req, res) => {
-   renderLoginPage(req, res);
+router.get("/login", async (req, res) => {
+  renderLoginPage(req, res);
 });
 
 const EMPLOYEE_UPLOAD_PAGE = "users/employee-upload";
@@ -372,6 +377,4 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-
 module.exports = router;
-
