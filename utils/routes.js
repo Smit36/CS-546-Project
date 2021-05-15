@@ -26,7 +26,11 @@ const guardXSS = (data, fields) => {
   const guardedData = { ...data };
   const guardingFields = fields || Object.keys(data);
   for (const field of guardingFields) {
-    guardedData[field] = xss(data[field]);
+    guardedData[field] = xss(data[field], {
+      whiteList: {},
+      stripIgnoreTag: true,
+      stripIgnoreTagBody: ["script"],
+    });
   }
 
   return guardedData;
