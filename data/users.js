@@ -3,6 +3,8 @@ const {
   users: getUserCollection,
 } = require("../config/mongoCollections");
 
+const corporateData = require('./corporate');
+
 const { QueryError, ValidationError } = require("../utils/errors");
 const {
   idQuery,
@@ -18,7 +20,8 @@ const {
   assertEmailString,
   assertContactString,
   assertPasswordString,
-  assertHashedPasswordString
+  assertHashedPasswordString,
+  assertCorporateDomainString
 } = require("../utils/assertion");
 const {
   USER_ROLE
@@ -89,6 +92,11 @@ const createUser = async (data) => {
     }
     assertIsValuedString(createdBy, "Created By");
     assertRequiredNumber(createdAt, "User created time");
+
+    if (corporateId) {
+      const corporate = await corporateData.getCorporate(corporateId);
+      assertCorporateDomainString(corporate.emailDomain, email);
+    }
   
     const userData = {
       _id: new ObjectId(),
@@ -144,6 +152,11 @@ const updateUser = async (id, updatedBy, updates) => {
     }
     if (role === USER_ROLE.EMPLOYEE) {
       assertRequiredNumber(rank, "Rank");
+    }
+
+    if (corporateId) {
+      const corporate = await corporateData.getCorporate(corporateId);
+      assertCorporateDomainString(corporate.emailDomain, email);
     }
   
     const user = await getUser(id);

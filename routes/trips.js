@@ -58,7 +58,6 @@ const getAuthorizedTripData = async (user, id) => {
   approvalExist(id, approval);
 
   const expenses = await getAllExpensesByTrip(id);
-  // const expenses = await Promise.all(trip.expenseIdList.map(expenseId => getExpense(expenseId)));
 
   return {
     approval,
@@ -106,30 +105,36 @@ router.get("/", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { user } = req.session;
+    const userId = user._id;
     const corporateId = user.corporateId;
     const tripData = req.body;
-    tripData.userId = user._id;
+    tripData.userId = userId;
     tripData.corporateId = corporateId;
     tripData.startTime = Number(tripData.startTime);
     tripData.endTime = Number(tripData.endTime);
     assertTripData(tripData);
 
-    const { managerId, employeeIdList } = tripData;
+    const { managerId } = tripData;
+    const employeeIdList = Array.from(new Set([managerId, ...tripData.employeeIdList]));
     const manager = await getUser(managerId);
     if (manager.corporateId !== corporateId) {
       throw new HttpError(`Invalid corporate manager ${managerId}`, 400);
     }
 
+    if (employeeIdList.length <= 1) {
+      throw new HttpError('Please select at least one employee aside from manager to this trip.', 400);
+    }
+  
     await Promise.all(
-      employeeIdList.map(async (employeeId, userId) => {
+      employeeIdList.map(async (employeeId) => {
         const employee = await getUser(employeeId);
 
         if (employee.corporateId !== corporateId) {
-          throw new HttpError(`Invalid corporate employee ${userId}`, 400);
+          throw new HttpError(`Invalid corporate employee ${employee.email}`, 400);
         }
 
-        if (employee.rank >= manager.rank) {
-          throw new HttpError(`Invalid employee hierarchy for ${userId}`, 400);
+        if (employee._id !== manager._id && employee.rank >= manager.rank) {
+          throw new HttpError(`Invalid employee hierarchy for ${employee.email}`, 400);
         }
       })
     );
@@ -187,9 +192,6 @@ router.get("/:id", async (req, res, next) => {
       0
     );
 
-    for (const employeeId of trip.employeeIdList) {
-
-    }
     const employees = await Promise.all(trip.employeeIdList.map(id => getUser(id)));
     const employeeById = employees.reduce((result, employee) => {
       result[employee._id] = employee;

@@ -1,27 +1,28 @@
 <div>
-  <h1>
-    Trips
-  </h1>
-  <ul>
-    <li>
-      <a href="/trip/new">
-        Add a trip
-      </a>
-    </li>
-  </ul>
-  {{#if trips}}
-    {{#each trips}}
-      <article class="Trip">
+  <a href="/trip/new">
+    <button id="new-trip">Add a trip</button>
+  </a>
+</div>
+{{#if trips}}
+<div class="row">
+  {{#each trips}}
+  <div class="col-35">
+    <div id="trip-card">
+      <div class="row">
         <h2>
           {{name}}
         </h2>
+      </div>
+      <div class="row">
         <a href="/trip/{{_id}}">
-          trip details
+          <button>Trip details</button>
         </a>
         <a href="/approval/{{approvalId}}">
-          approval tread
+          <button>Approval tread</button>
         </a>
-      </article>
-    {{/each}}
-  {{/if}}
+      </div>
+    </div>
+  </div>
+{{/each}}
 </div>
+{{/if}}

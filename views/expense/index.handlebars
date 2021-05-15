@@ -1,11 +1,9 @@
 <div class="row">
-  <div class="col-25">
-    <div id="new-expense">
-      <button onClick="addNewExpense()">New Expense</button>
-    </div>
-    <div id="show-expense" hidden>
-      <button onClick="showExpense()">Show Expense</button>
-    </div>
+  <div id="new-expense">
+    <button onClick="addNewExpense()">New Expense</button>
+  </div>
+  <div id="show-expense" hidden>
+    <button onClick="showExpense()">Show Expense</button>
   </div>
 </div>
 
@@ -19,8 +17,8 @@
       <div class="col-75">
         <select id="expense-trip" name="expense-trip">
           {{#if trips}}
+          <option default>Select a trip</option>
           {{#each trips}}
-          <option default>Trip</option>
           <option id={{_id}} value={{_id}}>{{name}}</option>
           {{/each}}
           {{/if}}
@@ -114,7 +112,7 @@
   </form>
 </div>
 
-<div id='get-expenses' >
+<div id='get-expenses'>
   <div class="total-amount"></div>
   <div class="row" id="header">
     <div class="col-25">Name</div>

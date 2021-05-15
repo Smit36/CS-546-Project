@@ -151,14 +151,14 @@ const assertCorporateDomainString = (corpDomain, userEmail, description= "User E
 
 const assertContactString = (contact, description= "Contact") => {
   assertIsValuedString(contact, description);
-  if (!contact.match(/^\(?([0-9]{3})\)?[- ]+?([0-9]{3})[- ]+?([0-9]{4})$/)){
+  if (!contact.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)){
   throw new ValidationError(`${description} is not a valid Contact: ${contact}`);
   }
 }
 
 const assertPasswordString = (password, description = 'Password') => {
   assertIsValuedString(password, description);
-  if (!password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)){
+  if (!password.match(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/)){
     throw new ValidationError(`${description} is not a valid Password: ${password}`);
     }
 }

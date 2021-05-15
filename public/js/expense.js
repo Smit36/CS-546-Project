@@ -79,6 +79,12 @@ function showExpense() {
   expenseList.empty();
   let rates = [];
 
+  $.ajax(`https://api.ratesapi.io/api/latest`, {
+    success: function (data) {
+      rates = data;
+    },
+  });
+
   $.ajax(`/expense/all`, {
     dataType: 'json',
     success: function (data, status, xhr) {
@@ -119,7 +125,7 @@ function showExpense() {
                 <p>Payment Amount:${data[i].payment.currency} ${data[i].payment.amount}</p>
                 <p>Payment Mode: ${data[i].payment.method}</p>
                 <p>Date: ${data[i].payment.date}</p>
-                <p>Note*: ${data[i].payment.notes}</p> 
+                <p>Note*: ${data[i].payment.notes || ''}</p> 
                 <input id="expenseId" value=${data[i]._id} hidden></input>               
                 <button id="expense-delete" class="delete">Delete</button>
                 <button id="expense-update" class="update">Update</button>              
@@ -138,9 +144,7 @@ function showExpense() {
               const year = dateFormat.slice(6, 10);
               const month = dateFormat.slice(3, 5);
               const day = dateFormat.slice(0, 2);
-              dateFormat = `${year}-${month}-${day}`;
-              modal.append(`<span onClick="showExpense()" class="close" title="Close Modal">×</span>
-              `);
+              dateFormat = `${year}-${day}-${month}`;
               if (data[i].payment.method == 'card') {
                 card = true;
               } else if (data[i].payment.method == 'cash') {
@@ -151,6 +155,7 @@ function showExpense() {
                 apple = true;
               }
               modal.append(`
+              <span onClick="showExpense()" class="close" title="Close Modal">×</span>              
                 <div class="detail">
                   <div id="update-expense-form">
                     <div class="row">
@@ -158,9 +163,9 @@ function showExpense() {
                         <label for="name">Expense Name</label>
                       </div>
                       <div class="col-75">
-                        <input type="text" id="update-name" name="expense_name" value=${
+                        <input type="text" id="update-name" name="expense_name" value="${
                           data[i].name
-                        }>
+                        }">
                       </div>
                       <span id="update-name-error" hidden>Enter expense name.</span>                 
                     </div>
@@ -169,9 +174,9 @@ function showExpense() {
                         <label for="update-description">Description</label>
                       </div>
                       <div class="col-75">
-                        <input type="text" id="update-description" name="update-description" value=${
+                        <input type="text" id="update-description" name="update-description" value="${
                           data[i].description
-                        }>
+                        }">
                       </div> 
                       <span id="update-description-error" hidden>Enter expense description.</span>
                     </div>
@@ -228,9 +233,9 @@ function showExpense() {
                       </div>
                       <div class="col-35">
                         <div class="row">                      
-                          <input type="number" id="update-amount" name="amount" value=${
+                          <input type="number" id="update-amount" name="amount" value="${
                             data[i].payment.amount
-                          }>                     
+                          }">                     
                         </div>
                         <span id="update-amount-error" hidden>Enter expense amount.</span>     
                       </div>
@@ -241,9 +246,9 @@ function showExpense() {
                       </div>
                       <div class="col-75">            
                         <div class="row">
-                          <input type="date" id="update-date" name="date" value=${dateFormat}>
+                          <input type="date" id="update-date" name="date" value="${dateFormat}">
                         </div>
-                        <span id="update-date-error" hidden>Select expense amount.</span> 
+                        <span id="update-date-error" hidden>Select date.</span> 
                       </div>
                     </div>  
                     <span id="expense-update-success" hidden>Expense updated successfully!</span>            
@@ -271,8 +276,8 @@ function showExpense() {
                     }
                   }
                   update = {
-                    userId: '60832c0f8b6948b77e6dc3c5',
-                    tripId: '60832c49d9bafeae5372234c',
+                    userId: data[i].userId,
+                    tripId: data[i].trip._id,
                     name: document.getElementById('update-name').value,
                     description: document.getElementById('update-description').value,
                     currency: document.getElementById('update-currency').value,
@@ -297,7 +302,6 @@ function showExpense() {
                 }
               });
             });
-
             $('#expense-delete').on('click', function (event) {
               event.preventDefault();
               modal.empty();
@@ -321,6 +325,10 @@ function showExpense() {
                   },
                 });
               });
+              $('#cancel').on('click', function () {
+                modal.hide();
+                showExpense();
+              });
             });
           });
         }
@@ -336,7 +344,6 @@ function showExpense() {
     },
     error: function (jqXhr, textStatus, errorMessage) {
       // error callback
-      console.log(errorMessage);
       $(expenseList).html(`<p>Expense not found</p>`);
       expenseList.show();
       $(getExpense).show();
