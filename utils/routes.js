@@ -23,8 +23,8 @@ const getTemplateData = (req, options = {}) => {
 const guardXSS = (data, fields) => {
   assertRequiredObject(data);
 
-  const guardedData = { ...data };
-  const guardingSet = new Set([fields || Object.keys(data)]);
+  const guardedData = {};
+  const guardingSet = new Set(fields || Object.keys(data));
   for (const [field, value] of Object.entries(data)) {
     guardedData[field] =
       guardingSet.has(field) && typeof value === "string"
