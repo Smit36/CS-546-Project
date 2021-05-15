@@ -47,6 +47,8 @@ const $fieldErrors = {
   submit: $tripSubmitError,
 };
 
+const getCurrentUserId = () => $('#user-id').html().trim();
+
 const getEmployeeIdList = () =>
   $tripEmployees
     .val()
@@ -69,32 +71,32 @@ function handleTripSubmit(e) {
   const inputStartTime = $tripStartTime.val();
   const inputEndTime = $tripEndTime.val();
   const inputManager = $tripManager.val();
-  const inputEmployees = getEmployeeIdList();
+  const inputEmployees = Array.from(new Set([inputManager, ...getEmployeeIdList()]));
 
   const errors = {};
-  // if (!inputName) {
-  //   errors.name = 'Name should not be empty';
-  // }
+  if (!inputName) {
+    errors.name = 'Name should not be empty';
+  }
 
-  // if (!inputDescription) {
-  //   errors.description = 'Description should not be empty';
-  // }
+  if (!inputDescription) {
+    errors.description = 'Description should not be empty';
+  }
 
-  // if (!inputStartTime || !/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/.test(inputDate)) {
-  //   errors.startTime = 'Please input a valid start date';
-  // }
+  if (!inputStartTime || !/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/.test(inputStartTime)) {
+    errors.startTime = 'Please input a valid start date';
+  }
 
-  // if (!inputEndTime || !/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/.test(inputDate)) {
-  //   errors.endTime = 'Please input a valid End date';
-  // }
+  if (!inputEndTime || !/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/.test(inputEndTime)) {
+    errors.endTime = 'Please input a valid End date';
+  }
   
-  // if (!inputManager) {
-  //   errors.manager = 'Please select the manager of this trip.';
-  // }
+  if (!inputManager) {
+    errors.manager = 'Please select the manager of this trip.';
+  }
 
-  // if (inputEmployees.length === 0) {
-  //   errors.employees = 'Please select and add employees to this trip.';
-  // }
+  if (inputEmployees.length <= 1) {
+    errors.employees = 'Please select at least one employee aside from manager to this trip.';
+  }
 
 
   for (const field in errors) {
@@ -137,7 +139,7 @@ function createEmployeePreviewItem(employeeId, isManager) {
   if (isManager) {
     const managerTag = $("<span>").text(" (manager)");
     $previewItem.append(managerTag);
-  } else {
+  } else if (employeeId !== getCurrentUserId()) {
     const removalButton = $("<button>")
       .text("remove")
       .click(() => removeEmployeeId(employeeId));
@@ -150,6 +152,7 @@ function updateEmployeesPreview() {
   const selectedManagerId = $tripManager.val();
   const selectedEmployeeIdSet = new Set([
     selectedManagerId,
+    getCurrentUserId(),
     ...getEmployeeIdList(),
   ]);
   $tripEmployeeSelectionPreview.empty();
@@ -192,3 +195,6 @@ $tripForm.submit(handleTripSubmit);
 $tripForm.on("reset", handleTripReset);
 $tripEmployeeSelection.change(handleEmployeeSelection);
 $tripEmployeeAddButton.click(handleAddEmployee);
+
+addEmployeeId(getCurrentUserId());
+$tripEmployees.trigger('change');

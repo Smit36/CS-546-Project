@@ -98,7 +98,7 @@ const createTrip = async (data) => {
     corporateId: new ObjectId(corporateId),
     approvalId: new ObjectId(approval._id),
     managerId: new ObjectId(managerId),
-    employeeIdList: [managerId, ...employeeIdList].map(
+    employeeIdList: Array.from(new Set([managerId, ...employeeIdList])).map(
       (ids) => new ObjectId(ids)
     ),
     expenseIdList: [],
