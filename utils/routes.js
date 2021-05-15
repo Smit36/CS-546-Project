@@ -1,5 +1,6 @@
 const xss = require("xss");
 const { assertRequiredObject } = require("./assertion");
+const { USER_ROLE } = require("./constants");
 
 const getTemplateData = (req, options = {}) => {
   const { user, corporate } = req.session;
