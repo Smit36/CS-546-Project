@@ -59,11 +59,11 @@ router.post("/", async (req, res, next) => {
     const userId = ObjectId(user._id);
 
     assertRequiredObject(userId);
-    const corporateData = guardXSS(req.body,
+    const corporateData = guardXSS(req.body,[
       "name",
       "emailDomain",
       "contactNo",
-      "address");
+      "address"]);
     corporateData.createdBy = userId;
     corporateData.updatedBy = userId;
     assertCorporateData(corporateData);
