@@ -54,6 +54,7 @@
           <label for="approval-pending">
             Pending
           </label>
+          {{#if isApprovalManager}}
           <input type="radio" id="approval-approve" name="status" value="APPROVED" />
           <label for="approval-approve">
             Approved
@@ -62,6 +63,7 @@
           <label for="approval-reject">
             Rejected
           </label>
+          {{/if}}
         </div>
       </div>
       {{!-- new message --}}
