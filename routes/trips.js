@@ -91,7 +91,7 @@ router.get("/new", async (req, res, next) => {
     const users = await getAllUsers(user);
 
     res.render("trip/new", {
-      users,
+      users: users.filter(user => user.role === USER_ROLE.EMPLOYEE),
       trips,
       ...getTemplateData(req, { title: "New Trip" }),
     });
