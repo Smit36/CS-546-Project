@@ -163,9 +163,9 @@ function showExpense() {
                         <label for="name">Expense Name</label>
                       </div>
                       <div class="col-75">
-                        <input type="text" id="update-name" name="expense_name" value=${
+                        <input type="text" id="update-name" name="expense_name" value="${
                           data[i].name
-                        }>
+                        }">
                       </div>
                       <span id="update-name-error" hidden>Enter expense name.</span>                 
                     </div>
@@ -174,9 +174,9 @@ function showExpense() {
                         <label for="update-description">Description</label>
                       </div>
                       <div class="col-75">
-                        <input type="text" id="update-description" name="update-description" value=${
+                        <input type="text" id="update-description" name="update-description" value="${
                           data[i].description
-                        }>
+                        }">
                       </div> 
                       <span id="update-description-error" hidden>Enter expense description.</span>
                     </div>
@@ -233,9 +233,9 @@ function showExpense() {
                       </div>
                       <div class="col-35">
                         <div class="row">                      
-                          <input type="number" id="update-amount" name="amount" value=${
+                          <input type="number" id="update-amount" name="amount" value="${
                             data[i].payment.amount
-                          }>                     
+                          }">                     
                         </div>
                         <span id="update-amount-error" hidden>Enter expense amount.</span>     
                       </div>
@@ -246,7 +246,7 @@ function showExpense() {
                       </div>
                       <div class="col-75">            
                         <div class="row">
-                          <input type="date" id="update-date" name="date" value=${dateFormat}>
+                          <input type="date" id="update-date" name="date" value="${dateFormat}">
                         </div>
                         <span id="update-date-error" hidden>Select date.</span> 
                       </div>
@@ -324,6 +324,10 @@ function showExpense() {
                     showExpense();
                   },
                 });
+              });
+              $('#cancel').on('click', function () {
+                modal.hide();
+                showExpense();
               });
             });
           });
