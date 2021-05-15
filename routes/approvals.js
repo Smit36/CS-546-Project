@@ -82,7 +82,7 @@ router.put("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const { user } = req.session;
-    const updateData = guardXSS(req.body);
+    const updateData = guardXSS(req.body, ['message', 'status', 'lastUpdateId']);
     updateData.userId = user._id;
     assertApprovalUpdates(id, updateData);
 
