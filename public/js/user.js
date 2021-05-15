@@ -176,9 +176,7 @@ function showUsers() {
                       <label for="update-name">Name</label>
                     </div>
                     <div class="col-75">
-                      <input type="text" id="update-name" name="name" pattern="^[a-zA-Z ']{2,100}$" value=${
-                        data[i].name
-                      } required>
+                      <input type="text" id="update-name" name="name" value="${data[i].name}" required>
                     </div>
                   </div>
                   <div class="row">
@@ -186,9 +184,8 @@ function showUsers() {
                       <label for="update-email">Email</label>
                     </div>
                     <div class="col-75">
-                      <input type="email" id="update-email" name="update-email" value=${
-                        data[i].email
-                      } pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" title="Enter valid email ID" required>
+                      <input type="email" id="update-email" name="update-email" value="${data[i].email}"
+                       pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" title="Enter valid email ID" required>
                     </div>
                   </div>
                   <div class="row">
@@ -196,9 +193,8 @@ function showUsers() {
                       <label for="update-contact">Contact</label>
                     </div>
                     <div class="col-75">
-                      <input type="tel" id="update-contact" name="update-contact" value=${
-                        data[i].contact
-                      } pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" title="Enter valid contact number" required>
+                      <input type="tel" id="update-contact" name="update-contact" value="${data[i].contact}"
+                      pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" title="Enter valid contact number" required>
                     </div>
                   </div>  
                   <div class="row">
@@ -299,6 +295,7 @@ function showUsers() {
                     //$('#update-expense-form')[0].reset();
                     alert('Successfully updated');
                     modal.hide();
+                    showUsers();
                   },
                   error() {
                     alert('Error occured while updating user.');
