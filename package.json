@@ -1,6 +1,6 @@
 {
   "name": "cs-546-project",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Spring 2021 CS-546 Group 17 Final Project",
   "main": "index.js",
   "scripts": {
