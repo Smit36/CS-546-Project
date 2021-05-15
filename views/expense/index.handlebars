@@ -17,8 +17,8 @@
       <div class="col-75">
         <select id="expense-trip" name="expense-trip">
           {{#if trips}}
+          <option default>Select a trip</option>
           {{#each trips}}
-          <option default>Trip</option>
           <option id={{_id}} value={{_id}}>{{name}}</option>
           {{/each}}
           {{/if}}

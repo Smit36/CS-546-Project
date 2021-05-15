@@ -105,7 +105,9 @@ router.get('/:expenseId', async (req, res, next) => {
 router.put('/:expenseId', async (req, res, next) => {
   try {
     const { expenseId } = req.params;
+    const { _id: userId } = req.session.user;
     let expense = req.body;
+    expense.userId = userId;
     assertObjectIdString(expenseId);
     assertExpenseData(expense);
     expense = await expenseData.updateExpense(expenseId, expense);
@@ -113,6 +115,7 @@ router.put('/:expenseId', async (req, res, next) => {
       throw new HttpError(`Could not update expense for id:${expenseId}`, 404);
     }
     res.status(200).json(expense);
+    console.log(expense);
   } catch (error) {
     next(error);
   }
