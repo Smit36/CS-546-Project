@@ -9,15 +9,14 @@
 
 <div id="show-form" hidden>
   <form id="expense-form">
-    <p id="user-id" hidden>{{userId}}</p>
     <div class="row">
       <div class="col-25">
-        <label for="expense-trip-name">Trip Name</label>
+        <label>Trip Name</label>
       </div>
       <div class="col-75">
         <select id="expense-trip" name="expense-trip">
           {{#if trips}}
-          <option default>Select a trip</option>
+          <option selected>Select a trip</option>
           {{#each trips}}
           <option id={{_id}} value={{_id}}>{{name}}</option>
           {{/each}}
@@ -28,7 +27,7 @@
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="expense-name">Expense Name</label>
+        <label>Expense Name</label>
       </div>
       <div class="col-75">
         <input type="text" id="name" name="expense_name" placeholder="Your expense">
@@ -37,7 +36,7 @@
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="description">Description</label>
+        <label>Description</label>
       </div>
       <div class="col-75">
         <input type="text" id="description" name="description" placeholder="Air India Airlines">
@@ -46,32 +45,32 @@
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="description">Payment Method</label>
+        <label>Payment Method</label>
       </div>
       <div class="col-25">
         <div class="row">
           <input type="radio" id="card" name="method" value="card">
-          <label for="card">Card</label><br>
+          <label>Card</label><br>
           <input type="radio" id="cash" name="method" value="cash">
-          <label for="cash">Cash</label>
+          <label>Cash</label>
         </div>
         <span id="method-error" hidden>Select expense method.</span>
       </div>
       <div class="col-25">
         <input type="radio" id="gpay" name="method" value="gpay">
-        <label for="gpay">GPay</label><br>
+        <label>GPay</label><br>
         <input type="radio" id="apple" name="method" value="apple">
-        <label for="Apple">Apple</label>
+        <label>Apple</label>
       </div>
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="amount">Amount</label>
+        <label>Amount</label>
       </div>
       <div class="col-20">
         <div class="row">
           <select id="currency" name="currency">
-            <option default>Currency</option>
+            <option selected>Currency</option>
             <option id="$" value="$">$-USD</option>
             <option id="¥" value="¥">¥-CNY</option>
             <option id="₹" value="₹">₹-INR</option>
@@ -89,18 +88,18 @@
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="date">Date</label>
+        <label>Date</label>
       </div>
       <div class="col-75">
         <div class="row">
-          <input type="date" id="date" name="date" placeholder="2021-01-01">
+          <input type="date" id="date" name="date">
         </div>
         <span id="date-error" hidden>Enter expense date.</span>
       </div>
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="notes">Notes*</label>
+        <label>Notes*</label>
       </div>
       <div class="col-75">
         <textarea></textarea>

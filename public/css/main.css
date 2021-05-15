@@ -95,7 +95,8 @@ input[type='submit'],
 button,
 #PENDING,
 #APPROVED,
-#REJECTED {
+#REJECTED,
+.button {
   background-color: #358aeb;
   color: white;
   padding: 12px 20px;
@@ -104,19 +105,24 @@ button,
   cursor: pointer;
 }
 
-a.blue-button {
-  text-decoration: none;
-  background-color: #2470da;
-  /* background-color: navy; */
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.submit:hover,
+.update:hover,
+input[type='submit']:hover,
+button:hover,
+#PENDING:hover,
+#APPROVED:hover,
+#REJECTED:hover,
+.button:hover {
+  background-color: #0b76f1;  
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-a.trip-button {
-  margin: 4px 4px;
+a {
+  text-decoration: none;
+}
+
+.button {
+  width: 30%;
 }
 
 #REJECTED {
@@ -134,8 +140,10 @@ a.trip-button {
   background-color: rgb(241, 243, 111);
 }
 
-#PENDING:hover,#APPROVED:hover,#REJECTED:hover {
-  cursor:auto;
+#PENDING:hover,
+#APPROVED:hover,
+#REJECTED:hover {
+  cursor: auto;
 }
 
 .submit,
@@ -250,7 +258,7 @@ input[type='submit']:hover {
 #user-list button,
 #rank-list button,
 #corporate-list button,
-#trip-list > div.row {
+#trip-list button {
   background-color: #f2f2f2;
   color: rgb(66, 66, 66);
   padding: 18px;
@@ -271,8 +279,8 @@ input[type='submit']:hover {
   color: rgb(66, 66, 66);
 }
 
-#trip-list button:hover{
-  cursor:auto;
+#trip-list button:hover {
+  cursor: auto;
 }
 
 #header {
@@ -528,8 +536,8 @@ label {
   margin: auto;
 }
 
-#back{
-  background-color: #4CAF50;
+#back {
+  background-color: #4caf50;
   color: white;
   -webkit-appearance: button;
   -moz-appearance: button;
@@ -541,7 +549,7 @@ label {
   font-size: medium;
 }
 
-#back:hover{
+#back:hover {
   background-color: #2ca030;
 }
 
@@ -556,12 +564,4 @@ button.trip-green[disabled] {
 
 li.trip-li {
   float: none;
-}
-
-#approval-update-form {
-  margin: 20px
-}
-
-#approval-update-form textarea {
-  width: 100%
 }
