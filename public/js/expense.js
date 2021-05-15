@@ -121,7 +121,6 @@ function showExpense() {
                 <h1>${data[i].name}</h1>
                 <h2>${data[i].description}</h2>
                 <p>Trip: ${data[i].trip.name}</p>
-                <p>Created By: ${data[i].createdBy}</p>
                 <p>Payment Amount:${data[i].payment.currency} ${data[i].payment.amount}</p>
                 <p>Payment Mode: ${data[i].payment.method}</p>
                 <p>Date: ${data[i].payment.date}</p>
