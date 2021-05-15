@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const { getTemplateData } = require('../utils/routes');
+const { getTemplateData, guardXSS } = require('../utils/routes');
 const {
   assertObjectIdString,
   assertIsValuedString,
@@ -17,7 +17,7 @@ const RANK_PAGE_TITLE = 'Expense';
 //add rank
 router.post('/', async (req, res) => {
     try {
-      const reqBody = req.body;
+      const reqBody = guardXSS(req.body, ['name', 'level']);
       const user = req.session.user;
 
       assertRequiredObject(reqBody);

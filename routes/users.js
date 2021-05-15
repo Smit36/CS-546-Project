@@ -19,7 +19,7 @@ const {
 } = require("../utils/assertion");
 const { USER_ROLE } = require("../utils/constants");
 const { QueryError, ValidationError, HttpError } = require("../utils/errors");
-const { getTemplateData } = require("../utils/routes");
+const { getTemplateData, guardXSS } = require("../utils/routes");
 const { getAllRanks } = require("../data/rank");
 const USER_PAGE_PATH = "users/index";
 const USER_PAGE_TITLE = "Employee";
@@ -27,7 +27,7 @@ const USER_PAGE_TITLE = "Employee";
 //add user
 router.post("/", async (req, res) => {
   try {
-    const reqBody = req.body;
+    const reqBody = guardXSS(req.body, ['name', 'email', 'password', 'contact']);
     assertRequiredObject(reqBody);
     let sessionUser = req.session.user;
     reqBody.corporateId = sessionUser.corporateId;
@@ -125,7 +125,7 @@ router.get("/all", async (req, res) => {
 router.put("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    let userReq = req.body;
+    let userReq = guardXSS(req.body, ['name', 'email', 'contact']);
 
     assertRequiredObject(userReq);
     let sessionUser = req.session.user;
@@ -203,7 +203,7 @@ const renderLoginPage = (req, res, errors) =>
   });
 
 router.post("/login", async (req, res) => {
-  const reqBody = req.body;
+  const reqBody = guardXSS(req.body, ['email', 'password']);
   let errors = [];
   let hasErrors = false;
 

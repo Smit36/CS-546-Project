@@ -199,7 +199,7 @@ function showUsers() {
                   </div>  
                   <div class="row">
                     <div class="col-25">
-                      <label for="update-role">Role</label>
+                      <label>Role</label>
                     </div>
                     <div class="col-25">
                       <input type="radio" id="corporate" name="update-role" value="CORPORATE" ${
