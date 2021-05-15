@@ -418,12 +418,26 @@ router.get("/:id/expense/:expenseId/edit", async (req, res, next) => {
       'gpay': false,
       'apple': false,
     };
+    const curAliasMap = {
+      "$": 'usd',
+      "¥": 'cny',
+      "₹": 'inr',
+      "€": 'eur',
+    };
+    const paymentCurrencyChecked = {
+      'usd': false,
+      'cny': false,
+      'inr': false,
+      'eur': false,
+    };
     paymentMethodChecked[expense.payment.method] = true;
+    paymentCurrencyChecked[curAliasMap[expense.payment.currency]] = true;
     res.render("trip/expense", {
       trip,
       expense: {
         ...expense,
         paymentMethodChecked,
+        paymentCurrencyChecked,
         paymentDateValue: new Date(expense.payment.date).toISOString().split('T')[0],
       },
       ...getTemplateData(req, { title: `Edit Trip Expense (${trip.name})` }),
@@ -447,12 +461,19 @@ router.get("/:id/expense/new", async (req, res, next) => {
       gpay: false,
       apple: false,
     };
+    const paymentCurrencyChecked = {
+      'usd': false,
+      'cny': false,
+      'inr': false,
+      'eur': false,
+    };
     res.render("trip/expense", {
       trip,
       expense: {
         userId: user._id,
         tripId: trip._id,
         paymentMethodChecked,
+        paymentCurrencyChecked,
       },
       ...getTemplateData(req, { title: `New Trip Expense (${trip.name})` }),
     });
