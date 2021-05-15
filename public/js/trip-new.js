@@ -135,7 +135,7 @@ function handleTripSubmit(e) {
 function createEmployeePreviewItem(employeeId, isManager) {
   const $employeeOption = $tripEmployeeOptionsById[employeeId];
   const employeeDescription = $employeeOption.html();
-  const $previewItem = $("<li>").html(employeeDescription);
+  const $previewItem = $("<li>").addClass('trip-li').html(employeeDescription);
   if (isManager) {
     const managerTag = $("<span>").text(" (manager)");
     $previewItem.append(managerTag);
@@ -182,7 +182,7 @@ function handleAddEmployee(e) {
   e.preventDefault();
   const employeeId = $tripEmployeeSelection.val();
   addEmployeeId(employeeId);
-  $tripEmployeeSelection.val("");
+  $tripEmployeeSelection.val("").trigger("change");
 }
 
 function handleEmployeesChange(e) {

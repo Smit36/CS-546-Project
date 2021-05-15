@@ -56,18 +56,20 @@
         </p>
       </div>
     </div>
+
+    {{#if expenses}}
     <h4>
       Trip expense items:
     </h4>
     <ol>
       {{#each expenses}}
       <div class="row">
-        <li>
+        <li class="trip-li">
           {{user.name}}
           :
           {{name}}
           {{#if isMine}}
-          <button class="update" id="trip-edit-{{_id}}">
+          <button class="update trip-green" id="trip-edit-{{_id}}">
             Edit
           </button>
           <button class="delete" id="trip-delete-{{_id}}">
@@ -79,9 +81,16 @@
 
       {{/each}}
     </ol>
+    {{else}}
+    <h4>
+      Warning: Trip currently doesn't not have any expenses.
+    </h4>
+    {{/if}}
 
-    Total Trip Expense:
-    {{total}}
+    <h4>
+      Total Trip Expense:
+      {{total}}
+    </h4>
 
     <a id="trip-add-expense" href="/trip/{{trip._id}}/expense/new">
       <button>Add New Expense to Trip</button>
@@ -100,4 +109,5 @@
     </a>
 
   </div>
-  <script defer src="/js/trip-details.js"></script>
+</div>
+<script defer src="/js/trip-details.js"></script>

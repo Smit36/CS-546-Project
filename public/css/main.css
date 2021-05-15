@@ -111,7 +111,7 @@ button,
 
 #APPROVED {
   color: white;
-  background-color: rgb(40, 177, 51);
+  background-color: green;
 }
 
 #PENDING {
@@ -121,12 +121,6 @@ button,
 
 #PENDING:hover,#APPROVED:hover,#REJECTED:hover {
   cursor:auto;
-}
-
-.submit,
-.update,
-input[type='submit'] {
-  background-color: #4caf50;
 }
 
 .submit,
@@ -534,4 +528,17 @@ label {
 
 #back:hover{
   background-color: #2ca030;
+}
+
+button.trip-green,
+input.trip-green {
+  background-color: green;
+}
+button.trip-green:disabled,
+button.trip-green[disabled] {
+  background-color: grey;
+}
+
+li.trip-li {
+  float: none;
 }
