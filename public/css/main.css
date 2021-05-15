@@ -105,18 +105,6 @@ button,
   cursor: pointer;
 }
 
-.submit:hover,
-.update:hover,
-input[type='submit']:hover,
-button:hover,
-#PENDING:hover,
-#APPROVED:hover,
-#REJECTED:hover,
-.button:hover {
-  background-color: #0b76f1;  
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
 a {
   text-decoration: none;
 }
@@ -140,6 +128,15 @@ a.trip-button {
   margin: 4px 4px;
 }
 
+.submit:hover,
+.update:hover,
+input[type='submit']:hover,
+.button:hover,
+a.blue-button:hover {
+  background-color: #0b76f1;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
 #REJECTED {
   color: black;
   background-color: rgb(240, 134, 92);
@@ -158,7 +155,7 @@ a.trip-button {
 #PENDING:hover,
 #APPROVED:hover,
 #REJECTED:hover {
-  cursor: auto;
+  cursor: pointer;
 }
 
 .submit,
@@ -269,10 +266,10 @@ input[type='submit']:hover {
   margin-top: 6px;
 }
 
-#expense-list button,
-#user-list button,
-#rank-list button,
-#corporate-list button,
+#expense-list .expense-button,
+#user-list .user-button,
+#rank-list .rank-button,
+#corporate-list .corporate-button,
 #trip-list > div.row {
   background-color: #f2f2f2;
   color: rgb(66, 66, 66);
@@ -286,9 +283,9 @@ input[type='submit']:hover {
   border-bottom: 1px solid rgb(66, 66, 66);
 }
 
-#expense-list button:hover,
-#user-list button:hover,
-#corporate-list button:hover {
+#expense-list .expense-button:hover,
+#user-list .user-button:hover,
+#corporate-list .corporate-button:hover {
   cursor: pointer;
   background-color: #ebebeb;
   color: rgb(66, 66, 66);
@@ -378,7 +375,14 @@ input[type='submit']:hover {
 #new-user-password-error,
 #new-user-error,
 #new-user-contact-error,
-#employee-upload-error {
+#employee-upload-error,
+#trip-name-error,
+#trip-description-error,
+#trip-start-time-error,
+#trip-end-time-error,
+#trip-manager-error,
+#trip-employees-error,
+#trip-submit-error {
   font-size: small;
   color: red;
 }
@@ -582,9 +586,9 @@ li.trip-li {
 }
 
 #approval-update-form {
-  margin: 20px
+  margin: 20px;
 }
 
 #approval-update-form textarea {
-  width: 100%
+  width: 100%;
 }

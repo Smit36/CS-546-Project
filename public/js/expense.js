@@ -101,14 +101,14 @@ function showExpense() {
           }
           $(expenseList).append(
             `<div class="row">
-              <button class="expense" id=${data[i]._id}>
+              <div class="expense-button" id=${data[i]._id}>
                 <div class="row" >
                   <div class="col-25">${data[i].name}</div>
                   <div class="col-25">${data[i].payment.date}</div>
                   <div class="col-25">${data[i].payment.currency} ${data[i].payment.amount}</div>                
                   <div class="col-25">${data[i].trip.name}</div>
                 </div>
-              </button>
+              </div>
             </div>           
             `,
           );
