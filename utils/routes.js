@@ -1,3 +1,6 @@
+const xss = require('xss');
+const { assertRequiredObject } = require("./assertion");
+
 const USER_ROLE = {
   ADMIN: 'ADMIN',
   CORPORATE: 'CORPORATE',
@@ -17,7 +20,20 @@ const getTemplateData = (req, options = {}) => {
   };
 };
 
+const guardXSS = (data, fields) => {
+  assertRequiredObject(data);
+
+  const guardedData = { ...data };
+  const guardingFields = fields || Object.keys(data);
+  for (const field of guardingFields) {
+    guardedData[field] = xss(data[field]);
+  }
+
+  return guardedData;
+}
+
 module.exports = {
   getTemplateData,
+  guardXSS,
   USER_ROLE
 };

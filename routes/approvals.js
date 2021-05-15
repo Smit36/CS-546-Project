@@ -9,7 +9,7 @@ const { getTrip } = require("../data/trips");
 const { getUser } = require("../data/users");
 const { assertObjectIdString } = require("../utils/assertion");
 const { HttpError } = require("../utils/errors");
-const { getTemplateData } = require("../utils/routes");
+const { getTemplateData, guardXSS } = require("../utils/routes");
 
 const dataExist = (id, data, desc = "data") => {
   if (!data) throw new HttpError(`Cannot find approval with ID: ${id}`, 404);
@@ -82,7 +82,7 @@ router.put("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const { user } = req.session;
-    const updateData = req.body;
+    const updateData = guardXSS(req.body);
     updateData.userId = user._id;
     assertApprovalUpdates(id, updateData);
 
