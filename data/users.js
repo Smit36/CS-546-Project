@@ -66,7 +66,7 @@ const getUser = async (id) => {
 const createUser = async (data) => {
     assertRequiredObject(data);
   
-    const { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = data;
+    let { corporateId, rankId, name, password, email, contact, designation, rank, role, createdBy, createdAt = new Date().getTime() } = data;
   
     assertUserRole(role, "User Role");
 
@@ -83,6 +83,7 @@ const createUser = async (data) => {
     assertIsValuedString(name, "User name");
     assertHashedPasswordString(password, "Password");
     assertEmailString(email, "Email");
+    email = email.toLowerCase();
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
       assertIsValuedString(designation, "Designation");
@@ -130,7 +131,7 @@ const updateUser = async (id, updatedBy, updates) => {
     assertObjectIdString(id);
     assertRequiredObject(updates, "User updates data");
 
-    const { corporateId, rankId, name, email, contact, designation, rank, role } = updates;
+    let { corporateId, rankId, name, email, contact, designation, rank, role } = updates;
   
     assertUserRole(role, "User Role");
 
@@ -146,6 +147,7 @@ const updateUser = async (id, updatedBy, updates) => {
     }   
     assertIsValuedString(name, "User name");
     assertEmailString(email, "Email");
+    email = email.toLowerCase();
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
       assertIsValuedString(designation, "Designation");

@@ -12,7 +12,7 @@ const {
 const rankData = require('../data/rank');
 const { ValidationError } = require('../utils/errors');
 const RANK_PAGE_PATH = 'rank/index';
-const RANK_PAGE_TITLE = 'Expense';
+const RANK_PAGE_TITLE = 'Ranks';
 
 //add rank
 router.post('/', async (req, res) => {

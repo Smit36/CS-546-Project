@@ -22,12 +22,12 @@ const { QueryError, ValidationError, HttpError } = require("../utils/errors");
 const { getTemplateData, guardXSS } = require("../utils/routes");
 const { getAllRanks } = require("../data/rank");
 const USER_PAGE_PATH = "users/index";
-const USER_PAGE_TITLE = "Employee";
+const USER_PAGE_TITLE = "Employees";
 
 //add user
 router.post("/", async (req, res) => {
   try {
-    const reqBody = guardXSS(req.body, ['name', 'email', 'password', 'contact']);
+    let reqBody = guardXSS(req.body, ['name', 'email', 'password', 'contact']);
     assertRequiredObject(reqBody);
     let sessionUser = req.session.user;
     reqBody.corporateId = sessionUser.corporateId;
@@ -70,6 +70,7 @@ router.post("/", async (req, res) => {
     assertIsValuedString(name, "User name");
     assertHashedPasswordString(hashPassword, "Password");
     assertEmailString(email, "Email");
+    reqBody.email = email.toLowerCase();
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
       assertIsValuedString(designation, "Designation");
@@ -163,6 +164,7 @@ router.put("/:userId", async (req, res) => {
     }
     assertIsValuedString(name, "User name");
     assertEmailString(email, "Email");
+    userReq.email = email.toLowerCase();
     assertContactString(contact, "Contact Number");
     if (role === USER_ROLE.EMPLOYEE) {
       assertIsValuedString(designation, "Designation");
@@ -203,11 +205,11 @@ const renderLoginPage = (req, res, errors) =>
   });
 
 router.post("/login", async (req, res) => {
-  const reqBody = guardXSS(req.body, ['email', 'password']);
+  let reqBody = guardXSS(req.body, ['email', 'password']);
   let errors = [];
   let hasErrors = false;
 
-  const { email, password } = reqBody;
+  let { email, password } = reqBody;
 
   if (!email || typeof email !== "string" || email.trim().length === 0) {
     errors.push("Email is empty or not of required format.");
@@ -226,6 +228,7 @@ router.post("/login", async (req, res) => {
     return;
   }
 
+  email = email.toLowerCase();
   const user = await usersData.getUserByEmail(email);
 
   if (!user) {
