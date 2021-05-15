@@ -15,23 +15,27 @@
     </div>
   </div>
   <div class="row">
-    <ul>
+    <div class="row" id="header">
+      <div class="col-25">Status</div>
+      <div class="col-25">User</div>
+      <div class="col-25">Time</div>
+      <div class="col-25">Message</div>
+    </div>
+    <div id="trip-list">
       {{#each updates}}
       <div class="row">
-        <li>
-          [
-          {{status}}
-          ] (
-          {{user.name}}
-          @
-          {{time}}
-          )
-          {{message}}
-        </li>
+        <button>
+          <div class="row">
+            <div class="col-25">{{status}}</div>
+            <div class="col-25">{{user.name}}</div>
+            <div class="col-25">{{time}}</div>
+            <div class="col-25">{{message}}</div>
+          </div>
+        </button>
       </div>
-
       {{/each}}
-    </ul>
+    </div>
+
   </div>
   <div hidden id="approval-id">{{approval._id}}</div>
   <div hidden id="approval-last-id">{{lastUpdateId}}</div>
@@ -70,15 +74,15 @@
     <input type="submit" value="Send New Update" />
     <div id="approval-update-error" hidden></div>
   </form>
-  <p>
-    <a href="/trip/{{approval.tripId}}">
-      To Trip Detail
-    </a>
-  </p>
-  <p>
-    <a href="/trip">
-      Back To Trips
-    </a>
-  </p>
+
+  <a href="/trip/{{approval.tripId}}">
+    <button>To Trip Detail</button>
+  </a>
+
+
+  <a href="/trip">
+    <button>Back To Trips</button>
+  </a>
+
 </div>
 <script defer src="/js/approval.js"></script>

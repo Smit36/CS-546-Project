@@ -79,6 +79,12 @@ function showExpense() {
   expenseList.empty();
   let rates = [];
 
+  $.ajax(`https://api.ratesapi.io/api/latest`, {
+    success: function (data) {
+      rates = data;
+    },
+  });
+
   $.ajax(`/expense/all`, {
     dataType: 'json',
     success: function (data, status, xhr) {
@@ -119,7 +125,7 @@ function showExpense() {
                 <p>Payment Amount:${data[i].payment.currency} ${data[i].payment.amount}</p>
                 <p>Payment Mode: ${data[i].payment.method}</p>
                 <p>Date: ${data[i].payment.date}</p>
-                <p>Note*: ${data[i].payment.notes}</p> 
+                <p>Note*: ${data[i].payment.notes || ''}</p> 
                 <input id="expenseId" value=${data[i]._id} hidden></input>               
                 <button id="expense-delete" class="delete">Delete</button>
                 <button id="expense-update" class="update">Update</button>              
@@ -139,7 +145,6 @@ function showExpense() {
               const month = dateFormat.slice(3, 5);
               const day = dateFormat.slice(0, 2);
               dateFormat = `${year}-${day}-${month}`;
-              console.log(dateFormat);
               if (data[i].payment.method == 'card') {
                 card = true;
               } else if (data[i].payment.method == 'cash') {
@@ -270,7 +275,6 @@ function showExpense() {
                       break;
                     }
                   }
-                  console.log(data[i].userId);
                   update = {
                     userId: data[i].userId,
                     tripId: data[i].trip._id,
@@ -299,7 +303,6 @@ function showExpense() {
               });
             });
             $('#expense-delete').on('click', function (event) {
-              console.log('delete');
               event.preventDefault();
               modal.empty();
               modal.append(` 
@@ -337,7 +340,6 @@ function showExpense() {
     },
     error: function (jqXhr, textStatus, errorMessage) {
       // error callback
-      console.log(errorMessage);
       $(expenseList).html(`<p>Expense not found</p>`);
       expenseList.show();
       $(getExpense).show();
