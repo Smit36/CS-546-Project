@@ -60,12 +60,76 @@ $ npm install
 $ npm start
 ```
 
-### Seed data
+### Demo data
 
-A set of seed data for `MongoDB` is available.
-Run the seeding task script to clean up and seed the database.
+A set of demo data available.
+#### Seed data
+
+A seeding task for `MongoDB` is available.
+Run the seeding script to clean up and seed the database.
 
 ```
 $ npm install
 $ npm run seed
 ```
+#### Seed content
+
+<details>
+  <summary>All seeded users have the same password</summary>
+  <code>P@ssw0rd123</code>
+</details>
+<br/>
+Portal Admins:
+
+- `admin1@ctem.com`
+- `admin2@ctem.com`
+
+Corporate data:
+
+- Gigasoft
+  - domain: @gigasoft.com
+  - admin account: `admin@gigasoft.com`
+  - Ranks
+    - lv3: Manager
+    - lv2: Accountant
+    - lv1: Associate
+  - Users
+    - Gina the Manager (`user1@gigasoft.com`) (lv3)
+    - Ghibli the Accountant (`user2@gigasoft.com`) (lv2)
+    - George the Associate (`user3@gigasoft.com`) (lv1)
+  - Trips
+    - Businses Trip to Death Star
+      - manager: user1@gigasoft.com
+      - employees:
+        - user2@gigasoft.com
+- Microhard
+  - domain: @microhard.com
+  - admin account: `admin@microhard.com`
+  - Ranks
+    - lv3: Tech Lead
+    - lv2: Senior Dev
+    - lv1: Dev
+  - Users
+    - Mary the Tech Lead (`user1@microhard.com`) (lv3)
+    - Mike the Senior Dev (`user2@microhard.com`) (lv2)
+    - Milly the Junior Dev (`user3@microhard.com`) (lv1)
+  - Trips
+    - Businses Trip to Terra
+      - manager: user1@microhard.com
+      - employees:
+        - user2@microhard.com
+        - user3@microhard.com
+
+
+#### Bulk upload test file
+
+`test.csv` will provide entry for 2 new employees for Gigasoft
+
+- bob1 bobb
+  - email: `bob1@gigasoft.com`
+  - password: 1qaz@WSX
+  - rank: lv3
+- bob2 bobb
+  - email: `bob2@gigasoft.com`
+  - password: 1qaz@WSX
+  - rank: lv2
